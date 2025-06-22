@@ -1,0 +1,56 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+const title = 'Media Query'
+const bodyClass = 'demo-media-query'
+// class: demo-media-query
+---
+
+<DefaultLayout title={title} bodyClass={bodyClass}>
+    <h2>Media Query change detection</h2>
+    <p>Resize browser window to see media query changes:</p>
+
+    <div class='w-panel'>
+        <div><span>state: </span><span class='js-mqstat-state'></span></div>
+        <div><span>width: </span><span class='js-mqstat-width'></span></div>
+        <div><span>prevState: </span><span class='js-mqstat-prevState'></span></div>
+        <div><span>prevWidth: </span><span class='js-mqstat-prevWidth'></span></div>
+    </div>
+</DefaultLayout>
+
+<style>
+    .w-panel {
+        min-height: 50vh;
+    }
+</style>
+
+<script>
+    import {mqStart} from 'wicle/ui/media-query'
+    import {type MediaQueryState} from 'wicle/ui/media-query'
+    mqStart()
+
+    // display values in docs/demo/media-query.md
+    function updateValues(stat: MediaQueryState) {
+        // console.log('[demo:mq:change]', `width=${stat.width}, state=${stat.state}, prevState=${stat.prevState}`)
+
+        let el: HTMLElement | null
+        el = document.querySelector<HTMLElement>('.js-mqstat-state')
+        if (el) el.textContent = stat.state
+
+        el = document.querySelector<HTMLElement>('.js-mqstat-width')
+        if (el) el.textContent = stat.width.toString()
+
+        el = document.querySelector<HTMLElement>('.js-mqstat-prevState')
+        if (el) el.textContent = stat.prevState
+
+        el = document.querySelector<HTMLElement>('.js-mqstat-prevWidth')
+        if (el) el.textContent = stat.prevWidth.toString()
+    }
+
+    function handleMediaQueryState(event: CustomEvent<MediaQueryState>) {
+        updateValues(event.detail)
+    }
+    window.addEventListener('mq:state', handleMediaQueryState as EventListener)
+    window.addEventListener('mq:change', handleMediaQueryState as EventListener)
+    window.dispatchEvent(new CustomEvent('mq:report'))
+</script>

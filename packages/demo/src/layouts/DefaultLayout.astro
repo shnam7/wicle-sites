@@ -1,0 +1,43 @@
+---
+import Head from '../components/Head.astro'
+import SiteBackground from '../components/SiteBackground.astro'
+import SiteHeader from '../components/SiteHeader.astro'
+import SiteBanner from '../components/SiteBanner.astro'
+import SiteFooter from '../components/SiteFooter.astro'
+import SiteOverlay from '../components/SiteOverlay.astro'
+import SiteOffcanvas from '../components/SiteOffcanvas.astro'
+import Sidebar from '../components/Sidebar.astro'
+import '../styles/main.scss'
+
+const {title, frontpage, bodyClass} = Astro.props.frontmatter || Astro.props
+---
+
+<html lang='en'>
+    <head><Head title={title} /></head>
+    <body class={bodyClass}>
+        <SiteBackground />
+        <div class='l-site-container'>
+            <header class='l-site-header'><SiteHeader /></header>
+            {frontpage && <SiteBanner />}
+            <div class='l-site-content'>
+                <div class='l-page'>
+                    <div class='l-content'>
+                        <h1>{title}</h1>
+                        <slot />
+                    </div>
+                    <div class='l-sidebar'><Sidebar /></div>
+                </div>
+            </div>
+            <footer class='l-site-footer'><SiteFooter /></footer>
+        </div>
+        <!-- l-site  -->
+        <SiteOverlay />
+        <SiteOffcanvas />
+    </body>
+</html>
+
+<style>
+    .l-page {
+        padding-bottom: 3.5rem;
+    }
+</style>

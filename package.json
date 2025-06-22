@@ -1,68 +1,30 @@
 {
-    "name": "wicle",
-    "version": "2.0.2",
-    "description": "Component library for Web development.",
-    "files": [
-        "dist",
-        "scripts",
-        "scss",
-        "!**/*.map"
-    ],
-    "main": "index.js",
-    "typings": "dist/js/wicle",
+    "name": "wicle-sites",
+    "private": true,
     "scripts": {
-        "wicle:build": "gulp wicle:@build",
-        "wicle:clean": "gulp wicle:@clean",
-        "docs:build": "gulp docs:@build",
-        "docs:clean": "gulp docs:@clean",
-        "build-all": "gulp @build-all",
-        "clean-all": "gulp @clean-all",
-        "watch": "gulp wicle:@watch",
-        "watch-all": "gulp @watch-all",
-        "jekyll-server": "jekyll serve -s docs -d docs/_site/wicle --safe --incremental",
-        "prepare-to-commit": "npm run clean-all && npm run build-all && gulp @clean-to-prepare",
-        "npm-dry-run": "npm publish --dry-run"
+        "dev": "turbo dev",
+        "dev:demo": "turbo dev --filter=demo",
+        "build": "turbo build --filter=./packages/*",
+        "lint": "turbo lint",
+        "lint:demo": "turbo lint --filter=demo",
+        "clean": "run-s clean:demo",
+        "clean:demo": "turbo clean --filter=demo",
+        "test": "turbo test",
+        "test:demo": "turbo test --filter=gulp-tron",
+        "reset": "npm-run-all -s clean reset:turbo reset:node",
+        "reset:turbo": "find . -type d -name .turbo -exec rm -rf {} +",
+        "reset:node": "find . -type d -name node_modules -exec rm -rf {} +",
+        "prepare-to-commit": "run-s build:tron lint test build clean"
     },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/shnam7/wicle"
-    },
-    "keywords": [
-        "scss",
-        "utility",
-        "web",
-        "ui"
-    ],
     "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/shnam7/wicle/issues"
-    },
-    "homepage": "https://github.com/shnam7/wicle#readme",
-    "dependencies": {
-        "sass-wdk": "^1.1.2"
+    "engines": {
+        "node": ">=16.14"
     },
     "devDependencies": {
-        "@types/jquery": "^3.5.4",
-        "autoprefixer": "^10.0.1",
-        "browser-sync": "^2.26.13",
-        "cssnano": "^4.1.10",
-        "gulp": "^4.0.2",
-        "gulp-clean-css": "^4.3.0",
-        "gulp-filter": "^6.0.0",
-        "gulp-postcss": "^9.0.0",
-        "gulp-rename": "^2.0.0",
-        "gulp-sass": "^4.1.0",
-        "gulp-sourcemaps": "^2.6.5",
-        "gulp-terser": "^1.4.1",
-        "gulp-tron": "^1.0.0-alpha.2",
-        "gulp-typescript": "^6.0.0-alpha.1",
-        "lost": "^8.3.1",
-        "postcss": "^8.1.4",
-        "postcss-combine-duplicated-selectors": "^10.0.2",
-        "postcss-reporter": "^7.0.1",
-        "stream-to-promise": "^3.0.0",
-        "stylelint": "^13.7.2",
-        "stylelint-config-recommended": "^3.0.0",
-        "typescript": "^4.0.5"
-    }
+        "npm-run-all": "^4.1.5",
+        "prettier-plugin-astro": "^0.14.1",
+        "sass": "^1.89.2",
+        "turbo": "^2.5.4"
+    },
+    "packageManager": "pnpm@10.12.1"
 }

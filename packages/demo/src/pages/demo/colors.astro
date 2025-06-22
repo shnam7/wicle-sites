@@ -1,0 +1,173 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+const title = 'Colors'
+const bodyClass = 'demo-colors'
+const colorMap = new Map<string, string>()
+const colors = `
+    $dim-gray:                  #737373 !default;
+    $cerulean:                  #007BA7 !default;
+    $deep-blush:                #ED6983 !default;
+    $rouge:                     #B12F5C !default;
+    $shalimar:                  #F2F4AB !default;
+    $emerald:                   #43DB8A !default;
+    $wild-sand:                 #E7E3DA !default;
+    $tea-green:                 #C5ECBE !default;
+    $well-read:                 #8F3740 !default;
+    $lochmara:                  #227CAD !default;
+    $cornflower-blue:           #6CA9F8 !default;
+    $hopbush:                   #BD6D97 !default;
+    $granny-apple:              #CEE0D0 !default;
+    $viridian-green:            #4B6C5C !default;
+    $bahama-blue:               #285880 !default;
+    $jazzberry-jam:             #9F134E !default;
+    $raven:                     #696F7A !default;
+    $trinidad:                  #D14E3A !default;
+    $harley-davidson-orange:    #BA3418 !default;
+    $fire-brick:                #A5240C !default;
+    $java:                      #15949D !default;
+    $mariner:                   #4267A0 !default;
+    $san-marino:                #5777AC !default;
+    $chetwode-blue:             #5B6BAA !default;
+    $charcoal:                  #444444 !default;
+    $pelorous:                  #17A2B8 !default;
+    $midnight:                  #152740 !default;
+    $lemon:                     #FFE21f !default;
+    $amber:                     #FFBF00 !default;
+    $pumpkin:                   #F87217 !default;
+    $claret:                    #7F1734 !default;
+    $mantis:                    #74C365 !default;
+    $mandy:                     #DA424D !default;
+    $matterhorn:                #545454 !default;
+    $plum:                      #D9A9D9 !default;
+    $clover:                    #4C5830 !default;
+    $seagull:                   #85B7D9 !default;
+    $olive:                     #808000 !default;
+    $teal:                      #00727f !default;
+    $purple:                    #800080 !default;
+    $violet:                    #EE82EE !default;
+    $pink:                      #FFC0CB !default;
+    $desert:                    #A5673F !default;
+    $brown:                     #A52A2A !default;
+    $gray:                      #767676 !default;
+    $st-tropaz:                 #294E80 !default;
+    $iris-blue:                 #00B5AD !default;
+    $deep-sky-blue:             #00A2E8 !default;
+    $navy-blue:                 #0074BD !default;
+    $blue-lagoon:               #004B66 !default;
+    $sherpa-blue:               #00494E !default;
+    $kingfisher-daisy:          #583580 !default;
+    $travertine:                #E5DEC7 !default;
+    $lightening-yellow:         #FAA732 !default;
+    $amber-green:               #AAB05C !default;
+    $dark-pastel-green:         #21BA45 !default;
+    $bitter-sweet:              #FF695E !default;
+    $forest-green:              #249324 !default;
+    $rio-grande:                #B5CC18 !default;
+    $persian-red:               #DB2828 !default;
+    $curious-blue:              #2185D0 !default;
+    $purple-heart:              #6435C9 !default;
+    $dark-orchid:               #A333C8 !default;
+    $deep-cerise:               #E03997 !default;
+    $fern:                      #63B76C !default;
+    $floral-white:              #FEFBEC !default;
+    $corn-silk:                 #FCF8E3 !default;
+    $mindaro:                   #D9E778 !default;
+    $lime-green:                #2ECC40 !default;
+    $baby-blue:                 #6DFFFF !default;
+    $maya-blue:                 #54C8FF !default;
+    $light-slate-blue:          #A291FB !default;
+    $helio-trope:               #DC73FF !default;
+    $pale-magenta:              #FF8EDF !default;
+    $pale-pink:                 #FADADD !default;
+    $ochre:                     #D67C1C !default;
+    $light-gray:                #D4D4D4 !default;   // ==lighten(#000, 83%)
+    $falu-red:                  #790D0D !default;
+    $dark-gray:                 #A8A8A8 !default;   // ==lighten(#000, 66%)
+    $dark-green:                #006400 !default;
+    $whisper:                   #EEEEEE !default;
+    $medium-carmine:            #BA3925 !default;
+    $persimmon:                 #EC5800 !default;
+    $amaranth:                  #DA314B !default;
+    $valencia:                  #D9534F !default;
+    $fern-green:                #4F7942 !default;
+    $royal-purple:              #6B15A1 !default;
+    $blue-diamond:              #4D1B7B !default;
+    $french-rose:               #EA4C88 !default;
+    $slate-gray:                #708090 !default;
+    $light-slate-gray:          #868E96 !default;
+    $chateau-green:             #28A745 !default;
+    $orange:                    #FFA500 !default;
+    $dark-red:                  #A30000 !default;
+    $alice-blue:                #F3F6FA !default;
+    $rebecca-purple:            #663399 !default;
+
+    $text-black:                $charcoal !default; // recommended for text reading. better than black.
+    $text-white:                $whisper !default;
+    $text-gray:                 $dim-gray !default;
+    $text-blue:                 $lochmara !default;
+    $text-red:                  $medium-carmine !default;
+    $text-orange:               $orange !default;
+`
+    .split('\n')
+    .filter(line => line.trim().startsWith('$'))
+    .map(line => line.trim().replace(/\s+|\!default;|\/\/.*/g, ''))
+    .map(line => line.split(':'))
+    .map(item => {
+        colorMap.set(item[0], item[1])
+        const value = item[1].startsWith('#') ? item[1] : `${item[1]} (${colorMap.get(item[1])})`
+        return {name: item[0], value}
+    })
+---
+
+<DefaultLayout title={title} bodyClass={bodyClass}>
+    <div class='demo-color-list'>
+        {
+            colors.map(color => (
+                <div class='color-item' style={`background-color: ${/#.{6}/.exec(color.value)};`}>
+                    <span class='demo-colorbox-tag'>
+                        {color.name}:{color.value}
+                    </span>
+                </div>
+            ))
+        }
+    </div>
+</DefaultLayout>
+
+<style lang='scss'>
+    .demo-color-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 10px;
+    }
+    .color-item {
+        padding: 1.25rem 0;
+        border-radius: 5px;
+        font-family: roboto, sans;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        text-align: center;
+    }
+    .demo-color-name {
+        font-weight: bold;
+    }
+    .demo-color-value {
+        font-style: italic;
+    }
+</style>
+
+<script>
+    document.querySelectorAll<HTMLElement>('.color-item').forEach(el => {
+        let bgColor = window.getComputedStyle(el).backgroundColor
+        let rgb = bgColor.match(/\d+/g)
+        if (rgb) {
+            let r = parseInt(rgb[0])
+            let g = parseInt(rgb[1])
+            let b = parseInt(rgb[2])
+            // ref: https://24ways.org/2010/calculating-color-contrast
+            let yiq = (r * 299 + g * 587 + b * 114) / 1000
+            el.style.color = yiq >= 256 * 0.6 ? 'black' : 'white'
+        }
+    })
+</script>

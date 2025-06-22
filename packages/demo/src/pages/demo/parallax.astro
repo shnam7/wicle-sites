@@ -1,0 +1,104 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+const title = 'Parallax'
+const boddyClass = 'demo-parallax'
+const cI = [
+    ...Array(10)
+        .keys()
+        .map(i => i + 1),
+]
+
+// bodyClass: demo-parallax
+---
+
+<DefaultLayout title={title} bodyClass={boddyClass}>
+    <p>Parallax Container Perspective Value: 0.7</p>
+    <p>First surface inside the parallax container moves in normal speed.</p>
+    <p>Second surface moves in 70% of the first</p>
+    <p>Third surface moves in 70% of the second, etc.</p>
+
+    <div class='demo-panel'>
+        {
+            cI.map(i => (
+                <div id={`surface${i}`} class='surface'>
+                    <div id={`object${i}`} class='object'>
+                        <div class='w-button wo-secondary'>Surface #{i}</div>
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+</DefaultLayout>
+
+<style lang='scss'>
+    @use 'sass:math';
+    @use 'sass:string';
+    @use 'wdk/color';
+    @use 'wicle/theme';
+
+    $surface-count: 10;
+    $object-height: 200px;
+    $surface-spacing: $object-height * 0.5;
+
+    .demo-panel {
+        position: relative;
+        border: 1px dotted coral;
+    }
+
+    .surface {
+        position: absolute;
+        top: 0%;
+        left: 0;
+        width: 100%;
+    }
+
+    .object {
+        margin: 0 auto;
+        height: $object-height;
+        border-radius: 50%;
+        border: 1px dotted green;
+
+        .w-button {
+            // centering
+            margin-left: 50%;
+            margin-top: math.div($object-height, 2);
+            transform: translate3d(-50%, -50%, 0);
+        }
+    }
+
+    @for $i from 1 through $surface-count {
+        #surface#{$i} {
+            margin-top: $surface-spacing * ($i - 1) * 1.2;
+
+            .object {
+                $reduction: string.unquote((($i - 1) * 5) + '%');
+                width: calc(100% - #{$reduction});
+                left: $reduction / 2;
+                background: color.gray(100% - math.div(100 * $i, $surface-count) * 0.5 * 1%);
+            }
+        }
+    }
+</style>
+
+<script>
+    import * as Parallax from '../../scripts/wicle/ui/parallax'
+
+    const parallax = new Parallax.Container(window, 1.2)
+
+    const SURFACE_COUNT = 10
+    for (let i = 1; i <= SURFACE_COUNT; ++i) {
+        const surface = document.getElementById('surface' + i)
+        if (surface) parallax.addSurface(new Parallax.Surface(surface))
+    }
+
+    window.addEventListener('resize', () => {
+        const demoPanel = document.querySelector<HTMLElement>('.demo-panel')
+        const lastSurface = document.querySelector<HTMLElement>(`#surface${SURFACE_COUNT}`)
+        if (demoPanel && lastSurface) {
+            const contentHeight = lastSurface.offsetTop + lastSurface.clientHeight
+            demoPanel.style.minHeight = `${contentHeight * 1.2}px`
+        }
+    })
+    window.dispatchEvent(new Event('resize'))
+</script>

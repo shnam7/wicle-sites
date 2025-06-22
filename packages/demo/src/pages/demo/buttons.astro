@@ -1,0 +1,125 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+const title = 'Buttons'
+const bodyClass = 'demo-buttons'
+---
+
+<DefaultLayout title={title} bodyClass='demo-buttons'>
+    <!-- default buttons -->
+    <div class='w-divider wo-thick'></div>
+    <div class='demo-panel'>
+        <h4>Buttons (class='w-button)</h4>
+        <div>
+            <button class='w-button'>Default</button>
+            <button class='w-button wo-primary'>Primary</button>
+            <button class='w-button wo-secondary'>Secondary</button>
+            <button class='w-button wo-success'>Success</button>
+            <button class='w-button wo-info'>Info</button>
+            <button class='w-button wo-warning'>Warning</button>
+            <button class='w-button wo-danger'>Danger</button>
+        </div>
+    </div>
+
+    <!-- outline buttons -->
+    <div class='w-divider wo-thick'></div>
+    <div class='demo-panel'>
+        <h4>Buttons with outline options (class='w=button wo-outline')</h4>
+        <div>
+            <button class='w-button wo-outline'>Default</button>
+            <button class='w-button wo-primary wo-outline'>Primary</button>
+            <button class='w-button wo-secondary wo-outline'>Secondary</button>
+            <button class='w-button wo-success wo-outline'>Success</button>
+            <button class='w-button wo-info wo-outline'>Info</button>
+            <button class='w-button wo-warning wo-outline'>Warning</button>
+            <button class='w-button wo-danger wo-outline'>Danger</button>
+        </div>
+    </div>
+
+    <!-- alpha option buttons -->
+    <div class='w-divider wo-thick'></div>
+    <div class='demo-panel'>
+        <h4>Buttons with alpha option (class='w-button wo-alpha')</h4>
+        <div>
+            <button class='w-button wo-alpha'>Default</button>
+            <button class='w-button wo-primary wo-alpha'>Primary</button>
+            <button class='w-button wo-secondary wo-alpha'>Secondary</button>
+            <button class='w-button wo-success wo-alpha'>Success</button>
+            <button class='w-button wo-info wo-alpha'>Info</button>
+            <button class='w-button wo-warning wo-alpha'>Warning</button>
+            <button class='w-button wo-danger wo-alpha'>Danger</button>
+        </div>
+    </div>
+
+    <!-- compact buttons -->
+    <div class='w-divider wo-thick'></div>
+    <div class='demo-panel'>
+        <h4>Buttons with compact option (class='w-button wo-compact')</h4>
+        <div>
+            <button class='w-button wo-compact'>Default</button>
+            <button class='w-button wo-primary wo-compact'>Primary</button>
+            <button class='w-button wo-secondary wo-compact'>Secondary</button>
+            <button class='w-button wo-success wo-compact'>Success</button>
+            <button class='w-button wo-info wo-compact'>Info</button>
+            <button class='w-button wo-warning wo-compact'>Warning</button>
+            <button class='w-button wo-danger wo-compact'>Danger</button>
+        </div>
+    </div>
+
+    <!-- disbled buttons -->
+    <div class='w-divider wo-thick'></div>
+    <div class='demo-panel'>
+        <h4>Button tags disabled (class='w-button disabled`)</h4>
+        <div>
+            <button class='w-button' disabled>Primary</button>
+            <button class='w-button wo-primary' disabled>Primary</button>
+            <button class='w-button wo-secondary' disabled>Secondary</button>
+            <button class='w-button wo-success' disabled>Success</button>
+            <button class='w-button wo-info' disabled>Info</button>
+            <button class='w-button wo-warning' disabled>Warning</button>
+            <button class='w-button wo-danger' disabled>Danger</button>
+        </div>
+    </div>
+
+    <!-- anchor buttons -->
+    <div class='w-divider wo-thick'></div>
+    <div class='demo-panel'>
+        <h4>Anchor Buttons ({`<a class='w-button'></a>`})</h4>
+        <div>
+            <a href='#' class='w-button'>Default</a>
+            <a href='#' class='w-button wo-primary'>Primary</a>
+            <a href='#' class='w-button wo-secondary'>Secondary</a>
+            <a href='#' class='w-button wo-success'>Success</a>
+            <a href='#' class='w-button wo-info'>Info</a>
+            <a href='#' class='w-button wo-warning'>Warning</a>
+            <a href='#' class='w-button wo-danger'>Danger</a>
+        </div>
+    </div>
+
+    <!-- compact anchor buttons -->
+    <div class='w-divider wo-thick'></div>
+    <div class='demo-panel'>
+        <h4>Anchor Buttons with compact option ({`<a class='w-button'></a>`})</h4>
+        <div>
+            <a href='#' class='w-button wo-compact'>Default</a>
+            <a href='#' class='w-button wo-primary wo-compact'>Primary</a>
+            <a href='#' class='w-button wo-secondary wo-compact'>Secondary</a>
+            <a href='#' class='w-button wo-success wo-compact'>Success</a>
+            <a href='#' class='w-button wo-info wo-compact'>Info</a>
+            <a href='#' class='w-button wo-warning wo-compact'>Warning</a>
+            <a href='#' class='w-button wo-danger wo-compact'>Danger</a>
+        </div>
+    </div>
+
+    <div class='w-divider wo-thick'></div>
+    <div class='demo-panel'>
+        <h4>Buttons with different font sizes</h4>
+        <div>
+            <a href='#' class='w-button wo-info wo-compact'>Compact</a>
+            <a href='#' class='w-button wo-info'>Normal</a>
+            <a href='#' class='w-button wo-info' style='font-size:150%'>font 150%</a>
+            <a href='#' class='w-button wo-info' style='font-size:200%'>font 200%</a>
+            <a href='#' class='w-button wo-info' style='font-size:250%'>font 250%</a>
+        </div>
+    </div>
+</DefaultLayout>

@@ -1,0 +1,44 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+const title = 'Panels'
+const bodyClass = 'demo-panels'
+const demoCases = [
+    {cls: 'w-panel'},
+    {cls: 'w-panel wo-primary'},
+    {cls: 'w-panel wo-secondary'},
+    {cls: 'w-panel wo-success'},
+    {cls: 'w-panel wo-info'},
+    {cls: 'w-panel wo-warning'},
+    {cls: 'w-panel wo-danger'},
+]
+---
+
+<DefaultLayout title={title} bodyClass={bodyClass}>
+    <div class='demo-header'>
+        <button id='w-panel-demo-alpha-toggle' class='w-button wo-primary' style='float:right'>Alpha Toggle</button>
+    </div>
+    {
+        demoCases.map(demoCase => (
+            <div class={`demo-panel ${demoCase.cls}`}>
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
+                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
+            </div>
+        ))
+    }
+</DefaultLayout>
+
+<style lang='scss'>
+    .demo-panel {
+        margin: 2rem 0;
+        padding: 1rem;
+    }
+</style>
+
+<script>
+    document.getElementById('w-panel-demo-alpha-toggle')?.addEventListener('click', () => {
+        document.querySelectorAll<HTMLElement>('.demo-panel').forEach(panel => {
+            panel.classList.toggle('wo-alpha')
+        })
+    })
+</script>

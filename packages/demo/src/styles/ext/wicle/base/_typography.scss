@@ -1,0 +1,96 @@
+//=========================================================
+//
+//  @package Wicle Collection
+//  @module base/typography
+//
+//  html5 default size in rem (not em)
+//  ref: https://www.w3.org/TR/html-markup/h1.html
+//    h1 { font-size: 2em; margin: .67rem 0 }
+//    h2 { font-size: 1.5rem; margin: .83rem 0 }
+//    h3 { font-size: 1.17rem; margin: 1rem 0 }
+//    h4 { font-size: 1rem; margin: 1.33rem 0 }
+//    h5 { font-size: .83rem; margin: 1.67rem 0 }
+//    h6 { font-size: .67rem; margin: 2.33rem 0 }
+//
+//=========================================================
+
+@use 'wdk/font';
+@use 'wdk/reg';
+
+$key: 'w-typography';
+
+//-----------------------------------------------
+//  Config
+//-----------------------------------------------
+// :root {
+//     // body font size
+//     --text-base-size: 1em;
+//     --text-scaler: 1.25; // scale up unit
+//     --text-down-scaler: 0.9; // scale down unit
+
+//     //--- type scales
+//     --text-xxs:     calc(var(--text-base-size) * var(--text-down-scaler) * var(--text-down-scaler) * var(--text-down-scaler));
+//     --text-xs:      calc(var(--text-xxs) / var(--text-down-scaler));
+//     --text-sm:      calc(var(--text-xs) / var(--text-down-scaler));
+//     --text-md:      calc(var(--text-base-size) * var(--text-scaler));
+//     --text-lg:      calc(var(--text-md) * var(--text-scaler));
+//     --text-xl:      calc(var(--text-lg) * var(--text-scaler));
+//     --text-xxl:     calc(var(--text-xl) * var(--text-scaler));
+//     --text-xxxl:    calc(var(--text-xxl) * var(--text-scaler));
+// }
+
+
+//-----------------------------------------------
+//  Mixins
+//-----------------------------------------------
+@mixin init() {
+    // core
+    // @include reg.ssv($key, 'header/h1', (font-size:2em, margin:0.67em 0 1em), true);
+    // //  Browser default font size for h2 is 1.5em, but korean font looks ugly for some characters.
+    // //  So, change the size to 1.45em
+    // @include reg.ssv($key, 'header/h2', (font-size:1.45em, margin:0.83em 0 1em), true);
+    // @include reg.ssv($key, 'header/h3', (font-size:1.17em, margin:1em 0 1em), true);
+    // @include reg.ssv($key, 'header/h4', (font-size:1em, margin:1em 0 1em), true); // 1.33em
+    // @include reg.ssv($key, 'header/h5', (font-size:0.83em, margin:1em 0 1em), true); // 1.67em
+    // @include reg.ssv($key, 'header/h6', (font-size:0.67em, margin:1em 0 1em), true); // 2.33em
+
+    // top and bottom margins can be different, which is intentional
+    @include reg.ssv($key, 'header/h1', (font-size:font.$size-xl, margin:0.67em 0 1em), true);
+    @include reg.ssv($key, 'header/h2', (font-size:font.$size-lg, margin:0.83em 0 1em), true);
+    @include reg.ssv($key, 'header/h3', (font-size:font.$size-md, margin:1em 0 1em), true);
+    @include reg.ssv($key, 'header/h4', (font-size:1em, margin:1em 0 1em), true); // 1.33em
+    @include reg.ssv($key, 'header/h5', (font-size:font.$size-sm, margin:1em 0 1em), true); // 1.67em
+    @include reg.ssv($key, 'header/h6', (font-size:font.$size-xs, margin:1em 0 1em), true); // 2.33em
+}
+
+
+//-----------------------------------------------
+//  Elements
+//-----------------------------------------------
+
+@mixin generate() {
+    @include init();
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        //font-family: font.$heading;    // removed because this is overlapping the rules in base/_reset.scss
+        font-weight: 600;
+    }
+
+    @for $i from 1 through 6 {
+        h#{$i} {
+            font-size: reg.gsv($key, 'header/h#{$i}/font-size');
+            margin: reg.gsv($key, 'header/h#{$i}/margin');
+        }
+    }
+
+    //--- list
+    ul,
+    ol {
+        padding-left: 1em;
+    }
+}

@@ -1,0 +1,50 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import NavExample1 from '../../components/demo/NavExample1.astro'
+import NavExample2 from '../../components/demo/NavExample2.astro'
+import NavExampleIcons from '../../components/demo/NavExampleIcons.astro'
+
+const title = 'Offcanvas'
+const bodyClass = 'demo-offcanvas'
+---
+
+<DefaultLayout title={title} bodyClass={bodyClass}>
+    <input type='radio' name='mode' value='push' checked /> Push (default) &nbsp;
+    <input type='radio' name='mode' value='overlay' /> Overlay
+
+    <br /><br />
+
+    <div class='offcanvas-controls'>
+        <button class='w-button wz-control-left'>Offcanvas Left</button>
+        <button class='w-button wz-control-right'>Offcanvas Right</button>
+        <button class='w-button wz-control-top'>Offcanvas Top</button>
+        <button class='w-button wz-control-bottom'>Offcanvas Bottom</button>
+    </div>
+</DefaultLayout>
+
+<script>
+    import {offcanvas} from 'wicle/ui/offcanvas'
+    offcanvas()
+
+    document.querySelectorAll<HTMLElement>('input[name=mode]').forEach(control => {
+        control.addEventListener('change', e => {
+            let $radio = e.currentTarget as HTMLInputElement
+            if ($radio.checked) {
+                document.querySelectorAll<HTMLElement>('[data-control*=wz-control-]').forEach(el => {
+                    el.dataset.mode = $radio.value
+                })
+            }
+        })
+    })
+
+    // $('input[name=mode]')
+    //     .change(e => {
+    //         let $radio = $(e.currentTarget)
+    //         if ($radio.prop('checked'))
+    //             $('[data-control*=wz-control-]').each((index, element) => {
+    //                 let $el = $(element)
+    //                 $el.data('mode', $(e.currentTarget).attr('value'))
+    //             })
+    //     })
+    //     .trigger('change')
+</script>

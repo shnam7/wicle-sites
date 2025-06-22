@@ -1,0 +1,128 @@
+//=========================================================================
+//
+//  @package  Wicle Collection
+//  @module   ui/components/Divider
+//  @description Horizontal dividers
+//
+//  @usage
+//    <div class="w-divider wo-thin"></div>
+//    <div class="w-divider"><span>Divider Text</span></div>
+//    <div class="w-divider"><div class="w-divider-text">Text</div></div>
+//
+//=========================================================================
+
+@use 'wdk/color';
+@use 'wdk/reg';
+@use '../config' as wc;
+
+$key: 'w-divider';
+
+//-----------------------------------------------
+//  Config
+//-----------------------------------------------
+@mixin init() {
+    // core
+    @include reg.ssv($key, 'style', 1px solid color.gray(80%), true);
+    @include reg.ssv($key, 'spacing', 1.5rem, true);
+    @include reg.ssv($key, 'text/fg', null, true);
+    @include reg.ssv($key, 'text/bg', white, true);
+
+    // modifiers
+    @include reg.ssv($key, 'skinny/spacing', 0.25rem, true);
+    @include reg.ssv($key, 'slim/spacing', 0.5rem, true);
+    @include reg.ssv($key, 'thin/spacing', 1rem, true);
+    @include reg.ssv($key, 'thick/spacing', 2rem, true);
+    @include reg.ssv($key, 'fat/spacing', 3rem, true);
+}
+
+
+//-----------------------------------------------
+//  Mixins
+//-----------------------------------------------
+@mixin w-divider-core {
+    //display: inline-block;  // required to remove margin collapsing
+    padding: 1px 0 0 0;
+    width: 100%;
+    height: auto;
+    user-select: none;
+    z-index: 0;
+    margin: reg.gsv($key, spacing) 0;
+
+    &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        z-index: -1;
+        top: 50%;
+        width: 100%;
+        border-top: reg.gsv($key, style);
+    }
+
+    // text on divider
+    position: relative;
+    text-align: center;
+
+    &>span,
+    .w-divider-text {
+        display: inline;
+        padding: 0.2rem 1rem;
+        border-radius: wc.$border-radius;
+    }
+}
+
+@mixin w-divider-modifiers {
+    &.wo-fit {
+        margin: 0 0;
+    }
+
+    &.wo-skinny {
+        margin: reg.gsv($key, skinny/spacing) 0;
+    }
+
+    &.wo-slim {
+        margin: reg.gsv($key, slim/spacing) 0;
+    }
+
+    &.wo-thin {
+        margin: reg.gsv($key, thin/spacing) 0;
+    }
+
+    &.wo-thick {
+        margin: reg.gsv($key, thick/spacing) 0;
+    }
+
+    &.wo-fat {
+        margin: reg.gsv($key, fat/spacing) 0;
+    }
+
+    &.wo-transparent {
+        &:before {
+            display: none;
+        }
+    }
+}
+
+@mixin w-divider-text-style($fg, $bg: null) {
+    & > span,
+    .w-divider-text {
+        color: reg.gsv($key, text/fg);
+        background: reg.gsv($key, text/bg);
+    }
+}
+
+@mixin w-divider-default-styles() {
+    @include w-divider-text-style(reg.gsv($key, text/fg), reg.gsv($key, text/bg));
+}
+
+//-----------------------------------------------
+//  Elements
+//-----------------------------------------------
+@mixin generate() {
+    @include init();
+    
+    .w-divider {
+        @include w-divider-core;
+        @include w-divider-modifiers;
+        @include w-divider-default-styles;
+    }
+}

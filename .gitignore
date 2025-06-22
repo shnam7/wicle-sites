@@ -1,9 +1,8 @@
-.idea
+__trash/
 .vscode
-.trash
-node_modules
-/__*
+node_modules/
 *.map
-/docs/_site/
-/docs/.*-triggered
-/docs/.jekyll-metadata
+.turbo/
+coverage/
+dist/
+packages/demo/assets/

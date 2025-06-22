@@ -1,0 +1,43 @@
+---
+const panels = [
+    {control: '.wz-control-left', position: 'left'},
+    {control: '.wz-control-right', position: 'right'},
+    {control: '.wz-control-top', position: 'top'},
+    {control: '.wz-control-bottom', position: 'bottom'},
+]
+---
+
+<!-- Multi Offcanvas panels for Offcanvas demo -->{
+    panels.map(panel => (
+        <section
+            class={`l-site-offcanvas ${panel.position}`}
+            data-control={panel.control}
+            data-position={panel.position}>
+            <div class='l-offcanvas-content'>
+                <h1>Offcanvas {panel.position.charAt(0).toUpperCase() + panel.position.slice(1)}</h1>
+                <p>This is a demo of the {panel.position} offcanvas panel.</p>
+                <ul>
+                    <li>AAAAATest1</li>
+                    <li>AAAAATest2</li>
+                    <li>AAAAATest3</li>
+                    <li>AAAAATest4</li>
+                    <li>AAAAATest5</li>
+                    <li>AAAAATest6</li>
+                    <li>AAAAATest7</li>
+                </ul>
+            </div>
+        </section>
+    ))
+}
+
+<style>
+    .l-site-offcanvas {
+        padding: 1rem 2rem;
+
+        li {
+            list-style: disk;
+            margin: 0.5rem 0;
+            font-size: 120%;
+        }
+    }
+</style>

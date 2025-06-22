@@ -1,0 +1,224 @@
+//=========================================================================
+//  @package      Wicle Collection
+//  @module       ui/components/search
+//  @description  Search Form
+//
+//  @usage
+//    <form class="w-search" onclick="this.children[0].focus()">
+//      <input type="search" ...>
+//    </form>
+//
+//  @notes
+//    It's recommended to have onclick handler to set focus on input field
+//      ex) onclick="this.getElementsByTagName('input')[0].focus()"
+//      ex) onclick="this.children[0].focus()"
+//
+//  @classes
+//    .w-search
+//
+//  @options
+//    .wo-compact:     reduce line height
+//    .wo-iconize:     show search icon only
+//    .wo-small:       font size set to 0.9rem
+//    .wo-large:       font size set to 1.5rem
+//    .wo-xlarge:      font size set to 2rem
+//    .wo-xxlarge:     font size set to 3rem
+//
+//=========================================================================
+
+@use 'wdk/color';
+@use 'wdk/font';
+@use 'wdk/reg';
+@use '../config' as wc;
+@use '../theme';
+
+$key: 'w-search';
+
+//-----------------------------------------------
+//  mixin's
+//-----------------------------------------------
+@mixin init() {
+    //--- core
+    @include reg.ssv($key, 'fg', color.gray(60%), true);
+    @include reg.ssv($key, 'bg', white, true);
+    @include reg.ssv($key, 'font', normal 1rem font.$text, true);
+    @include reg.ssv($key, 'line-height', 2, true);
+    @include reg.ssv($key, 'max-width', 12em, true);
+    @include reg.ssv($key, 'radius', wc.$border-radius, true);
+
+    //--- search icon
+    @include reg.ssv($key, 'icon/svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980"><path fill="#000000" d="m29.1 810.2c-18 18-29.1 42.9-29.1 70.3 0 54.9 44.5 99.5 99.4 99.5 27.5 0 52.3-11.1 70.3-29.1l210.7-210.7c59.2 35 128 55.4 201.8 55.4 219.7 0 397.8-178.1 397.8-397.8s-178.1-397.8-397.8-397.8-397.8 178.1-397.8 397.8c0 73.7 20.4 142.6 55.4 201.8zm553.1-710.8c164.8 0 298.4 133.6 298.4 298.4s-133.6 298.3-298.3 298.3-298.3-133.6-298.3-298.3c-0.1-164.8 133.4-298.4 298.2-298.4z"/></svg>', true);
+    @include reg.ssv($key, 'icon/code', '\1F50E', true); // possible uncodes: '1F50D', '1F50E'
+    @include reg.ssv($key, 'icon/margin', 0.5rem, true);
+    @include reg.ssv($key, 'icon/fg', color.gray(50%), true);
+
+    //--- search text
+    @include reg.ssv($key, 'text/fg', color.$text-black, true); // search icon
+    @include reg.ssv($key, 'text/active/fg', color.tint(theme.$primary, 35%), true); // search icon
+
+    //--- etc
+    @include reg.ssv($key, 'shadow/fg', color.tint(theme.$primary, 35%), true);
+    @include reg.ssv($key, 'shadow/size', 3px, true);
+    @include reg.ssv($key, 'transition', (all 0.2s ease-in-out), true); // search icon
+}
+
+@mixin w-search-core {
+    $font: reg.gsv($key, font); // to-string(map-values(ggsv($key, $conf, 'font')), ' ');
+    $icon-margin: reg.gsv($key, icon/margin);
+
+    display: inline-block;
+    //white-space: nowrap;
+    //display: flex;
+    //flex-flow: row nowrap;
+    position: relative;
+    font: reg.gsv($key, font);
+    margin: 0;
+    padding: 0;
+
+    // search icon
+    &:after {
+        content: '';
+        width: 100%;
+        height: 50%;
+        background: svg-url(reg.gsv($key, 'icon/svg'), reg.gsv($key, 'icon/fg')) no-repeat;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: $icon-margin;
+    }
+
+    // input box
+    & > input[type=search] {
+        font: $font;
+        box-sizing: border-box;
+        margin: 0;
+        width: reg.gsv($key, max-width);
+        padding-left: $icon-margin*2 + 1rem; // make space for search icon
+        vertical-align: middle;
+        line-height: reg.gsv($key, line-height);
+        border-radius: reg.gsv($key, radius);
+        border: 1px solid reg.gsv($key, fg);
+        transition: reg.gsv($key, transition);
+
+        // remove search cancel button
+        &::-webkit-search-cancel-button,
+        &::-webkit-search-decoration {
+            -webkit-appearance: none;
+        }
+
+        &::-ms-clear {
+            display: none;
+        }
+
+        // highlight on focus
+        &:focus {
+            width: reg.gsv($key, max-width);
+            border: 1px solid reg.gsv($key, 'text/active/fg');
+            outline: 0;
+            box-shadow: 0 0 reg.gsv($key, shadow/size) reg.gsv($key, shadow/fg); // rgba(107,21,161,0.3);
+        }
+    }
+}
+
+@mixin w-search-styles($bg) {
+    & > input[type=search] {
+        background: $bg;
+    }
+}
+
+@mixin w-search-modifiers {
+    &.wo-minify {
+        & > input[type=search] {
+            width: reg.gsv($key, icon/margin) * 4; // left/right margins are 50% of icon. So total width is 4 times of the margin
+
+            &:focus {
+                width: reg.gsv($key, max-width);
+            }
+        }
+    }
+
+    &.wo-iconize {
+        & > input[type=search] {
+            border-style: hidden;
+            width: 1rem;
+
+            &:focus {
+                border-style: solid;
+                width: reg.gsv($key, max-width);
+            }
+        }
+    }
+
+    &.wo-compact {
+        & > input[type=search] {
+            line-height: 1.5;
+            padding-left: 1.5rem;
+        }
+    }
+
+    &.wo-small {
+        & > input[type=search] {
+            font-size: 0.9rem;
+            padding-left: 1.8rem;
+        }
+    }
+
+    &.wo-large {
+        &:after {
+            left: reg.gsv($key, icon/margin) * 2;
+        }
+
+        & > input[type=search] {
+            font-size: 1.3rem;
+            padding-left: 3rem;
+        }
+    }
+
+    &.wo-xlarge {
+        &:after {
+            left: reg.gsv($key, icon/margin) * 2;
+        }
+
+        & > input[type=search] {
+            font-size: 2rem;
+            padding-left: 3.75rem;
+        }
+    }
+
+    &.wo-xxlarge {
+        &:after {
+            left: reg.gsv($key, icon/margin) * 3;
+        }
+
+        & > input[type=search] {
+            font-size: 3rem;
+            padding-left: 5.5rem;
+        }
+    }
+
+    &.wo-expand {
+        width: 100%;
+
+        & > input[type=search] {
+            width: 100%;
+        }
+    }
+}
+
+@mixin w-search-default-styles {
+    @include w-search-styles(white);
+}
+
+
+//-----------------------------------------------
+//  Elements
+//-----------------------------------------------
+@mixin generate() {
+    @include init();
+
+    .w-search {
+        @include w-search-core;
+        @include w-search-modifiers;
+        @include w-search-default-styles;
+    }
+}

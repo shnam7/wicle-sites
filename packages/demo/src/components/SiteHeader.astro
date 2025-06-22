@@ -1,0 +1,9 @@
+---
+import site from '../data/site.json'
+import nav from '../data/nav.json'
+import Navbar from './Navbar.astro'
+
+const cls = 'wz-nav wo-responsive w-nav wo-horizontal wo-dropdown wo-icon wo-pointer wo-invert'
+---
+
+<Navbar site={site} cls={cls} />

@@ -1,0 +1,22 @@
+{
+    "tasks": {
+        "dev": {
+            "cache": false,
+            "persistent": true
+        },
+        "build": {
+            "inputs": ["src/**", "test/**"],
+            "outputs": ["dist/**", "!converag/**"],
+            "dependsOn": ["^build"]
+        },
+        "lint": {
+            "cache": false
+        },
+        "test": {
+            "cache": false
+        },
+        "clean": {
+            "cache": false
+        }
+    }
+}

@@ -1,0 +1,86 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+const title = 'Typograpghy'
+const bodyClass = 'demo-typography'
+---
+
+<DefaultLayout title={title} bodyClass={bodyClass}>
+    <h3>Font scaling</h3>
+    <div class='demo-panel'>
+        <div class='w-divider wo-thin'></div>
+        <p data-font-scale='5'>Font Scale = 5</p>
+        <p data-font-scale='4'>Font Scale = 4</p>
+        <p data-font-scale='3'>Font Scale = 3</p>
+        <p data-font-scale='2'>Font Scale = 2</p>
+        <p data-font-scale='1'>Font Scale = 1</p>
+        <p data-font-scale='0'>Font Scale = 0</p>
+        <p data-font-scale='-1'>Font Scale = -1</p>
+        <p data-font-scale='-2'>Font Scale = -2</p>
+        <p data-font-scale='-3'>Font Scale = -3</p>
+        <p data-font-scale='-4'>Font Scale = -4</p>
+        <p data-font-scale='-5'>Font Scale = -5</p>
+    </div>
+
+    <div class='w-divider'></div>
+
+    <div class='demo-panel'>
+        <h3>Font scaling using font size names</h3>
+        <p data-font-scale='xxxl'>Font Scale = xxxl</p>
+        <p data-font-scale='xxl'>Font Scale = xxl</p>
+        <p data-font-scale='xl'>Font Scale = xl</p>
+        <p data-font-scale='lg'>Font Scale = lg</p>
+        <p data-font-scale='md'>Font Scale = md</p>
+        <p data-font-scale='0'>Font Scale = 0</p>
+        <p data-font-scale='sm'>Font Scale = sm</p>
+        <p data-font-scale='xs'>Font Scale = xs</p>
+        <p data-font-scale='xxs'>Font Scale = xxs</p>
+    </div>
+
+    <div class='w-divider'></div>
+
+    <div class='demo-panel'>
+        <h3>Headings</h3>
+        <h1>Heading #1 (font.$size-xl)</h1>
+        <h2>Heading #2 (font.$size-lg)</h2>
+        <h3>Heading #3 (font.$size-md)</h3>
+        <h4>Heading #4 (1em)</h4>
+        <h5>Heading #5 (font.$size-sm)</h5>
+        <h6>Heading #6 (font.$size-xs)</h6>
+    </div>
+</DefaultLayout>
+
+<style lang='scss'>
+    @use 'wdk/font';
+
+    .demo-panel {
+        //--- type scales
+        --demo-text-xxs: #{font.$size-xxs};
+        --demo-text-xs: #{font.$size-xs};
+        --demo-text-sm: #{font.$size-sm};
+        --demo-text-md: #{font.$size-md};
+        --demo-text-lg: #{font.$size-lg};
+        --demo-text-xl: #{font.$size-xl};
+        --demo-text-xxl: #{font.$size-xxl};
+        --demo-text-xxxl: #{font.$size-xxl};
+
+        p {
+            margin: 0;
+            padding: 0;
+
+            $scale-list: (5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5);
+            @each $scale in $scale-list {
+                &[data-font-scale='#{$scale}'] {
+                    font-size: font.scale(1rem, $scale);
+                }
+            }
+
+            $scale-names: (xxxl, xxl, xl, lg, md, sm, xs, xxs);
+            @each $name in $scale-names {
+                &[data-font-scale='#{$name}'] {
+                    font-size: var(--demo-text-#{$name});
+                }
+            }
+        }
+    }
+</style>

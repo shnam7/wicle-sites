@@ -1,0 +1,16 @@
+@use 'wdk/ui/media-query' as mq;
+@use 'wicle';
+
+@include mq.set-breakpoints(mq.$w-breakpoints-tailwind);
+@include wicle.init();
+@include wicle.generate();
+
+.l-site-overlay {
+    display: none;
+}
+
+.demo-header {
+    display: flex;
+    justify-content: right;
+    margin: 0.5rem 0;
+}

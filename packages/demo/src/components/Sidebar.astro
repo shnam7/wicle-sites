@@ -1,0 +1,37 @@
+---
+import site from '../data/site.json'
+
+const demoNames = [
+    'colors',
+    'typography',
+    'buttons',
+    'nav',
+    'dividers',
+    'panels',
+    'search',
+    'images',
+    'parallax',
+    'pagination',
+    'offcanvas',
+    'media-query',
+]
+---
+
+<h3>Contents</h3>
+
+<p>Version {site.version}</p>
+<p>---</p>
+
+<ul>
+    <li><a href={(site.baseUrl ?? '') + 'getting-started'}>Getting Started</a></li>
+    <li><a href='#demo'>Demo</a></li>
+    <ul>
+        {
+            demoNames.map(name => (
+                <li>
+                    <a href={(site.baseUrl ?? '') + 'demo/' + name}>{name.charAt(0).toUpperCase() + name.slice(1)}</a>
+                </li>
+            ))
+        }
+    </ul>
+</ul>

@@ -1,0 +1,29 @@
+---
+const {comment} = Astro.props
+
+const {site, cls} = Astro.props
+
+// const cls = 'wz-nav wo-responsive w-nav wo-horizontal wo-dropdown wo-icon wo-pointer wo-invert'
+---
+
+<div class='w-navbar'>
+    <a class='wz-brand' href={Astro.url.origin}>{site.title}</a>
+    <div class='wz-spacer'></div>
+    <ul class={cls}>
+        <li><a class='item' title='search' href='#'><i class='fa fa-search fa-fw'></i></a></li>
+        <li>
+            <a class='item' title='github' href='{{site.repo}}' target='_blank'><i class='fa fa-github fa-fw'></i></a>
+        </li>
+        <li>
+            <a class='item' title='github' href='{{site.repo}}' target='_blank'><i class='fa fa-github fa-fw'></i></a>
+            <ul>
+                <li><a href='#'>AAAA</a></li>
+                <li><a href='#'>AAAA</a></li>
+                <li><a href='#'>AAAA</a></li>
+                <li><a href='#'>AAAA</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <!-- <a href='#' class='wz-toggle wo-responsive'>AAA</a> -->
+</div>

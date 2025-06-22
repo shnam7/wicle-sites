@@ -1,0 +1,43 @@
+---
+import site from '../data/site.json'
+---
+
+<div class='l-site-banner'>
+    {site?.title && <h1 class='title'>{site.title}</h1>}
+    {site?.description && <p class='description'>{site.description}</p>}
+    {site?.version && <p class='version'>Version {site.version}</p>}
+    {
+        site?.repo && (
+            <a href={site.repo} class='w-button wo-warning' target='_blank'>
+                View on GitHub
+            </a>
+        )
+    }
+</div>
+
+<style lang='scss'>
+    @use 'wdk/color';
+
+    .l-site-banner {
+        padding: 2rem 1rem;
+        color: rgba(0, 0, 0, 0.9);
+        text-align: center;
+    }
+
+    .title {
+        font-size: 2rem;
+        color: color.scale(orange, $lightness: -10%);
+    }
+
+    .description {
+        font-size: 1.2rem;
+        font-weight: normal;
+        padding: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .version {
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+    }
+</style>

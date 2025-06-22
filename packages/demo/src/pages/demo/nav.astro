@@ -1,0 +1,153 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import NavExample1 from '../../components/demo/NavExample1.astro'
+import NavExample2 from '../../components/demo/NavExample2.astro'
+import NavExampleIcons from '../../components/demo/NavExampleIcons.astro'
+
+const title = 'Nav'
+const clsSingle = 'w-nav'
+const clsSingleHorizontal = 'w-nav wo-horizontal'
+const clsSingleSeparators = 'w-nav wo-horizontal wo-separators'
+const clsAccordion = 'w-nav wo-accordion'
+const clsDropdown = 'w-nav wo-dropdown'
+const clsHorizontalDropdown = 'w-nav wo-horizontal wo-dropdown wo-pointer wo-separators'
+const clsHorizontalInvert = 'w-nav wo-horizontal wo-dropdown wo-pointer wo-separators wo-invert'
+const clsDefault = 'w-nav wo-default'
+
+// bodyClass: demo-nav
+---
+
+<DefaultLayout title={title} bodyClass='demo-nav'>
+    <div class='w-divider wo-thick'></div>
+
+    <h2>Single-level navigation</h2>
+
+    <!-- Single level vertical nav -->
+    <div class='w-divider'></div>
+    <div class='demo-panel'>
+        <h3>Vertical nav</h3>
+        <p class='caption'>class='{clsSingle}</p>
+        <NavExample1 id='menu-1' cls={clsSingle} />
+        <NavExampleIcons cls='w-nav' />
+    </div>
+
+    <!-- Single level horizontal nav -->
+    <div class='w-divider'></div>
+    <div class='demo-panel'>
+        <h3>Horizontal nav</h3>
+        <p class='caption'>class='{clsSingleHorizontal}'</p>
+        <NavExample1 cls={clsSingleHorizontal} />
+        <NavExampleIcons cls={clsSingleHorizontal} />
+    </div>
+
+    <!-- Single level custom colored horizontal nav -->
+    <div class='w-divider'></div>
+    <div class='demo-panel custom'>
+        <h3>Horizontal nav with custom color</h3>
+        <p class='caption'>class='{clsSingleHorizontal}'</p>
+        <NavExample1 id='custom-menu' cls={clsSingleHorizontal} />
+        <NavExampleIcons cls={clsSingleHorizontal} />
+    </div>
+
+    <!-- Single horizontal nav with separators -->
+    <div class='w-divider'></div>
+    <div class='demo-panel'>
+        <h3>Horizontal nav with separators</h3>
+        <p class='caption'>class='{clsSingleSeparators}'</p>
+        <NavExample1 id='custom-menu' cls={clsSingleSeparators} />
+        <NavExampleIcons cls={clsSingleSeparators} />
+    </div>
+
+    <!-- ==================== -->
+    <div class='w-divider wo-fat'></div>
+    <h2>Multi-level navigation</h2>
+
+    <!-- Accordion menu -->
+    <div class='w-divider'></div>
+    <div class='demo-panel'>
+        <h3>Accordion menu</h3>
+        <p class='caption'>class='{clsAccordion}'</p>
+        <NavExample2 cls={clsAccordion} />
+        <NavExampleIcons cls={clsAccordion} />
+    </div>
+
+    <!-- Dropdown menu -->
+    <div class='w-divider'></div>
+    <div class='demo-panel'>
+        <h3>Dropdown menu</h3>
+        <p class='caption'>class='{clsDropdown}'</p>
+        <NavExample2 cls={clsDropdown} />
+        <NavExampleIcons cls={clsDropdown} />
+    </div>
+
+    <!-- Horizontal dropdown menu -->
+    <div class='w-divider'></div>
+    <div class='demo-panel'>
+        <h3>Horizontal Dropdown menu</h3>
+        <p class='caption'>class='{clsHorizontalDropdown}'</p>
+        <NavExample2 cls={clsHorizontalDropdown} />
+        <NavExampleIcons cls={clsHorizontalDropdown} />
+    </div>
+    <div class='demo-panel custom'>
+        <h3>Horizontal Dropdown menu</h3>
+        <p class='caption'>class='{clsHorizontalDropdown}'</p>
+        <NavExample2 cls={clsHorizontalDropdown} />
+        <NavExampleIcons cls={clsHorizontalDropdown} />
+    </div>
+
+    <!-- Horizontal dropdown Inverted menu -->
+    <div class='w-divider'></div>
+    <div class='demo-panel custom inverted'>
+        <h3>Horizontal Dropdown Inverted menu</h3>
+        <p class='caption'>class='{clsHorizontalInvert}'</p>
+        <NavExample2 cls={clsHorizontalInvert} />
+        <NavExampleIcons cls={clsHorizontalInvert} />
+    </div>
+
+    <!-- Default Menu -->
+    <div class='w-divider'></div>
+    <div class='demo-panel'>
+        <h3>Default menu</h3>
+        <p class='caption'>class='{clsDefault}'</p>
+        <NavExample2 cls={clsDefault} />
+        <NavExampleIcons cls={clsDefault} />
+    </div>
+    <div class='bottom-padding'></div>
+</DefaultLayout>
+
+<style lang='scss'>
+    @use 'wdk/color';
+
+    .demo-panel {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border-radius: 5px;
+        box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+        .caption {
+            color: brown;
+            text-decoration: underline;
+        }
+        &.custom {
+            background-color: color.$bahama-blue;
+            color: #eee;
+            .caption {
+                color: burlywood;
+            }
+            &.inverted {
+                background-color: rgba(black, 0.85);
+            }
+        }
+    }
+    .bottom-padding {
+        padding-bottom: 5rem;
+    }
+</style>
+
+<style is:global lang='scss'>
+    @use 'wdk/color';
+    .demo-panel.custom {
+        .w-nav > li > a {
+            color: #ccc;
+        }
+    }
+</style>

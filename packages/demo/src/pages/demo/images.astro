@@ -1,0 +1,41 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+const title = 'Images'
+const bodyClass = 'demo-images'
+const demoCases = [
+    {cls: 'w-image'},
+    {cls: 'w-image wo-round'},
+    {cls: 'w-image wo-frame'},
+    {cls: 'w-image wo-thumbnail'}, // wo-thumbnail = wo-round + wo-frame
+    {cls: 'w-image wo-circle'},
+    {cls: 'w-image wo-circle wo-frame'},
+]
+---
+
+<DefaultLayout title={title} bodyClass={bodyClass}>
+    {
+        demoCases.map(demoCase => (
+            <div class='demo-panel'>
+                <p>img (class=`'{demoCase.cls}'`)</p>
+                <img class={demoCase.cls} src='https://shnam7.github.io/artworks/images/blueberry.jpg' />
+            </div>
+        ))
+    }
+</DefaultLayout>
+
+<style lang='scss'>
+    .demo-panel {
+        text-align: center;
+    }
+
+    img {
+        width: 70%;
+        margin: 0 0.5rem;
+        height: auto;
+    }
+    p {
+        padding: 0;
+        margin: 1rem 0 0.1rem 0;
+    }
+</style>

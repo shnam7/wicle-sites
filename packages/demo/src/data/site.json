@@ -1,0 +1,7 @@
+{
+    "title": "Wicle for Sites Demo",
+    "version": "3.0.0-alpha",
+    "description": "A demo site showcasing features of Wicle for Sites.",
+    "repo": "https://github.com/shnam7/wicle-sites",
+    "baseUrl": "/"
+}

@@ -1,7 +1,0 @@
-{
-    "extends": "stylelint-config-recommended",
-    "rules": {
-        "function-calc-no-unspaced-operator": null,
-        "no-descending-specificity": null
-    }
-}

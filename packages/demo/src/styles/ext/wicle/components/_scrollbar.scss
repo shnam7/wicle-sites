@@ -1,0 +1,67 @@
+//=========================================================
+//
+//  @package Wicle Collection
+//  @module components/scrollbar
+//
+//=========================================================
+
+@use 'wdk/color';
+@use 'wdk/reg';
+
+$key: 'w-scrollbar';
+
+//-----------------------------------------------
+//  Config
+//-----------------------------------------------
+@mixin init {
+    // scrollbar
+    @include reg.ssv($key, 'width', 14px, true);
+    @include reg.ssv($key, 'height', 14px, true);
+    @include reg.ssv($key, 'thumb/border-radius', 5px, true);
+    @include reg.ssv($key, 'thumb/bg', color.gray(85%), true);            // dark mode: 23.5%
+    @include reg.ssv($key, 'thumb/hover/bg', color.gray(70%), true);      // dark mode: 35%
+    @include reg.ssv($key, 'thumb/active/bg', color.gray(45%), true);
+    @include reg.ssv($key, 'thumb/transition', (color .2s ease), true);
+    @include reg.ssv($key, 'track/bg',gray(95%), true);             // dark mode: 20%
+}
+
+
+//-----------------------------------------------
+//  Mixins
+//-----------------------------------------------
+@mixin w-scrollbar-core {
+    body {
+        ::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: reg.gsv($key, 'width');
+            height: reg.gsv($key, 'height');
+        }
+
+        ::-webkit-scrollbar-thumb {
+            cursor: pointer;
+            border-radius: reg.gsv($key, 'thumb/border-radius');
+            background: reg.gsv($key, 'thumb/bg');
+            transition: reg.gsv($key, 'thumb/transition');
+            &:hover {
+                background: reg.gsv($key, 'thumb/hover/bg');
+            }
+            &:active {
+                background: reg.gsv($key, 'thumb/active/bg');
+            }
+        }
+
+        ::-webkit-scrollbar-track {
+            background: reg.gsv($key, 'track/bg');
+            border-radius: 0;
+        }
+    }
+}
+
+
+//-----------------------------------------------
+//  Elements
+//-----------------------------------------------
+@mixin generate() {
+    @include init();
+    @include w-scrollbar-core();
+}

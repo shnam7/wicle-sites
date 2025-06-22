@@ -1,0 +1,211 @@
+//=========================================================
+//
+//  @package  Wicle Collection
+//  @module   layout/site
+//
+//=========================================================
+
+@use 'wdk/color';
+@use 'wdk/reg';
+@use "wdk/ui/z-index" as zi;
+@use "wdk/ui/misc" as *;
+@use "wicle/theme";
+
+$key: 'w-layout/site';
+$max-width: reg.gsv($key, max-width);   // 1220px !default; null means no limit
+
+//-----------------------------------------------
+//  Config
+//-----------------------------------------------
+@mixin init() {
+    // site-shadow
+    @include reg.ssv($key, 'background/z-index', null, true);
+
+    // site
+    @include reg.ssv($key, 'max-width', null, true);
+
+    // site-header
+    @include reg.ssv($key, 'header/fg', null, true);
+    @include reg.ssv($key, 'header/bg', theme.$theme-color, true);
+    @include reg.ssv($key, 'header/gradient', (level:20%, direction:top));
+    @include reg.ssv($key, 'header/min-height', 3rem, true);
+    @include reg.ssv($key, 'header/z-index', 10, true);
+
+    // site-banner
+    @include reg.ssv($key, 'banner/min-height', 25rem, true);
+
+    // site-header-trailer
+    // @include reg.ssv($key, 'header-trailer/padding', (1rem), true);
+
+    // site-footer
+    @include reg.ssv($key, 'footer/margin', (0rem auto), true);
+    @include reg.ssv($key, 'footer/padding', (2rem 1rem), true);
+    @include reg.ssv($key, 'footer/divider', (1px solid color.gray(70%, 0.5)), true);
+    @include reg.ssv($key, 'footer/fg', color.$text-white, true);
+    @include reg.ssv($key, 'footer/bg', rgba(#000, 0.85), true);
+
+    // site-overlay
+    @include reg.ssv($key, 'overlay/z-index', zi.$level1, true);
+
+    // site-offcanvas
+    @include reg.ssv($key, 'offcanvas/bg', color.$text-black, true);
+    @include reg.ssv($key, 'offcanvas/z-index', reg.gsv($key, 'overlay/z-index') + 10, true);
+    @include reg.ssv($key, 'offcanvas/close-button/offset', 0.5rem, true);
+    @include reg.ssv($key, 'offcanvas/close-button/font-size', 1.35rem, true);
+    @include reg.ssv($key, 'offcanvas/close-button/padding', (0 0.4rem), true);
+    @include reg.ssv($key, 'offcanvas/close-button/fg', color.gray(85%), true);
+    @include reg.ssv($key, 'offcanvas/close-button/bg', color.gray(15%), true);
+    @include reg.ssv($key, 'offcanvas/close-button/border', (1px solid gray), true);
+    @include reg.ssv($key, 'offcanvas/close-button/border-radius', 5px, true);
+}
+
+//-----------------------------------------------
+//  Mixins
+//-----------------------------------------------
+@mixin w-layout-site-background {
+    $key: 'w-layout/site/background';
+
+    .l-site-background {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: reg.gsv($key, 'z-index');  // default value is null
+    }
+}
+
+@mixin w-layout-site {
+    .l-site {
+        box-sizing: border-box;
+        margin: 0 auto;
+        padding: 0;
+        max-width: reg.gsv($key, max-width);
+        overflow: hidden; // important: this will hide off-canvas elements
+    }
+}
+
+@mixin w-layout-site-header() {
+    $key: 'w-layout/site/header';
+
+    .l-site-header {
+        box-sizing: border-box;
+        position: relative;
+        $z-index: reg.gsv($key, 'z-index'); // header should appear above the other layout objects
+        margin: 0 auto;
+        min-height: reg.gsv($key, 'height'); // height this should be set in applications
+        @include clearfix();
+
+        // default style
+        color: reg.gsv($key, 'fg');
+        background: reg.gsv($key, 'bg');
+    }
+}
+
+@mixin w-layout-site-banner() {
+    $key: 'w-layout/site/banner';
+
+    .l-site-banner {
+        position: relative; // required to enable absolute position settings of child elements
+        overflow: hidden;
+        min-height: reg.gsv($key, 'min-height');
+    }
+}
+
+// @mixin w-layout-site-header-trailer {
+//   .l-header + .l-header-trailer {
+//      position: absolute;
+//      z-index: reg.gsv($key, 'site/z-index') - 1;
+//      width: 100%;
+//      padding: reg.gsv($key, 'header-trailer/padding');
+//      display: none;
+//     }
+// }
+
+@mixin w-layout-site-content() {
+    .l-site-content {
+        position: relative; // required to be positioned above parallax elements
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        max-width: $max-width;
+    }
+}
+
+@mixin w-layout-site-footer() {
+    $key: 'w-layout/site/footer';
+
+    .l-site-footer {
+        width: 100%;
+        margin: reg.gsv($key, 'margin');
+        padding: reg.gsv($key, 'padding');
+
+        // default style
+        color: reg.gsv($key, 'fg');
+        background: reg.gsv($key, 'bg');
+        text-align: center;
+        border-top: reg.gsv($key, 'divider');
+    }
+}
+
+@mixin w-layout-site-overlay {
+    $key: 'w-layout/site/overlay';
+
+    .l-site-overlay {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: reg.gsv($key, 'z-index');
+    }
+}
+
+
+@mixin w-layout-site-offcanvas() {
+    $key: 'w-layout/site/offcanvas';
+
+    .l-site-offcanvas {
+        display: none;
+        position: fixed;
+        z-index: reg.gsv($key, 'z-index');
+        padding: 2rem 0 0 0;
+        overflow-y: auto;
+        max-height: 100%;
+
+        // close-button
+        &>.offcanvas-close-button {
+            position: absolute;
+            top: reg.gsv($key, 'close-button/offset');
+            right: reg.gsv($key, 'close-button/offset');
+            cursor: pointer;
+
+            &:after {
+                position: absolute;
+                right: 0;
+                content: '\2716';
+                font-size: reg.gsv($key, 'close-button/font-size');
+                font-weight: bold;
+                padding: reg.gsv($key, 'close-button/padding');
+                color: reg.gsv($key, 'close-button/fg');
+                background: reg.gsv($key, 'close-button/bg');
+                border: reg.gsv($key, 'close-button/border');
+                border-radius: reg.gsv($key, 'close-button/border-radius');
+            }
+        }
+
+        // default style
+        color: color.$text-white;
+        background: reg.gsv($key, 'bg');
+    }
+}
+
+@mixin generate() {
+    @include init();
+
+    @include w-layout-site-background;
+    @include w-layout-site;
+    @include w-layout-site-header;
+    @include w-layout-site-banner;
+    @include w-layout-site-content;
+    @include w-layout-site-footer;
+    @include w-layout-site-overlay;
+    @include w-layout-site-offcanvas;
+}

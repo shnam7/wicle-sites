@@ -1,0 +1,63 @@
+//=========================================================
+//
+//  @package Wicle Collection
+//  @module Components/image
+//
+//=========================================================
+
+@use 'wdk/color';
+@use 'wdk/reg';
+
+$key: 'w-image';
+
+//-----------------------------------------------
+//  Config
+//-----------------------------------------------
+@mixin init() {
+    // core
+    @include reg.ssv($key, 'radius', 3px, true);
+
+    // modifiers
+    @include reg.ssv($key, 'frame/fg', color.adjust(color.$text-black, $alpha: -0.5), true);
+    @include reg.ssv($key, 'frame/padding', 0.15rem, true);
+}
+
+
+//-----------------------------------------------
+//  Mixins
+//-----------------------------------------------
+@mixin w-image-core($circular:false) {
+    // responsive image
+    max-width: 100%;
+    height: auto;
+}
+
+@mixin w-image-modifiers {
+    &.wo-frame,
+    &.wo-thumbnail {
+        padding: reg.gsv($key, frame/padding);
+        border: 1px solid reg.gsv($key, frame/fg);
+    }
+
+    &.wo-round,
+    &.wo-thumbnail {
+        border-radius: reg.gsv($key, radius);
+    }
+
+    &.wo-circle {
+        border-radius: 50%;
+    }
+}
+
+
+//-----------------------------------------------
+//  Elements
+//-----------------------------------------------
+@mixin generate() {
+    @include init();
+    
+    .w-image {
+        @include w-image-core;
+        @include w-image-modifiers;
+    }
+}

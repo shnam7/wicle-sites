@@ -1,0 +1,13 @@
+{
+    "tabWidth": 4,
+    "useTabs": false,
+    "singleQuote": true,
+    "semi": false,
+    "arrowParens": "avoid",
+    "bracketSpacing": false,
+    "trailingComma": "all",
+    "bracketSameLine": true,
+    "endOfLine": "lf",
+    "printWidth": 120,
+    "plugins": ["prettier-plugin-astro"]
+}

@@ -1,0 +1,276 @@
+//=========================================================
+//
+//  @package  Wicle Collection
+//  @module   ui/components/button
+//
+//  @usage
+//    <div class="w-button wo-compact..."></div>
+//  @options
+//    - wo-compact
+//    - wo-outline
+//    - disabled
+//    - color scheme
+//      wo-primary, wo-secondary, wo-success, wo-info, wp-warning, wo-danger
+//
+//=========================================================
+
+@use 'sass:list';
+@use 'wdk/color';
+@use 'wdk/reg';
+@use '../config' as wc;
+@use '../theme';
+
+$key: 'w-button';
+
+//-----------------------------------------------
+//  Config
+//-----------------------------------------------
+@mixin init() {
+
+    // core
+    @include reg.ssv($key, 'margin', 0, true);
+    @include reg.ssv($key, 'padding', 0.25rem 1rem, true);
+    @include reg.ssv($key, 'line-height', 1.5, true);
+    @include reg.ssv($key, 'radius', wc.$border-radius, true);
+    @include reg.ssv($key, 'transition', (all 0.15s), true);
+    @include reg.ssv($key, 'alpha', 0.75, true);
+    // @include reg.ssv($key, 'gradient', (level:20%, direction:bottom), true);
+
+    // modifier: compact
+    @include reg.ssv($key, 'compact/font-size', 90%, true);
+    @include reg.ssv($key, 'compact/line-height', 1.75, true);
+    @include reg.ssv($key, 'compact/padding', 0 0.75rem, true);
+
+    // outline
+    @include reg.ssv($key, 'outline/alpha', 0.5, true);
+}
+
+
+//-----------------------------------------------
+//  Mixins
+//-----------------------------------------------
+@mixin w-button-core() {
+    display: inline-block; // this is required to vertical margin overlapping
+    position: relative;
+    box-sizing: border-box;
+    white-space: nowrap;
+    text-transform: none;
+    vertical-align: middle;
+    text-align: center; // align the text for the cases width is set
+    text-decoration: none;
+
+    margin: reg.gsv($key, 'margin');
+    padding: reg.gsv($key, 'padding');
+    line-height: reg.gsv($key, line-height);
+
+    border: 1px solid transparent; //gsv($key, 'border');
+    outline: none;
+    border-radius: reg.gsv($key, 'radius');
+    transition: reg.gsv($key, 'transition');
+
+    &:not(:disabled) {
+        cursor: pointer;
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    //--- Settings for gradient
+    // Create a background layer with :after property for gradient animation.
+    // This is a workaround for gradient not supporting transition
+    // This background layer will reveal on mouse hover
+    @if reg.gsv($key, 'gradient') {
+        z-index: 1;
+
+        &:after {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: reg.gsv($key, radius);
+            transition: reg.gsv($key, transition);
+            z-index: -1; // set layer below the button
+            opacity: 0;
+        }
+
+        &:hover:after {
+            opacity: 1;
+        }
+    }
+}
+
+@mixin w-button-modifiers-compact {
+    &.wo-compact {
+        font-size: reg.gsv($key, 'compact/font-size');
+        padding: reg.gsv($key, 'compact/padding');
+        line-height: reg.gsv($key, 'compact/line-height');
+    }
+}
+
+@mixin w-button-modifiers-outline() {
+    &.wo-outline {
+        background: transparent;
+
+        &:after {
+            display: none;
+        }
+    }
+}
+
+@mixin w-button-modifiers-disabled {
+    &:disabled,
+    &.disabled {
+        opacity: 0.65;
+        pointer-events: none;
+    }
+}
+
+@mixin w-button-gradient($bg:null, $gr: (level:20%, direction:bottom)) {
+    $hover: color.scale($bg, $lightness: -10%);
+
+    z-index: 1;
+
+    @if $bg {
+        background: if($gr, color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)), $bg);
+        background-clip: padding-box; // remove dummy borders for gradients
+    }
+
+    &:after {
+        position: absolute;
+        content: '';
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: reg.gsv($key, radius);
+        transition: reg.gsv($key, transition);
+        z-index: -1; // set layer below the button
+        opacity: 0;
+    }
+
+    &:hover:after {
+        @if $bg {
+            background: color.gradient($hover, reg.get($gr, level), reg.get($gr, direction));
+        }
+
+        opacity: 1;
+    }
+}
+
+@mixin w-button-styles($color, $alpha:false) {
+    $fg: color.yiq-color($color);
+    $bg: $color;
+    $gr: reg.gsv($key, 'gradient');
+    $hover: color.scale($bg, $lightness: -10%);
+
+    @if $alpha {
+        $fg: color.scale(color.scale($color, $saturation: 15%), $lightness: -15%);
+        $bg: color.adjust($fg, $alpha: -1 * reg.gsv($key, 'alpha'));
+        $hover: color.adjust($bg, $alpha: 0.1);
+
+        @if (color.channel($fg, "saturation", $space:hsl) <=50%) {
+            $fg: color.invert($fg, 50%);
+        }
+    }
+
+    &,
+    a {
+        color: $fg;
+    }
+
+    & {
+        background: if($gr, color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)), $bg);
+        background-clip: padding-box; // remove dummy borders for gradients
+
+        @if $gr {
+            &:after {
+                background: color.gradient($hover, reg.get($gr, level), reg.get($gr, direction));
+            }
+        }
+
+        @else {
+            &:hover {
+                background: $hover;
+            }
+        }
+    }
+}
+
+
+//
+//  Generate Button styles for color selections
+//  @param {Map} [$color-scheme=null] - Set of $color-schemes. If null, color.$scheme is used
+@mixin w-button-modifiers-color-scheme($color-scheme: theme.$color-scheme) {
+    $color-scheme: if($color-scheme, $color-scheme, color.$scheme);
+
+    @each $scheme in $color-scheme {
+        $name: list.nth($scheme, 1);
+        $color: list.nth($scheme, 2);
+
+        // outline option
+        &.wo-outline.wo-#{$name} {
+            color: $color;
+            border: 1px solid color.adjust($color, $alpha: -1 * reg.gsv($key, 'outline/alpha'));
+
+            &:hover {
+                color: color.yiq-color($color);
+                background: $color;
+            }
+        }
+
+        &:not(.wo-outline).wo-#{$name} {
+            @include w-button-styles($color);
+
+            // alpha mode (semi transparent)
+            &.wo-alpha {
+                @include w-button-styles($color, true);
+            }
+        }
+    }
+
+}
+@mixin w-button-default-styles {
+    $default-color: color.gray(90%);
+
+    @include w-button-styles($default-color);
+
+    &.wo-alpha {
+        @include w-button-styles($default-color, true);
+    }
+
+    &.wo-outline {
+        $fg: color.yiq-color($default-color);
+        border: 1px solid color.adjust($fg, $alpha: -1 * reg.gsv($key, 'outline/alpha'));
+        color: $fg;
+
+        &:hover {
+            $fg: if(color.channel($fg, "saturation", $space:hsl) <=50%, color.invert($fg, 50%), $fg);
+            color: $fg;
+            background: $default-color;
+        }
+    }
+}
+
+
+//-----------------------------------------------
+//  Elements
+//-----------------------------------------------
+@mixin generate() {
+    @include init();
+    
+    .w-button {
+        @include w-button-core();
+        @include w-button-modifiers-compact();
+        @include w-button-modifiers-outline();
+        @include w-button-modifiers-disabled();
+        @include w-button-modifiers-color-scheme();
+        @include w-button-default-styles();
+    }
+}

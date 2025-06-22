@@ -1,0 +1,113 @@
+//=========================================================
+//
+//  @package  Wicle Collection
+//  @module   layout/page
+//
+//  @usage
+//  <
+//=========================================================
+
+@use 'sass:math';
+@use 'wdk/reg';
+@use 'wdk/ui/misc' as *;
+@use 'wdk/ui/media-query' as mq;
+
+$key: 'w-layout/page';
+$max-width:              1220px !default;  // 960px !default;
+
+//-----------------------------------------------
+//  Config
+//-----------------------------------------------
+@mixin init() {
+    // page
+    @include reg.ssv($key, 'max-width', $max-width, true);
+    @include reg.ssv($key, 'min-height', 30rem, true);
+    @include reg.ssv($key, 'padding', 1rem, true);
+    @include reg.ssv($key, 'font-family', null, true);
+    @include reg.ssv($key, 'font-size', 1.15rem, true);
+    @include reg.ssv($key, 'breakpoint', 'lg', true);
+
+    // sidebar: sidebar size defined first and then content size determined
+    @include reg.ssv($key, 'sidebar/width', 20rem, true);
+    @include reg.ssv($key, 'sidebar/spacing', 3rem, true);
+    @include reg.ssv($key, 'sidebar/padding', 0 0 0 calc(reg.gsv($key, 'sidebar/spacing')/2), true);
+
+    // contents
+    @include reg.ssv($key, 'content/width', calc(100% - #{reg.gsv($key, 'sidebar/width')}), true);
+    @include reg.ssv($key, 'content/padding', 0 calc(reg.gsv($key, 'sidebar/spacing') / 2) 0 0, true);
+}
+
+
+//-----------------------------------------------
+//  Mixins
+//-----------------------------------------------
+@mixin w-layout-page() {
+    .l-page {
+        font-size: reg.gsv($key, 'font-size');
+        font-family: reg.gsv($key, 'font-family');
+        max-width: reg.gsv($key, 'max-width');
+        min-height: reg.gsv($key, 'min-height');
+        margin: 0 auto;
+        padding: reg.gsv($key, 'padding');
+        @include clearfix();
+    }
+}
+
+@mixin w-layout-page-content() {
+    .l-content {
+        box-sizing: border-box;
+        width: 100%; // mobile first (100% for mobile)
+        padding: 0; // no padding because it is set by l-page
+    }
+
+    $breakpoint: reg.gsv($key, 'breakpoint');
+
+    @if $breakpoint {
+        @include mq.media(reg.gsv($key, 'breakpoint')) {
+            .l-page:not(.wo-single) {
+                .l-content {
+                    float: left;
+                    width: reg.gsv($key, 'content/width');
+                    padding: reg.gsv($key, 'content/padding');
+
+                    &.wo-right {
+                        float: right;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@mixin w-layout-page-sidebar() {
+    // mobile first: contents and sidebar have 100% width
+    .l-sidebar {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0; // no padding because it is set by l-page
+    }
+
+    // On bigger screens, sidebar comes on left or right of content
+    $breakpoint: reg.gsv($key, 'breakpoint');
+
+    @if $breakpoint {
+        @include mq.media($breakpoint) {
+            .l-page:not(.wo-single) {
+                .l-sidebar {
+                    float: left;
+                    width: reg.gsv($key, 'sidebar/width');
+                    padding: reg.gsv($key, 'sidebar/padding');
+                }
+            }
+        }
+    }
+}
+
+
+//=========================================================
+@mixin generate() {
+    @include init();
+    @include w-layout-page();
+    @include w-layout-page-content();
+    @include w-layout-page-sidebar();
+}

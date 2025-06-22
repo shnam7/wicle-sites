@@ -1,0 +1,128 @@
+//=========================================================
+//
+//  @package Wicle Collection
+//  @module base/reset
+//
+//  @notes
+//  First, use normalize.css. This is an additional settings to it
+//  normalize.css: https://github.com/necolas/normalize.css/
+//
+//=========================================================
+
+@use 'wdk/color';
+@use 'wdk/font';
+@use 'wdk/reg';
+@use 'wicle/theme';
+
+$key: 'w-reset';
+
+//-----------------------------------------------
+//  Config
+//-----------------------------------------------
+@mixin init() {
+    // core
+    @include reg.ssv($key, 'a/fg', color.$text-black, true);
+    @include reg.ssv($key, 'list/margin-left', 1rem, true);
+    @include reg.ssv($key, 'pre/margin', 0.5rem 0, true);
+    @include reg.ssv($key, 'pre/padding', 0.5rem 1rem, true);
+    // @include reg.ssv($key, 'pre/bg', #f3f6fa, true);
+    @include reg.ssv($key, 'pre/border', solid 1px color.scale(#f3f6fa, $lightness: -2%), true);
+}
+
+
+//-----------------------------------------------
+//  Mixins
+//-----------------------------------------------
+
+
+//-----------------------------------------------
+//  Elements
+//-----------------------------------------------
+
+@mixin generate() {
+    @include init();
+
+    html {
+        font-size: theme.$theme-font-size;
+        line-height: font.$line-height;
+        box-sizing: border-box;
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    body {
+        word-wrap: break-word;
+        color: reg.gsv($key, fg);
+        margin: 0;
+    }
+
+    // paragraph
+    p {
+        word-break: keep-all;
+        margin: 0;
+        padding-bottom: 1rem;
+        // overflow: auto;     // for long string without spaces
+        // --> this causes problem when image is floating inside the text.
+        // So, this should not be default setting.
+
+        &:last-child {
+            padding-bottom: 0;
+        }
+    }
+
+    //--- link
+    a {
+        color: reg.gsv($key, 'a/fg');
+        // background-color: transparent;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            text-decoration: none; // underline;
+            outline: 0;
+        }
+    }
+
+    //--- headers/titles
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: font.$heading;
+        font-weight: 600;
+        color: reg.gsv($key, fg);
+    }
+
+    body,
+    select,
+    input,
+    textarea {
+        color: reg.gsv($key, fg);
+        font-family: font.$text; // set base font here, to apply evenly
+        box-sizing: border-box;
+    }
+
+    //--- code block
+    pre,
+    code {
+        font-family: font.$code;
+        font-size: font.$size-sm;
+        line-height: font.$line-height * font.$down-scaler;
+        background: inherit; // reg.gsv($key, 'pre/bg'); // same color for pre and code
+    }
+
+    pre {
+        display: block;
+        overflow: auto;
+        margin: reg.gsv($key, 'pre/margin');
+        padding: reg.gsv($key, 'pre/padding');
+        border: reg.gsv($key, 'pre/border');
+        border-radius: 3px;
+    }
+}

@@ -1,0 +1,68 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+const title = 'Divider'
+const bodyClass = 'demo-dividers'
+const demoCases = [
+    {cls: 'w-divider', text: 'Divider'},
+    {cls: 'w-divider wo-fit', text: 'Fit Divider'},
+    {cls: 'w-divider wo-skinny', text: 'Skinny Divider'},
+    {cls: 'w-divider wo-slim', text: 'Slim Divider'},
+    {cls: 'w-divider wo-thin', text: 'Thin Divider'},
+    {cls: 'w-divider wo-thick', text: 'Thick Divider'},
+    {cls: 'w-divider wo-fat', text: 'Fat Divider'},
+    {cls: 'w-divider wo-transparent', text: 'Transparent Divider'},
+]
+---
+
+<DefaultLayout title={title} bodyClass={bodyClass}>
+    <div class='demo-header'>
+        <button id='w-divider-demo-color-toggle' class='w-button wo-primary' style='float:right'>Color Toggle</button>
+    </div>
+
+    {
+        demoCases.map(demoCase => (
+            <div class='demo-panel'>
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
+                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
+                {demoCase.text ? (
+                    <div class={demoCase.cls}>
+                        <span class='w-divider-text'>{demoCase.text}</span>
+                    </div>
+                ) : (
+                    <div class={demoCase.cls} />
+                )}
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
+                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
+            </div>
+        ))
+    }
+</DefaultLayout>
+
+<style lang='scss'>
+    .demo-panel {
+        font-family: roboto, sans-serif;
+
+        text-align: center;
+        padding: 3.5rem 1rem;
+        border: 1px dashed rgba(indigo, 0.5);
+        border-radius: 3pxs;
+
+        &.dark {
+            color: white;
+            background: rgba(black, 0.75);
+
+            .w-divider-text {
+                color: #444;
+            }
+        }
+    }
+</style>
+
+<script>
+    document.getElementById('w-divider-demo-color-toggle')?.addEventListener('click', () => {
+        document.querySelectorAll<HTMLElement>('.demo-panel').forEach(panel => {
+            panel.classList.toggle('dark')
+        })
+    })
+</script>
