@@ -24,6 +24,77 @@ export type NavOptions = {
 const dynamicClasses = 'w-nav,w-nav-item,w-nav-item-wrapper w-nav-parent,w-nav-child,w-nav-divider js-flip, is-active'
 const dynamicElements = 'w-nav-parent-marker,w-nav-accordion-click-area'
 
+function onMouseEnterDropdown(e: Event) {
+    // check out-of-viewport status (determine child popup dipslay position)
+    const sub = (e.currentTarget as HTMLElement).querySelector('.w-nav-child')
+    if (sub) {
+        const rect = sub.getBoundingClientRect()
+        let flip = ''
+
+        // Check if the element exceeds the horizontal viewport (excluding scrollbars)
+        if (rect.right >= document.body.clientWidth) flip = 'x'
+
+        // Check if the element exceeds the vertical viewport
+        if (rect.bottom >= window.innerHeight) flip += 'y'
+
+        if (flip) {
+            sub.setAttribute('js-flip', flip)
+        }
+    }
+}
+
+function flipHandler(e: Event) {
+    const flippedElements = document.querySelectorAll('.w-nav [js-flip]')
+    for (const el of flippedElements) {
+        el.removeAttribute('js-flip')
+    }
+
+    jQuery('.w-nav').find('[js-flip]').removeAttr('js-flip')
+}
+
+function setBasicClasses(nav: HTMLElement) {
+    // set basic classes
+    nav.classList.add('w-nav')
+    for (const el of nav.querySelectorAll('li')) {
+        el.classList.add('w-nav-item')
+        const itemWrapper = el.querySelector('a,div')
+        if (itemWrapper) {
+            itemWrapper.classList.add('w-nav-item-wrapper')
+        }
+    }
+}
+
+function setMultiLevelClasses(nav: HTMLElement) {
+    // set parent/child settings for multi-level menus
+    const cl = nav.classList
+    if (cl.contains('wo-dropdown') || cl.contains('wo-default') || cl.contains('wo-accordion')) {
+        for (const ul of nav.querySelectorAll('ul')) {
+            ul.classList.add('w-nav-child')
+            ul.parentElement?.classList.add('w-nav-parent')
+        }
+    }
+}
+
+function initParentNodes(nav: HTMLElement) {
+    // set parent nodes for multi-level menus
+    const parents = nav.querySelectorAll<HTMLElement>('.w-nav-parent')
+    for (const parent of parents) {
+        if (parent.classList.contains('wo-icon')) continue
+
+        const itemWrappers = [...parent.children].filter(child => child.classList.contains('w-nav-item-wrapper'))
+        for (const wrapper of itemWrappers) {
+            if (wrapper.classList.contains('wo-icon')) continue
+
+            const hasMarker = wrapper.querySelector('.w-nav-parent-marker')
+            if (!hasMarker) {
+                const span = document.createElement('span')
+                span.className = 'w-nav-parent-marker'
+                wrapper.append(span)
+            }
+        }
+    }
+}
+
 export function nav(selector?: string, options: NavOptions = {}) {
     selector ??= '.w-nav'
     options = {
@@ -39,110 +110,57 @@ export function nav(selector?: string, options: NavOptions = {}) {
     for (const nav of document.querySelectorAll<HTMLElement>(selector)) {
         const $nav = jQuery(nav)
 
-        // for (const item of siblings(el).filter(item => item.classList.contains('entry-content'))) {
-        //     const linkMore = item.querySelector('.link-more')
-        //     if (linkMore) el.append(linkMore)
-        // }
-
-        function flipHandler(e: JQuery.TriggeredEvent) {
-            jQuery('.w-nav').find('[js-flip]').removeAttr('js-flip')
-        }
-
-        // function flipHandler(e: Event) {
-        //     for (const el of document.querySelectorAll('.w-nav [js-flip]')) {
-        //         el.removeAttribute('js-flip');
-        //     }
-        // }
-
-        // --- Event handlers ----------------------------------------
-        // nav.addEventListener('nav:init', e => {
-        //     const data:NavOptions = e.target?.dataset as NavOptions
-        //     // console.log(`[nav::init]`, e, options);
-
-        // })
-
         // init
-        $nav.on('nav:init', (e, data: NavOptions) => {
-            // classes = $nav.attr('class');
+        nav.addEventListener('nav:init', (e: Event) => {
+            const data = (e as CustomEvent<NavOptions>).detail
+            // Use the data here...
 
-            // set basic classes
-            $nav.addClass('w-nav').find('li').addClass('w-nav-item').children('a,div').addClass('w-nav-item-wrapper')
+            setBasicClasses(nav)
+            setMultiLevelClasses(nav)
+            initParentNodes(nav)
 
-            // set parent/child settings for multi-level menus
-            $nav.filter('.wo-dropdown,.wo-default,.wo-accordion')
-                .find('ul')
-                .addClass('w-nav-child') // set parent/child classes, add parent marker
-                .parent()
-                .addClass('w-nav-parent')
+            const navItems = document.querySelectorAll('.w-nav-item')
 
-            // $nav.filter(':not(.wo-icon)').find('.w-nav-parent')
-            $nav.find('.w-nav-parent')
-                .children('.w-nav-item-wrapper')
-                .each((idx, el) => {
-                    const $el = jQuery(el)
-                    // Do not add parent-marker if wo-icon is set for the item
-                    if ($el.hasClass('wo-icon')) return
+            for (const el of navItems) {
+                const text = el.textContent?.trim() ?? ''
 
-                    // Do not add top-level parent marker if wo-icon is set
-                    if ($el.parent().parent().hasClass('wo-icon')) return
-
-                    if ($el.children('.w-nav-parent-marker').length === 0)
-                        $el.append('<span class="w-nav-parent-marker">')
-                })
-
-            // check divider items: item text only with '-' or unicode dashes or spaces
-            $nav.find('.w-nav-item').each((index, el) => {
-                const $el = jQuery(el)
-                // if (!/[^\-\u2014\u2013\s]/.test($el.text())) $el.addClass('w-nav-divider');
-                // text should starts with one or more dashes
-                if (/^[-\u2014\u2013]+/.test($el.text())) $el.addClass('w-nav-divider')
-            })
+                // If text starts with one or more dash-like characters, add the class
+                if (/^[-\u2014\u2013]+/.test(text)) {
+                    el.classList.add('w-nav-divider')
+                }
+            }
 
             // --- dropdown settings
-            const $dropdown = $nav.filter('.wo-dropdown, .wo-default')
-
-            // check out-of-viewport status
-            $dropdown
-                .find('.w-nav-parent')
-                .off('mouseenter')
-                .on('mouseenter', e => {
-                    const $sub = jQuery(e.currentTarget).children('.w-nav-child')
-                    // check element position if it exceeds viewport
-                    // ref: http://stackoverflow.com/questions/8897289/how-to-check-if-an-element-is-off-screen
-                    // ref: http://stackoverflow.com/questions/1567327/using-jquery-to-get-elements-position-relative-to-viewport
-                    // ref: http://stackoverflow.com/questions/36175336/get-element-position-relative-to-top-of-the-viewport
-                    const rect = $sub[0].getBoundingClientRect()
-                    let flip
-                    // window.innerWidth includes scrollbars. so, use document.body.clientWidth for horizontal check
-                    if (rect.right >= document.body.clientWidth) flip = 'x'
-                    if (rect.bottom >= window.innerHeight) flip += 'y'
-                    if (flip) $sub.attr('js-flip', flip)
-                })
+            const cl = nav.classList
+            if (cl.contains('wo-dropdown') || cl.contains('wo-default')) {
+                for (const itemWithChildren of nav.querySelectorAll('.w-nav-parent')) {
+                    itemWithChildren.removeEventListener('mouseenter', onMouseEnterDropdown)
+                    itemWithChildren.addEventListener('mouseenter', onMouseEnterDropdown)
+                }
+            }
 
             // --- accordion settings
+            if (cl.contains('wo-accordion')) {
+                for (const el of nav.querySelectorAll<HTMLElement>('.w-nav-item-wrapper')) {
+                    const hasClickArea = el.querySelector('.w-nav-accordion-click-area')
+                    if (!hasClickArea) {
+                        const clickArea = document.createElement('span')
+                        clickArea.className = 'w-nav-accordion-click-area'
+                        el.after(clickArea)
+                    }
+                }
+            }
+
             const $accordion = $nav.filter('.wo-accordion')
-            // add accordion click area to avoid link activation
-            $accordion.find('.w-nav-item-wrapper').each((idx, el) => {
-                const $el = jQuery(el)
-                if ($el.children('.w-nav-accordion-click-area').length === 0)
-                    $el.after(jQuery('<span class="w-nav-accordion-click-area"></span>'))
-            })
-
-            // check manually activated items
-            $nav.find('.w-state-active').addClass('is-active')
-
-            // set event handlers
             $accordion
                 .find('.w-nav-item-wrapper,.w-nav-accordion-click-area')
                 .off('click')
                 .on('click', (e, data) => {
                     const opts = options ?? {}
-                    let $target = jQuery(e.target)
-                    const href = $target.attr('href')
+                    const href = e.target.getAttribute('href')
 
                     // set target to w-nav-parent
-                    $target = $target.parent()
-
+                    const $target = jQuery(e.target).parent()
                     const $sub = $target.children('.w-nav-child')
                     const $subAll = $target.find('.w-nav-child')
                     if ($sub.length > 0) {
@@ -171,7 +189,12 @@ export function nav(selector?: string, options: NavOptions = {}) {
                     return false
                 })
 
-            jQuery(window).off('resize', flipHandler).on('resize', flipHandler)
+            for (const el of nav.querySelectorAll('.w-state-active')) {
+                el.classList.add('is-active')
+            }
+
+            window.removeEventListener('resize', flipHandler)
+            window.addEventListener('resize', flipHandler)
         })
 
         $nav.on('nav:clean', (e, data) => {
@@ -186,7 +209,7 @@ export function nav(selector?: string, options: NavOptions = {}) {
             }
 
             // remove event handlers
-            jQuery(window).off('resize', flipHandler)
+            window.removeEventListener('resize', flipHandler)
             // window.removeEventListener(Nav.mqStateChangedEventName, this.mqChangeHandler);
             $nav.filter('.wo-accordion').find('.w-nav-parent,.w-nav-accordion-click-area').off('click')
         })

@@ -270,6 +270,7 @@ $key: 'w-nav';
 
     .w-nav-accordion-click-area {
         position: absolute;
+        pointer-events: none;
         top: 0;
         right: 0;
         height: 100%;

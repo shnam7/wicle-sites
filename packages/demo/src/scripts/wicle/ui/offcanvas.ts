@@ -42,8 +42,8 @@ export function offcanvas(selector?: string, options?: OffcanvasOptions) {
         ...options,
     }
 
-    jQuery(selector).each((index: number, item: HTMLElement) => {
-        const $canvas = jQuery(item)
+    jQuery(selector).each((index: number, canvas: HTMLElement) => {
+        const $canvas = jQuery(canvas)
         const defaultCanvasData: OffcanvasData = {
             control: '',
             position: 'left',
@@ -111,7 +111,7 @@ export function offcanvas(selector?: string, options?: OffcanvasOptions) {
             // https://reactjs.org/docs/accessibility.html
             // blur event comes first before focus. So, cancel the timer if $canvas is focused
             // This is better than click event because it works for keyboard input too
-            let timerId: number
+            let timerId: NodeJS.Timeout
             $canvas.on('blur', () => {
                 timerId = setTimeout(() => {
                     $canvas.trigger('offcanvas:close')
