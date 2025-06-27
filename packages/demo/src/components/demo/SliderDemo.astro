@@ -1,0 +1,51 @@
+---
+
+---
+
+<button class='control w-button wo-primary' dir='dwon'>Slide Down</button>
+<button class='control w-button wo-secondary' dir='up'>Slide Up</button>
+
+<div class='frame'>
+    <div class='slide-target'>
+        <div class='slide-content'>
+            <p>This box will slide up and down with no timers involved.</p>
+        </div>
+    </div>
+</div>
+
+<style lang='scss'>
+    .frame {
+        margin: 0.2rem 0;
+        min-height: 160px;
+        border: 1px solid #ccc;
+    }
+    .slide-target {
+        // core properties
+        position: absolute;
+        background: #c8e6c9;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+        max-height: 0; /* Start with height 0 */
+
+        // custom properties
+        border-top: 1px solid #ccc;
+        margin-top: 80px;
+    }
+    .slide-content {
+        padding: 20px;
+    }
+</style>
+<script>
+    document.querySelectorAll('.control').forEach(control => {
+        const dir = control.getAttribute('dir') || 'down'
+        control.addEventListener('click', () => {
+            const slider = document.querySelector<HTMLElement>('.slide-target')
+            const content = slider?.querySelector<HTMLElement>('.slide-content')
+            if (slider != null && content !== null) {
+                const contentHeight = parseInt(slider.style.maxHeight)
+                slider.style.transform = dir === 'up' ? 'translateY(-100%)' : 'translateY(0)'
+                slider.style.maxHeight = contentHeight ? '0' : content?.offsetHeight + 'px'
+            }
+        })
+    })
+</script>

@@ -12,7 +12,7 @@ const xoConfig: FlatXoConfig = [
             'arrow-body-style': ['error', 'as-needed'],
             '@typescript-eslint/no-empty-function': 'off',
 
-            '@typescript-eslint/no-unsafe-call': 'off',
+            // '@typescript-eslint/no-unsafe-call': 'off',
         },
     },
 ]

@@ -9,7 +9,7 @@
 @use 'wdk/reg';
 @use 'wdk/ui/misc' as *;
 @use 'wdk/ui/media-query' as mq;
-@use '../theme';
+@use 'wdk/ui/theme';
 
 $key: 'w-pagination';
 
@@ -23,7 +23,7 @@ $key: 'w-pagination';
     @include reg.ssv($key, 'padding', 0.25rem 0.85rem, true);
 
     // default styles
-    @include reg.ssv($key, 'theme-color', color.scale(theme.$theme-color, $lightness: -5%), true); // pagination theme color
+    @include reg.ssv($key, 'theme-color', color.scale(theme.$color-fg, $lightness: -5%), true); // pagination theme color
     @include reg.ssv($key, 'current-color', color.scale(color.$harley-davidson-orange, $lightness: -5%), true); // current page color
 }
 

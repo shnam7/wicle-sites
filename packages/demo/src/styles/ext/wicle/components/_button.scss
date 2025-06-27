@@ -17,8 +17,8 @@
 @use 'sass:list';
 @use 'wdk/color';
 @use 'wdk/reg';
+@use 'wdk/ui/theme';
 @use '../config' as wc;
-@use '../theme';
 
 $key: 'w-button';
 
@@ -264,7 +264,7 @@ $key: 'w-button';
 //-----------------------------------------------
 @mixin generate() {
     @include init();
-    
+
     .w-button {
         @include w-button-core();
         @include w-button-modifiers-compact();

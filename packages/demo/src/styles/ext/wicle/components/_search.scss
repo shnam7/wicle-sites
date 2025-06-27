@@ -29,8 +29,8 @@
 @use 'wdk/color';
 @use 'wdk/font';
 @use 'wdk/reg';
+@use 'wdk/ui/theme';
 @use '../config' as wc;
-@use '../theme';
 
 $key: 'w-search';
 

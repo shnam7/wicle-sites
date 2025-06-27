@@ -8,8 +8,8 @@
 @use 'wdk/color';
 @use 'wdk/reg';
 @use 'wdk/list';
+@use 'wdk/ui/theme';
 @use '../config' as wc;
-@use '../theme';
 
 $key: 'w-panel';
 

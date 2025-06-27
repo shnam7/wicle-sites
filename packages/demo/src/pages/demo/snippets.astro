@@ -1,0 +1,15 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import SliderDemo from '../../components/demo/SliderDemo.astro'
+
+const title = 'Code Snippets'
+const bodyClass = 'demo-snippets'
+---
+
+<DefaultLayout title={title} bodyClass={bodyClass}>
+    <div class='w-divider wo-thick'></div>
+    <h2>Sliders</h2>
+    <div class='demo-panel'>
+        <SliderDemo title={title} bodyClass={bodyClass} />
+    </div>
+</DefaultLayout>

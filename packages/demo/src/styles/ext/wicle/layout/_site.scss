@@ -9,7 +9,7 @@
 @use 'wdk/reg';
 @use "wdk/ui/z-index" as zi;
 @use "wdk/ui/misc" as *;
-@use "wicle/theme";
+@use "wdk/ui/theme";
 
 $key: 'w-layout/site';
 $max-width: reg.gsv($key, max-width);   // 1220px !default; null means no limit
@@ -26,7 +26,7 @@ $max-width: reg.gsv($key, max-width);   // 1220px !default; null means no limit
 
     // site-header
     @include reg.ssv($key, 'header/fg', null, true);
-    @include reg.ssv($key, 'header/bg', theme.$theme-color, true);
+    @include reg.ssv($key, 'header/bg', theme.$color-fg, true);
     @include reg.ssv($key, 'header/gradient', (level:20%, direction:top));
     @include reg.ssv($key, 'header/min-height', 3rem, true);
     @include reg.ssv($key, 'header/z-index', 10, true);
@@ -74,7 +74,7 @@ $max-width: reg.gsv($key, max-width);   // 1220px !default; null means no limit
 }
 
 @mixin w-layout-site {
-    .l-site {
+    .l-site-container {
         box-sizing: border-box;
         margin: 0 auto;
         padding: 0;

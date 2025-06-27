@@ -12,7 +12,7 @@
 @use 'wdk/color';
 @use 'wdk/font';
 @use 'wdk/reg';
-@use 'wicle/theme';
+@use 'wdk/ui/theme';
 
 $key: 'w-reset';
 
@@ -43,7 +43,7 @@ $key: 'w-reset';
     @include init();
 
     html {
-        font-size: theme.$theme-font-size;
+        font-size: theme.$font-size;
         line-height: font.$line-height;
         box-sizing: border-box;
     }

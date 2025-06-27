@@ -48,8 +48,6 @@ function flipHandler(e: Event) {
     for (const el of flippedElements) {
         el.removeAttribute('js-flip')
     }
-
-    jQuery('.w-nav').find('[js-flip]').removeAttr('js-flip')
 }
 
 function setBasicClasses(nav: HTMLElement) {

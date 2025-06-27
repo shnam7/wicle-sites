@@ -27,9 +27,9 @@
 @use 'wdk/reg';
 @use 'wdk/ui/shape';
 @use 'wdk/ui/media-query' as mq;
+@use 'wdk/ui/theme';
 @use '../layout/site';
 @use '../config' as wc;
-@use '../theme';
 
 $key: 'w-navbar';
 
@@ -42,7 +42,7 @@ $key: 'w-navbar';
     @include reg.ssv($key, 'height', 3.5rem, true);
     @include reg.ssv($key, 'padding', 0 1.5rem, true);
     @include reg.ssv($key, 'fg', null, true);
-    @include reg.ssv($key, 'bg', theme.$theme-color, true);
+    @include reg.ssv($key, 'bg', theme.$color-fg, true);
     @include reg.ssv($key, 'gradient', (level:20%, direction:bottom), true);
     @include reg.ssv($key, 'radius', wc.$border-radius, true);
     @include reg.ssv($key, 'item-spacing', 0.25rem, true);

@@ -24,8 +24,8 @@
 @use 'wdk/reg';
 @use 'wdk/ui/misc' as *;
 @use 'wdk/ui/z-index' as zi;
+@use 'wdk/ui/theme';
 @use '../config' as wc;
-@use '../theme';
 
 $key: 'w-nav';
 
@@ -42,7 +42,7 @@ $key: 'w-nav';
     @include reg.ssv($key, 'border', null, true);
     @include reg.ssv($key, 'radius', wc.$border-radius, true);
     @include reg.ssv($key, 'fg', color.$text-black, true);
-    @include reg.ssv($key, 'bg', color.tint(theme.$theme-color, 98%), true);
+    @include reg.ssv($key, 'bg', color.tint(theme.$color-fg, 98%), true);
 
     // item (li)
     @include reg.ssv($key, 'item/padding', 0, true);
@@ -54,7 +54,7 @@ $key: 'w-nav';
     @include reg.ssv($key, 'item-wrapper/fg', reg.gsv($key, fg), true);
     @include reg.ssv($key, 'item-wrapper/bg', null, true);
     @include reg.ssv($key, 'item-wrapper/hover/fg', white, true);
-    @include reg.ssv($key, 'item-wrapper/hover/bg', rgba(theme.$theme-color, 0.9), true);
+    @include reg.ssv($key, 'item-wrapper/hover/bg', rgba(theme.$color-fg, 0.9), true);
 
     // nav icon options
     @include reg.ssv($key, 'icon/font-size', 1.25rem, true);
@@ -68,13 +68,13 @@ $key: 'w-nav';
 
     // divider for dropdown
     @include reg.ssv($key, 'divider/spacing', 5px, true);
-    @include reg.ssv($key, 'divider/style', 1px solid theme.$theme-color-line, true); // color #ddd = color.gray(86.5%)
+    @include reg.ssv($key, 'divider/style', 1px solid theme.$color-line, true); // color #ddd = color.gray(86.5%)
 
     // dropdown
     @include reg.ssv($key, 'dropdown/z-index', zi.$level2, true);
     @include reg.ssv($key, 'dropdown/padding', 0.5rem 0, true);
     @include reg.ssv($key, 'dropdown/min-width', 12rem, true);
-    @include reg.ssv($key, 'dropdown/border', 1px solid theme.$theme-color-line, true);
+    @include reg.ssv($key, 'dropdown/border', 1px solid theme.$color-line, true);
 
     @include reg.ssv($key, 'dropdown/top-level/offset', 0.5rem, true);
     @include reg.ssv($key, 'dropdown/top-level/fg', color.$text-white, true);

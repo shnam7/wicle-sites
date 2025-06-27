@@ -51,7 +51,7 @@ export function offcanvas(selector?: string, options?: OffcanvasOptions) {
             height: '320px',
             mode: 'push',
             duration: 500,
-            pusher: '.l-site',
+            pusher: '.l-site-container',
             isOpen: false,
         }
 
