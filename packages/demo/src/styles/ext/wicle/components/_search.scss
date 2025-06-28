@@ -34,19 +34,13 @@
 @use 'wdk/ui/svg';
 @use 'wdk/ui/theme';
 
-
 //-----------------------------------------------
 //  mixin's
 //-----------------------------------------------
 $key: 'w-search';
 
-@mixin ssv($path, $value, $is-default: false) {
-    @include reg.ssv($key, $path, $value, $is-default);
-}
-
-@function gsv($path, $default: null) {
-    @return reg.gsv($key, $path, $default);
-}
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) { @return reg.gsv($key, $path, $default); }
 
 @mixin init() {
     //--- core
@@ -60,7 +54,11 @@ $key: 'w-search';
     @include ssv('radius', theme.$border-radius, true);
 
     //--- search icon
-    @include ssv('icon/svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980"><path fill="#000000" d="m29.1 810.2c-18 18-29.1 42.9-29.1 70.3 0 54.9 44.5 99.5 99.4 99.5 27.5 0 52.3-11.1 70.3-29.1l210.7-210.7c59.2 35 128 55.4 201.8 55.4 219.7 0 397.8-178.1 397.8-397.8s-178.1-397.8-397.8-397.8-397.8 178.1-397.8 397.8c0 73.7 20.4 142.6 55.4 201.8zm553.1-710.8c164.8 0 298.4 133.6 298.4 298.4s-133.6 298.3-298.3 298.3-298.3-133.6-298.3-298.3c-0.1-164.8 133.4-298.4 298.2-298.4z"/></svg>', true);
+    @include ssv(
+        'icon/svg',
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980"><path fill="#000000" d="m29.1 810.2c-18 18-29.1 42.9-29.1 70.3 0 54.9 44.5 99.5 99.4 99.5 27.5 0 52.3-11.1 70.3-29.1l210.7-210.7c59.2 35 128 55.4 201.8 55.4 219.7 0 397.8-178.1 397.8-397.8s-178.1-397.8-397.8-397.8-397.8 178.1-397.8 397.8c0 73.7 20.4 142.6 55.4 201.8zm553.1-710.8c164.8 0 298.4 133.6 298.4 298.4s-133.6 298.3-298.3 298.3-298.3-133.6-298.3-298.3c-0.1-164.8 133.4-298.4 298.2-298.4z"/></svg>',
+        true
+    );
     @include ssv('icon/code', '\1F50E', true); // possible uncodes: '1F50D', '1F50E'
     @include ssv('icon/margin', 1em, true);
     @include ssv('icon/fg', color.gray(50%), true);
@@ -72,7 +70,7 @@ $key: 'w-search';
     //--- etc
     @include ssv('shadow/fg', color.tint(theme.$primary, 35%), true);
     @include ssv('shadow/size', 3px, true);
-    @include ssv('transition', (all 0.2s ease-in-out), true); // search icon
+    @include ssv('transition', (all 0.5s ease-in-out), true); // search icon
 }
 
 @mixin w-search-core {
@@ -88,9 +86,11 @@ $key: 'w-search';
     margin: 0;
     padding: 0;
     width: gsv('max-width');
+    transition: gsv(transition);
 
     // search icon
     &:after {
+        transition: gsv(transition);
         content: '';
         width: 100%;
         height: 50%;
@@ -103,7 +103,7 @@ $key: 'w-search';
     }
 
     // input box
-    & > input[type=search] {
+    & > input[type='search'] {
         box-sizing: border-box;
         margin: 0;
         width: gsv(max-width);
@@ -113,7 +113,6 @@ $key: 'w-search';
         line-height: gsv(line-height);
         border-radius: gsv(radius);
         border: 1px solid gsv(fg);
-        transition: gsv(transition);
 
         // remove search cancel button
         &::-webkit-search-cancel-button,
@@ -136,7 +135,7 @@ $key: 'w-search';
 }
 
 @mixin w-search-styles($bg) {
-    & > input[type=search] {
+    & > input[type='search'] {
         background: $bg;
     }
 }
@@ -151,23 +150,17 @@ $key: 'w-search';
 
     &.wo-iconize {
         width: 1em;
-
         &:after {
             left: 0;
         }
-
-
-        & > input[type=search] {
+        & > input[type='search'] {
             border-style: hidden;
-
             &:focus {
                 border-style: solid;
             }
         }
-
         &:focus-within {
             width: gsv(max-width);
-
             &:after {
                 left: gsv('icon/margin');
             }
@@ -175,39 +168,35 @@ $key: 'w-search';
     }
 
     &.wo-compact {
-        & > input[type=search] {
+        & > input[type='search'] {
             line-height: 1.5;
         }
     }
 
     &.wo-small {
-
         &:after,
-        & > input[type=search] {
+        & > input[type='search'] {
             font-size: 0.9rem;
         }
     }
 
     &.wo-large {
-
         &:after,
-        & > input[type=search] {
+        & > input[type='search'] {
             font-size: 1.3rem;
         }
     }
 
     &.wo-xlarge {
-
         &:after,
-        & > input[type=search] {
+        & > input[type='search'] {
             font-size: 2rem;
         }
     }
 
     &.wo-xxlarge {
-
         &:after,
-        & > input[type=search] {
+        & > input[type='search'] {
             font-size: 3rem;
         }
     }
@@ -215,7 +204,7 @@ $key: 'w-search';
     &.wo-expand {
         width: 100%;
 
-        & > input[type=search] {
+        & > input[type='search'] {
             width: 100%;
         }
     }
@@ -224,7 +213,6 @@ $key: 'w-search';
 @mixin w-search-default-styles {
     @include w-search-styles(white);
 }
-
 
 //-----------------------------------------------
 //  Elements

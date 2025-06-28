@@ -30,14 +30,13 @@
 @use 'wdk/ui/theme';
 @use '../layout/site';
 
-
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
 $key: 'w-navbar';
 
 @mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+@function gsv($path, $default:null) { @return reg.gsv($key, $path, $default); }
 
 @mixin init() {
     // core
@@ -72,7 +71,6 @@ $key: 'w-navbar';
     @include ssv('trailer/bg', color.tint(theme.$color-bg, 90%), true);
 }
 
-
 //-----------------------------------------------
 //  Mixins
 //-----------------------------------------------
@@ -89,7 +87,7 @@ $key: 'w-navbar';
     border-radius: gsv(radius);
 
     // set item spacing
-    & > :nth-child(n+2) {
+    & > :nth-child(n + 2) {
         margin-left: gsv(item-spacing);
     }
 
@@ -161,6 +159,7 @@ $key: 'w-navbar';
     // padding: gsv(trailer/padding);
     border-top: gsv(trailer/separator);
     & > .w-navbar-trailer-content {
+        text-align: center;
         padding: gsv(trailer/padding);
         color: gsv(trailer/fg);
         background: gsv(trailer/bg);
@@ -190,7 +189,6 @@ $key: 'w-navbar';
         }
     }
 }
-
 
 //-----------------------------------------------
 //  Elements

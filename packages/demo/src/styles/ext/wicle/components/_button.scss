@@ -19,14 +19,13 @@
 @use 'wdk/reg';
 @use 'wdk/ui/theme';
 
-
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
 $key: 'w-button';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+@mixin ssv($path, $value, $is-default: false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default: null) { @return reg.gsv($key, $path, $default); }
 
 @mixin init() {
     // core
@@ -46,7 +45,6 @@ $key: 'w-button';
     // outline
     @include ssv('outline/alpha', 0.5, true);
 }
-
 
 //-----------------------------------------------
 //  Mixins
@@ -134,7 +132,13 @@ $key: 'w-button';
     }
 }
 
-@mixin w-button-gradient($bg:null, $gr: (level:20%, direction:bottom)) {
+@mixin w-button-gradient(
+    $bg: null,
+    $gr: (
+        level: 20%,
+        direction: bottom
+    )
+) {
     $hover: color.scale($bg, $lightness: -10%);
 
     z-index: 1;
@@ -166,7 +170,7 @@ $key: 'w-button';
     }
 }
 
-@mixin w-button-styles($color, $alpha:false) {
+@mixin w-button-styles($color, $alpha: false) {
     $fg: color.yiq-color($color);
     $bg: $color;
     $gr: gsv('gradient');
@@ -177,7 +181,7 @@ $key: 'w-button';
         $bg: color.adjust($fg, $alpha: -1 * gsv('alpha'));
         $hover: color.adjust($bg, $alpha: 0.1);
 
-        @if (color.channel($fg, "saturation", $space:hsl) <=50%) {
+        @if (color.channel($fg, 'saturation', $space: hsl) <=50%) {
             $fg: color.invert($fg, 50%);
         }
     }
@@ -195,16 +199,13 @@ $key: 'w-button';
             &:after {
                 background: color.gradient($hover, reg.get($gr, level), reg.get($gr, direction));
             }
-        }
-
-        @else {
+        } @else {
             &:hover {
                 background: $hover;
             }
         }
     }
 }
-
 
 //  Generate Button styles for color selections
 //  @param {Map} [$color-scheme=null] - Set of $color-schemes. If null, color.$scheme is used
@@ -235,7 +236,6 @@ $key: 'w-button';
             }
         }
     }
-
 }
 @mixin w-button-default-styles {
     $default-color: color.gray(90%);
@@ -252,13 +252,12 @@ $key: 'w-button';
         color: $fg;
 
         &:hover {
-            $fg: if(color.channel($fg, "saturation", $space:hsl) <=50%, color.invert($fg, 50%), $fg);
+            $fg: if(color.channel($fg, 'saturation', $space: hsl) <=50%, color.invert($fg, 50%), $fg);
             color: $fg;
             background: $default-color;
         }
     }
 }
-
 
 //-----------------------------------------------
 //  Elements

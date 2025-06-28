@@ -1,49 +1,26 @@
 ---
 import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import SearchDemo from '../../components/demo/SearchDemo.astro'
 
 const title = 'Search'
 const bodyClass = 'demo-search'
-const demoCases = [
-    {cls: 'w-search', action: '', button: false},
-    {cls: 'w-search wo-minify'},
-    {cls: 'w-search wo-iconize'},
-    {cls: 'w-search wo-compact'},
-    {cls: 'w-search wo-small'},
-    {cls: 'w-search wo-large'},
-    {cls: 'w-search wo-xlarge'},
-    {cls: 'w-search wo-xxlarge'},
-    {cls: 'w-search wo-expand'},
-]
+const aligns = ['left', 'center', 'right']
 ---
 
 <DefaultLayout title={title} bodyClass={bodyClass}>
     {
-        demoCases.map(demoCase => (
-            <div class='demo-panel'>
-                <p>class='{demoCase.cls}''</p>
-                <form
-                    class={demoCase.cls}
-                    role='search'
-                    method='get'
-                    action={demoCase.action}
-                    onclick='this.children[0].focus()'>
-                    <input type='search' name='s' value='' placeholder='Search' results='5' />
-                    {demoCase.button && <input type='submit' class='z-submit' value='Search' />}
-                </form>
-            </div>
-        ))
-    }
+
+    aligns.map(align => (
+        <div class="w-divider wo-thick"></div>
+        <h2 class="title">Align: {align}</h2>
+        <SearchDemo align={align} />
+    ))}
 </DefaultLayout>
 
 <style lang='scss'>
-    .demo-panel {
-        text-align: center;
-        margin: 1rem 0;
-        padding: 1rem;
-    }
-
-    .w-search {
-        max-width: 50%;
-        text-align: center;
-    }
+.title {
+    text-align: center;
+    color: indigo;
+    margin: 1rem 0;
+}
 </style>
