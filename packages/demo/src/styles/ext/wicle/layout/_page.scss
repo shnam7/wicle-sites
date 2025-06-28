@@ -12,18 +12,18 @@
 @use 'wdk/ui/misc' as *;
 @use 'wdk/ui/media-query' as mq;
 
-$key: 'w-layout/page';
-$max-width:              1220px !default;  // 960px !default;
 
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+$key: 'w-layout/page';
+
 @mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
 @function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
 
 @mixin init() {
     // page
-    @include ssv('max-width', $max-width, true);
+    @include ssv('max-width', 1220px, true);
     @include ssv('min-height', 30rem, true);
     @include ssv('padding', 1rem, true);
     @include ssv('font-family', null, true);

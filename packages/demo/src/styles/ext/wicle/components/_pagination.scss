@@ -11,11 +11,12 @@
 @use 'wdk/ui/media-query' as mq;
 @use 'wdk/ui/theme';
 
-$key: 'w-pagination';
 
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+$key: 'w-pagination';
+
 @mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
 @function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
 

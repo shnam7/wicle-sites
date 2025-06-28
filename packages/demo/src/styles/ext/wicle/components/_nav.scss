@@ -25,13 +25,13 @@
 @use 'wdk/ui/misc' as *;
 @use 'wdk/ui/z-index' as zi;
 @use 'wdk/ui/theme';
-@use '../config' as wc;
 
-$key: 'w-nav';
 
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+$key: 'w-nav';
+
 @mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
 @function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
 
@@ -43,7 +43,7 @@ $key: 'w-nav';
     @include ssv('font-size', 1rem, true);
     @include ssv('padding', 0, true);
     @include ssv('border', null, true);
-    @include ssv('radius', wc.$border-radius, true);
+    @include ssv('radius', theme.$border-radius, true);
     @include ssv('fg', color.$text-black, true);
     @include ssv('bg', color.tint(theme.$color-fg, 98%), true);
 

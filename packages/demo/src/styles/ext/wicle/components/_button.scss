@@ -18,14 +18,13 @@
 @use 'wdk/color';
 @use 'wdk/reg';
 @use 'wdk/ui/theme';
-@use '../config' as wc;
-
-$key: 'w-button';
 
 
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+$key: 'w-button';
+
 @mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
 @function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
 
@@ -34,7 +33,7 @@ $key: 'w-button';
     @include ssv('margin', 0, true);
     @include ssv('padding', 0.25rem 1rem, true);
     @include ssv('line-height', 1.5, true);
-    @include ssv('radius', wc.$border-radius, true);
+    @include ssv('radius', theme.$border-radius, true);
     @include ssv('transition', (all 0.15s), true);
     @include ssv('alpha', 0.75, true);
     // @include ssv('gradient', (level:20%, direction:bottom), true);

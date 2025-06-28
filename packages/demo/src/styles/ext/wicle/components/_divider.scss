@@ -13,13 +13,14 @@
 
 @use 'wdk/color';
 @use 'wdk/reg';
-@use '../config' as wc;
+@use 'wdk/ui/theme';
 
-$key: 'w-divider';
 
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+$key: 'w-divider';
+
 @mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
 @function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
 
@@ -69,7 +70,7 @@ $key: 'w-divider';
     .w-divider-text {
         display: inline;
         padding: 0.2rem 1rem;
-        border-radius: wc.$border-radius;
+        border-radius: theme.$border-radius;
     }
 }
 

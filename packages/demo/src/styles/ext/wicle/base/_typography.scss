@@ -17,11 +17,15 @@
 @use 'wdk/font';
 @use 'wdk/reg';
 
-$key: 'w-typography';
 
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+$key: 'w-typography';
+
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+
 // :root {
 //     // body font size
 //     --text-base-size: 1em;
@@ -39,12 +43,6 @@ $key: 'w-typography';
 //     --text-xxxl:    calc(var(--text-xxl) * var(--text-scaler));
 // }
 
-
-//-----------------------------------------------
-//  Mixins
-//-----------------------------------------------
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
 
 @mixin init() {
     // core

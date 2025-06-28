@@ -29,25 +29,25 @@
 @use 'wdk/ui/media-query' as mq;
 @use 'wdk/ui/theme';
 @use '../layout/site';
-@use '../config' as wc;
 
-$key: 'w-navbar';
 
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+$key: 'w-navbar';
+
 @mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
 @function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
 
 @mixin init() {
     // core
-    @include ssv('max-width', site.$max-width, true);
+    @include ssv('max-width', site.gsv(max-width), true);
     @include ssv('height', 3.5rem, true);
     @include ssv('padding', 0 1.5rem, true);
     @include ssv('fg', null, true);
     @include ssv('bg', theme.$color-fg, true);
     @include ssv('gradient', (level:20%, direction:bottom), true);
-    @include ssv('radius', wc.$border-radius, true);
+    @include ssv('radius', theme.$border-radius, true);
     @include ssv('item-spacing', 0.25rem, true);
     @include ssv('breakpoint', 'lg', true);
     @include ssv('link/fg', color.gray(85%), true);

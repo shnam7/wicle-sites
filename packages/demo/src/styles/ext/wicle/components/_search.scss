@@ -31,13 +31,13 @@
 @use 'wdk/reg';
 @use 'wdk/ui/svg';
 @use 'wdk/ui/theme';
-@use '../config' as wc;
 
-$key: 'w-search';
 
 //-----------------------------------------------
 //  mixin's
 //-----------------------------------------------
+$key: 'w-search';
+
 @mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
 @function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
 
@@ -48,7 +48,7 @@ $key: 'w-search';
     @include ssv('font', normal 1rem font.$text, true);
     @include ssv('line-height', 2, true);
     @include ssv('max-width', 12em, true);
-    @include ssv('radius', wc.$border-radius, true);
+    @include ssv('radius', theme.$border-radius, true);
 
     //--- search icon
     @include ssv('icon/svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980"><path fill="#000000" d="m29.1 810.2c-18 18-29.1 42.9-29.1 70.3 0 54.9 44.5 99.5 99.4 99.5 27.5 0 52.3-11.1 70.3-29.1l210.7-210.7c59.2 35 128 55.4 201.8 55.4 219.7 0 397.8-178.1 397.8-397.8s-178.1-397.8-397.8-397.8-397.8 178.1-397.8 397.8c0 73.7 20.4 142.6 55.4 201.8zm553.1-710.8c164.8 0 298.4 133.6 298.4 298.4s-133.6 298.3-298.3 298.3-298.3-133.6-298.3-298.3c-0.1-164.8 133.4-298.4 298.2-298.4z"/></svg>', true);
