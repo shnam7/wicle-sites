@@ -29,6 +29,7 @@
 @use 'wdk/color';
 @use 'wdk/font';
 @use 'wdk/reg';
+@use 'wdk/ui/svg';
 @use 'wdk/ui/theme';
 @use '../config' as wc;
 
@@ -37,41 +38,44 @@ $key: 'w-search';
 //-----------------------------------------------
 //  mixin's
 //-----------------------------------------------
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+
 @mixin init() {
     //--- core
-    @include reg.ssv($key, 'fg', color.gray(60%), true);
-    @include reg.ssv($key, 'bg', white, true);
-    @include reg.ssv($key, 'font', normal 1rem font.$text, true);
-    @include reg.ssv($key, 'line-height', 2, true);
-    @include reg.ssv($key, 'max-width', 12em, true);
-    @include reg.ssv($key, 'radius', wc.$border-radius, true);
+    @include ssv('fg', color.gray(60%), true);
+    @include ssv('bg', white, true);
+    @include ssv('font', normal 1rem font.$text, true);
+    @include ssv('line-height', 2, true);
+    @include ssv('max-width', 12em, true);
+    @include ssv('radius', wc.$border-radius, true);
 
     //--- search icon
-    @include reg.ssv($key, 'icon/svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980"><path fill="#000000" d="m29.1 810.2c-18 18-29.1 42.9-29.1 70.3 0 54.9 44.5 99.5 99.4 99.5 27.5 0 52.3-11.1 70.3-29.1l210.7-210.7c59.2 35 128 55.4 201.8 55.4 219.7 0 397.8-178.1 397.8-397.8s-178.1-397.8-397.8-397.8-397.8 178.1-397.8 397.8c0 73.7 20.4 142.6 55.4 201.8zm553.1-710.8c164.8 0 298.4 133.6 298.4 298.4s-133.6 298.3-298.3 298.3-298.3-133.6-298.3-298.3c-0.1-164.8 133.4-298.4 298.2-298.4z"/></svg>', true);
-    @include reg.ssv($key, 'icon/code', '\1F50E', true); // possible uncodes: '1F50D', '1F50E'
-    @include reg.ssv($key, 'icon/margin', 0.5rem, true);
-    @include reg.ssv($key, 'icon/fg', color.gray(50%), true);
+    @include ssv('icon/svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980"><path fill="#000000" d="m29.1 810.2c-18 18-29.1 42.9-29.1 70.3 0 54.9 44.5 99.5 99.4 99.5 27.5 0 52.3-11.1 70.3-29.1l210.7-210.7c59.2 35 128 55.4 201.8 55.4 219.7 0 397.8-178.1 397.8-397.8s-178.1-397.8-397.8-397.8-397.8 178.1-397.8 397.8c0 73.7 20.4 142.6 55.4 201.8zm553.1-710.8c164.8 0 298.4 133.6 298.4 298.4s-133.6 298.3-298.3 298.3-298.3-133.6-298.3-298.3c-0.1-164.8 133.4-298.4 298.2-298.4z"/></svg>', true);
+    @include ssv('icon/code', '\1F50E', true); // possible uncodes: '1F50D', '1F50E'
+    @include ssv('icon/margin', 0.5rem, true);
+    @include ssv('icon/fg', color.gray(50%), true);
 
     //--- search text
-    @include reg.ssv($key, 'text/fg', color.$text-black, true); // search icon
-    @include reg.ssv($key, 'text/active/fg', color.tint(theme.$primary, 35%), true); // search icon
+    @include ssv('text/fg', color.$text-black, true); // search icon
+    @include ssv('text/active/fg', color.tint(theme.$primary, 35%), true); // search icon
 
     //--- etc
-    @include reg.ssv($key, 'shadow/fg', color.tint(theme.$primary, 35%), true);
-    @include reg.ssv($key, 'shadow/size', 3px, true);
-    @include reg.ssv($key, 'transition', (all 0.2s ease-in-out), true); // search icon
+    @include ssv('shadow/fg', color.tint(theme.$primary, 35%), true);
+    @include ssv('shadow/size', 3px, true);
+    @include ssv('transition', (all 0.2s ease-in-out), true); // search icon
 }
 
 @mixin w-search-core {
-    $font: reg.gsv($key, font); // to-string(map-values(ggsv($key, $conf, 'font')), ' ');
-    $icon-margin: reg.gsv($key, icon/margin);
+    $font: gsv(font); // to-string(map-values(gsv($conf, 'font')), ' ');
+    $icon-margin: gsv(icon/margin);
 
     display: inline-block;
     //white-space: nowrap;
     //display: flex;
     //flex-flow: row nowrap;
     position: relative;
-    font: reg.gsv($key, font);
+    font: gsv(font);
     margin: 0;
     padding: 0;
 
@@ -80,7 +84,7 @@ $key: 'w-search';
         content: '';
         width: 100%;
         height: 50%;
-        background: svg-url(reg.gsv($key, 'icon/svg'), reg.gsv($key, 'icon/fg')) no-repeat;
+        background: svg.to-cssurl(gsv('icon/svg'), gsv('icon/fg')) no-repeat;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
@@ -92,13 +96,13 @@ $key: 'w-search';
         font: $font;
         box-sizing: border-box;
         margin: 0;
-        width: reg.gsv($key, max-width);
+        width: gsv(max-width);
         padding-left: $icon-margin*2 + 1rem; // make space for search icon
         vertical-align: middle;
-        line-height: reg.gsv($key, line-height);
-        border-radius: reg.gsv($key, radius);
-        border: 1px solid reg.gsv($key, fg);
-        transition: reg.gsv($key, transition);
+        line-height: gsv(line-height);
+        border-radius: gsv(radius);
+        border: 1px solid gsv(fg);
+        transition: gsv(transition);
 
         // remove search cancel button
         &::-webkit-search-cancel-button,
@@ -112,10 +116,10 @@ $key: 'w-search';
 
         // highlight on focus
         &:focus {
-            width: reg.gsv($key, max-width);
-            border: 1px solid reg.gsv($key, 'text/active/fg');
+            width: gsv(max-width);
+            border: 1px solid gsv('text/active/fg');
             outline: 0;
-            box-shadow: 0 0 reg.gsv($key, shadow/size) reg.gsv($key, shadow/fg); // rgba(107,21,161,0.3);
+            box-shadow: 0 0 gsv(shadow/size) gsv(shadow/fg); // rgba(107,21,161,0.3);
         }
     }
 }
@@ -129,10 +133,10 @@ $key: 'w-search';
 @mixin w-search-modifiers {
     &.wo-minify {
         & > input[type=search] {
-            width: reg.gsv($key, icon/margin) * 4; // left/right margins are 50% of icon. So total width is 4 times of the margin
+            width: gsv(icon/margin) * 4; // left/right margins are 50% of icon. So total width is 4 times of the margin
 
             &:focus {
-                width: reg.gsv($key, max-width);
+                width: gsv(max-width);
             }
         }
     }
@@ -144,7 +148,7 @@ $key: 'w-search';
 
             &:focus {
                 border-style: solid;
-                width: reg.gsv($key, max-width);
+                width: gsv(max-width);
             }
         }
     }
@@ -165,7 +169,7 @@ $key: 'w-search';
 
     &.wo-large {
         &:after {
-            left: reg.gsv($key, icon/margin) * 2;
+            left: gsv(icon/margin) * 2;
         }
 
         & > input[type=search] {
@@ -176,7 +180,7 @@ $key: 'w-search';
 
     &.wo-xlarge {
         &:after {
-            left: reg.gsv($key, icon/margin) * 2;
+            left: gsv(icon/margin) * 2;
         }
 
         & > input[type=search] {
@@ -187,7 +191,7 @@ $key: 'w-search';
 
     &.wo-xxlarge {
         &:after {
-            left: reg.gsv($key, icon/margin) * 3;
+            left: gsv(icon/margin) * 3;
         }
 
         & > input[type=search] {

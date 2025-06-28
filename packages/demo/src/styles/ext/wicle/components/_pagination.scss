@@ -16,15 +16,18 @@ $key: 'w-pagination';
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+
 @mixin init() {
 
     // core
-    @include reg.ssv($key, 'breakpoint', 'md', true);
-    @include reg.ssv($key, 'padding', 0.25rem 0.85rem, true);
+    @include ssv('breakpoint', 'md', true);
+    @include ssv('padding', 0.25rem 0.85rem, true);
 
     // default styles
-    @include reg.ssv($key, 'theme-color', color.scale(theme.$color-fg, $lightness: -5%), true); // pagination theme color
-    @include reg.ssv($key, 'current-color', color.scale(color.$harley-davidson-orange, $lightness: -5%), true); // current page color
+    @include ssv('theme-color', color.scale(theme.$color-fg, $lightness: -5%), true); // pagination theme color
+    @include ssv('current-color', color.scale(color.$harley-davidson-orange, $lightness: -5%), true); // current page color
 }
 
 //-----------------------------------------------
@@ -41,7 +44,7 @@ $key: 'w-pagination';
             font-weight: 800;
             vertical-align: middle;
             transition: all 0.2s ease-in-out;
-            padding: reg.gsv($key, padding);
+            padding: gsv(padding);
             border-radius: 2px;
 
             $arrow-scale: 1.5;
@@ -87,9 +90,9 @@ $key: 'w-pagination';
                 }
             }
 
-            @include mq.media(reg.gsv($key, breakpoint)) {
+            @include mq.media(gsv(breakpoint)) {
                 display: inline-block;
-                padding: reg.gsv($key, padding-wide);
+                padding: gsv(padding-wide);
 
                 &.current {
                     &:before {
@@ -111,7 +114,7 @@ $key: 'w-pagination';
 @mixin w-pagination-modifiers-circle {
     .page-links {
         .page-numbers {
-            @include mq.media(reg.gsv($key, breakpoint)) {
+            @include mq.media(gsv(breakpoint)) {
                 padding: 0.5rem 0.8rem;
                 border-radius: 50%;
 
@@ -140,7 +143,7 @@ $key: 'w-pagination';
         .page-numbers {
             color: $color-theme;
 
-            @include mq.media(reg.gsv($key, breakpoint)) {
+            @include mq.media(gsv(breakpoint)) {
                 border: 1px solid rgba($color-theme, 0.35);
 
                 &:hover {
@@ -168,7 +171,7 @@ $key: 'w-pagination';
 }
 
 @mixin w-pagination-default-styles {
-    @include w-pagination-styles(reg.gsv($key, theme-color), reg.gsv($key, current-color));
+    @include w-pagination-styles(gsv(theme-color), gsv(current-color));
 }
 
 //-----------------------------------------------

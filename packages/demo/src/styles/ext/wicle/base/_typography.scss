@@ -43,24 +43,27 @@ $key: 'w-typography';
 //-----------------------------------------------
 //  Mixins
 //-----------------------------------------------
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+
 @mixin init() {
     // core
-    // @include reg.ssv($key, 'header/h1', (font-size:2em, margin:0.67em 0 1em), true);
+    // @include ssv('header/h1', (font-size:2em, margin:0.67em 0 1em), true);
     // //  Browser default font size for h2 is 1.5em, but korean font looks ugly for some characters.
     // //  So, change the size to 1.45em
-    // @include reg.ssv($key, 'header/h2', (font-size:1.45em, margin:0.83em 0 1em), true);
-    // @include reg.ssv($key, 'header/h3', (font-size:1.17em, margin:1em 0 1em), true);
-    // @include reg.ssv($key, 'header/h4', (font-size:1em, margin:1em 0 1em), true); // 1.33em
-    // @include reg.ssv($key, 'header/h5', (font-size:0.83em, margin:1em 0 1em), true); // 1.67em
-    // @include reg.ssv($key, 'header/h6', (font-size:0.67em, margin:1em 0 1em), true); // 2.33em
+    // @include ssv('header/h2', (font-size:1.45em, margin:0.83em 0 1em), true);
+    // @include ssv('header/h3', (font-size:1.17em, margin:1em 0 1em), true);
+    // @include ssv('header/h4', (font-size:1em, margin:1em 0 1em), true); // 1.33em
+    // @include ssv('header/h5', (font-size:0.83em, margin:1em 0 1em), true); // 1.67em
+    // @include ssv('header/h6', (font-size:0.67em, margin:1em 0 1em), true); // 2.33em
 
     // top and bottom margins can be different, which is intentional
-    @include reg.ssv($key, 'header/h1', (font-size:font.$size-xl, margin:0.67em 0 1em), true);
-    @include reg.ssv($key, 'header/h2', (font-size:font.$size-lg, margin:0.83em 0 1em), true);
-    @include reg.ssv($key, 'header/h3', (font-size:font.$size-md, margin:1em 0 1em), true);
-    @include reg.ssv($key, 'header/h4', (font-size:1em, margin:1em 0 1em), true); // 1.33em
-    @include reg.ssv($key, 'header/h5', (font-size:font.$size-sm, margin:1em 0 1em), true); // 1.67em
-    @include reg.ssv($key, 'header/h6', (font-size:font.$size-xs, margin:1em 0 1em), true); // 2.33em
+    @include ssv('header/h1', (font-size:font.$size-xl, margin:0.67em 0 1em), true);
+    @include ssv('header/h2', (font-size:font.$size-lg, margin:0.83em 0 1em), true);
+    @include ssv('header/h3', (font-size:font.$size-md, margin:1em 0 1em), true);
+    @include ssv('header/h4', (font-size:1em, margin:1em 0 1em), true); // 1.33em
+    @include ssv('header/h5', (font-size:font.$size-sm, margin:1em 0 1em), true); // 1.67em
+    @include ssv('header/h6', (font-size:font.$size-xs, margin:1em 0 1em), true); // 2.33em
 }
 
 
@@ -83,8 +86,8 @@ $key: 'w-typography';
 
     @for $i from 1 through 6 {
         h#{$i} {
-            font-size: reg.gsv($key, 'header/h#{$i}/font-size');
-            margin: reg.gsv($key, 'header/h#{$i}/margin');
+            font-size: gsv('header/h#{$i}/font-size');
+            margin: gsv('header/h#{$i}/margin');
         }
     }
 

@@ -16,17 +16,20 @@ $key: 'w-panel';
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+
 @mixin init() {
 
     // core
-    @include reg.ssv($key, 'padding', 1rem, true);
-    @include reg.ssv($key, 'border', none, true);
-    @include reg.ssv($key, 'radius', wc.$border-radius, true);
-    @include reg.ssv($key, 'gradient', (level:20%, direction:bottom), true);
+    @include ssv('padding', 1rem, true);
+    @include ssv('border', none, true);
+    @include ssv('radius', wc.$border-radius, true);
+    @include ssv('gradient', (level:20%, direction:bottom), true);
 
     // modifiers
-    @include reg.ssv($key, 'gradient', (level:20%, direction:bottom), true);
-    @include reg.ssv($key, 'alpha', 0.75, true);
+    @include ssv('gradient', (level:20%, direction:bottom), true);
+    @include ssv('alpha', 0.75, true);
 }
 
 
@@ -36,19 +39,19 @@ $key: 'w-panel';
 @mixin w-panel-core {
     display: block;
     position: relative;
-    padding: reg.gsv($key, padding);
-    border-radius: reg.gsv($key, radius);
-    border: reg.gsv($key, border);
+    padding: gsv(padding);
+    border-radius: gsv(radius);
+    border: gsv(border);
 }
 
 @mixin w-panel-styles($bg, $alpha: false) {
     $fg: color.yiq-color($bg);
     $line: color.smart-scale($bg, 20%);
-    $gr: reg.gsv($key, 'gradient');
+    $gr: gsv('gradient');
 
     @if $alpha {
         $fg: color.$text-black;
-        $bg: color.adjust($bg, $alpha: -1 * reg.gsv($key, 'alpha'));
+        $bg: color.adjust($bg, $alpha: -1 * gsv('alpha'));
     }
 
     color: $fg;

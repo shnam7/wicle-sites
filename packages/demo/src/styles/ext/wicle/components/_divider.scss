@@ -20,19 +20,22 @@ $key: 'w-divider';
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+
 @mixin init() {
     // core
-    @include reg.ssv($key, 'style', 1px solid color.gray(80%), true);
-    @include reg.ssv($key, 'spacing', 1.5rem, true);
-    @include reg.ssv($key, 'text/fg', null, true);
-    @include reg.ssv($key, 'text/bg', white, true);
+    @include ssv('style', 1px solid color.gray(80%), true);
+    @include ssv('spacing', 1.5rem, true);
+    @include ssv('text/fg', null, true);
+    @include ssv('text/bg', white, true);
 
     // modifiers
-    @include reg.ssv($key, 'skinny/spacing', 0.25rem, true);
-    @include reg.ssv($key, 'slim/spacing', 0.5rem, true);
-    @include reg.ssv($key, 'thin/spacing', 1rem, true);
-    @include reg.ssv($key, 'thick/spacing', 2rem, true);
-    @include reg.ssv($key, 'fat/spacing', 3rem, true);
+    @include ssv('skinny/spacing', 0.25rem, true);
+    @include ssv('slim/spacing', 0.5rem, true);
+    @include ssv('thin/spacing', 1rem, true);
+    @include ssv('thick/spacing', 2rem, true);
+    @include ssv('fat/spacing', 3rem, true);
 }
 
 
@@ -46,7 +49,7 @@ $key: 'w-divider';
     height: auto;
     user-select: none;
     z-index: 0;
-    margin: reg.gsv($key, spacing) 0;
+    margin: gsv(spacing) 0;
 
     &:before {
         content: '';
@@ -55,7 +58,7 @@ $key: 'w-divider';
         z-index: -1;
         top: 50%;
         width: 100%;
-        border-top: reg.gsv($key, style);
+        border-top: gsv(style);
     }
 
     // text on divider
@@ -76,23 +79,23 @@ $key: 'w-divider';
     }
 
     &.wo-skinny {
-        margin: reg.gsv($key, skinny/spacing) 0;
+        margin: gsv(skinny/spacing) 0;
     }
 
     &.wo-slim {
-        margin: reg.gsv($key, slim/spacing) 0;
+        margin: gsv(slim/spacing) 0;
     }
 
     &.wo-thin {
-        margin: reg.gsv($key, thin/spacing) 0;
+        margin: gsv(thin/spacing) 0;
     }
 
     &.wo-thick {
-        margin: reg.gsv($key, thick/spacing) 0;
+        margin: gsv(thick/spacing) 0;
     }
 
     &.wo-fat {
-        margin: reg.gsv($key, fat/spacing) 0;
+        margin: gsv(fat/spacing) 0;
     }
 
     &.wo-transparent {
@@ -105,13 +108,13 @@ $key: 'w-divider';
 @mixin w-divider-text-style($fg, $bg: null) {
     & > span,
     .w-divider-text {
-        color: reg.gsv($key, text/fg);
-        background: reg.gsv($key, text/bg);
+        color: gsv(text/fg);
+        background: gsv(text/bg);
     }
 }
 
 @mixin w-divider-default-styles() {
-    @include w-divider-text-style(reg.gsv($key, text/fg), reg.gsv($key, text/bg));
+    @include w-divider-text-style(gsv(text/fg), gsv(text/bg));
 }
 
 //-----------------------------------------------
@@ -119,7 +122,7 @@ $key: 'w-divider';
 //-----------------------------------------------
 @mixin generate() {
     @include init();
-    
+
     .w-divider {
         @include w-divider-core;
         @include w-divider-modifiers;

@@ -13,13 +13,16 @@ $key: 'w-image';
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+
 @mixin init() {
     // core
-    @include reg.ssv($key, 'radius', 3px, true);
+    @include ssv('radius', 3px, true);
 
     // modifiers
-    @include reg.ssv($key, 'frame/fg', color.adjust(color.$text-black, $alpha: -0.5), true);
-    @include reg.ssv($key, 'frame/padding', 0.15rem, true);
+    @include ssv('frame/fg', color.adjust(color.$text-black, $alpha: -0.5), true);
+    @include ssv('frame/padding', 0.15rem, true);
 }
 
 
@@ -35,13 +38,13 @@ $key: 'w-image';
 @mixin w-image-modifiers {
     &.wo-frame,
     &.wo-thumbnail {
-        padding: reg.gsv($key, frame/padding);
-        border: 1px solid reg.gsv($key, frame/fg);
+        padding: gsv(frame/padding);
+        border: 1px solid gsv(frame/fg);
     }
 
     &.wo-round,
     &.wo-thumbnail {
-        border-radius: reg.gsv($key, radius);
+        border-radius: gsv(radius);
     }
 
     &.wo-circle {
@@ -55,7 +58,7 @@ $key: 'w-image';
 //-----------------------------------------------
 @mixin generate() {
     @include init();
-    
+
     .w-image {
         @include w-image-core;
         @include w-image-modifiers;

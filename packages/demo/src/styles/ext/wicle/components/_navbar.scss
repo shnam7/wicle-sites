@@ -36,36 +36,40 @@ $key: 'w-navbar';
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+
 @mixin init() {
     // core
-    @include reg.ssv($key, 'max-width', site.$max-width, true);
-    @include reg.ssv($key, 'height', 3.5rem, true);
-    @include reg.ssv($key, 'padding', 0 1.5rem, true);
-    @include reg.ssv($key, 'fg', null, true);
-    @include reg.ssv($key, 'bg', theme.$color-fg, true);
-    @include reg.ssv($key, 'gradient', (level:20%, direction:bottom), true);
-    @include reg.ssv($key, 'radius', wc.$border-radius, true);
-    @include reg.ssv($key, 'item-spacing', 0.25rem, true);
-    @include reg.ssv($key, 'breakpoint', 'lg', true);
-    @include reg.ssv($key, 'link/fg', color.gray(85%), true);
-    @include reg.ssv($key, 'link/bg', null, true);
-    @include reg.ssv($key, 'link/hover/fg', white, true);
-    @include reg.ssv($key, 'link/hover/bg', null, true);
+    @include ssv('max-width', site.$max-width, true);
+    @include ssv('height', 3.5rem, true);
+    @include ssv('padding', 0 1.5rem, true);
+    @include ssv('fg', null, true);
+    @include ssv('bg', theme.$color-fg, true);
+    @include ssv('gradient', (level:20%, direction:bottom), true);
+    @include ssv('radius', wc.$border-radius, true);
+    @include ssv('item-spacing', 0.25rem, true);
+    @include ssv('breakpoint', 'lg', true);
+    @include ssv('link/fg', color.gray(85%), true);
+    @include ssv('link/bg', null, true);
+    @include ssv('link/hover/fg', white, true);
+    @include ssv('link/hover/bg', null, true);
 
     // brand
-    @include reg.ssv($key, 'brand/font-family', font.$heading, true);
-    @include reg.ssv($key, 'brand/font-size', 1.25rem, true);
-    @include reg.ssv($key, 'brand/font-weight', 600, true);
-    @include reg.ssv($key, 'brand/fg', color.gray(90%), true);
-    @include reg.ssv($key, 'brand/hover/fg', white, true);
+    @include ssv('brand/font-family', font.$heading, true);
+    @include ssv('brand/font-size', 1.25rem, true);
+    @include ssv('brand/font-weight', 600, true);
+    @include ssv('brand/fg', color.gray(90%), true);
+    @include ssv('brand/hover/fg', white, true);
 
     // toggle
-    @include reg.ssv($key, 'toggle/fg', color.gray(80%), true);
-    @include reg.ssv($key, 'toggle/hover/fg', white, true);
+    @include ssv('toggle/fg', color.gray(80%), true);
+    @include ssv('toggle/hover/fg', white, true);
 
     // optional dropdown trailer
-    @include reg.ssv($key, 'trailer/padding', 0.75rem 1rem, true);
-    @include reg.ssv($key, 'trailer/separator', 1px solid color.gray(70%), true);
+    @include ssv('trailer/padding', 0.75rem 1rem, true);
+    @include ssv('trailer/fg', theme.$text, true);
+    @include ssv('trailer/bg', color.tint(theme.$color-bg, 90%), true);
 }
 
 
@@ -79,14 +83,14 @@ $key: 'w-navbar';
     margin: 0 auto;
     border: none;
 
-    max-width: reg.gsv($key, max-width);
-    height: reg.gsv($key, height);
-    padding: reg.gsv($key, padding);
-    border-radius: reg.gsv($key, radius);
+    max-width: gsv(max-width);
+    height: gsv(height);
+    padding: gsv(padding);
+    border-radius: gsv(radius);
 
     // set item spacing
     & > :nth-child(n+2) {
-        margin-left: reg.gsv($key, item-spacing);
+        margin-left: gsv(item-spacing);
     }
 
     // navbar items
@@ -99,12 +103,12 @@ $key: 'w-navbar';
 
     // brand
     .wz-brand {
-        font-family: reg.gsv($key, brand/font-family);
-        font-size: reg.gsv($key, brand/font-size);
-        font-weight: reg.gsv($key, brand/font-weight);
+        font-family: gsv(brand/font-family);
+        font-size: gsv(brand/font-size);
+        font-weight: gsv(brand/font-weight);
 
-        $fg: reg.gsv($key, brand/fg);
-        $hover: reg.gsv($key, 'brand/hover/fg');
+        $fg: gsv(brand/fg);
+        $hover: gsv('brand/hover/fg');
         color: $fg;
 
         &:hover,
@@ -123,19 +127,19 @@ $key: 'w-navbar';
     .wz-nav.wo-responsive {
         display: none;
 
-        @include mq.media(reg.gsv($key, breakpoint)) {
+        @include mq.media(gsv(breakpoint)) {
             display: inline-block;
         }
     }
 
     .wz-toggle {
         &.wo-responsive {
-            @include mq.media(reg.gsv($key, breakpoint)) {
+            @include mq.media(gsv(breakpoint)) {
                 display: none;
             }
         }
 
-        @include shape.hamburger(reg.gsv($key, 'toggle/fg'), reg.gsv($key, 'toggle/hover/fg'));
+        @include shape.hamburger(gsv('toggle/fg'), gsv('toggle/hover/fg'));
 
         & {
             margin: 0.5rem;
@@ -143,29 +147,30 @@ $key: 'w-navbar';
     }
 }
 
-@mixin w-navbar-brand($brand: null) {
-    $brand: map-extend((), reg.get($key, $w-conf-navbar, 'brand'), $brand);
-    $font: to-string(map-values(gcv($key, $brand, 'font')), ' ');
-    $color-fg: reg.get($key, $brand, 'color/fg');
-}
-
 @mixin w-navbar-trailer-core {
     position: absolute;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    max-height: 0;
+    z-index: 1;
+
     box-sizing: border-box;
     width: 100%;
-    z-index: 0;
     margin: 0 auto;
-    display: none;
 
-    padding: reg.gsv($key, trailer/padding);
-    border-top: reg.gsv($key, trailer/separator);
-    ;
+    // padding: gsv(trailer/padding);
+    border-top: gsv(trailer/separator);
+    & > .w-navbar-trailer-content {
+        padding: gsv(trailer/padding);
+        color: gsv(trailer/fg);
+        background: gsv(trailer/bg);
+    }
 }
 
 @mixin w-navbar-default-styles {
-    $fg: reg.gsv($key, 'fg');
-    $bg: reg.gsv($key, 'bg');
-    $gr: reg.gsv($key, gradient);
+    $fg: gsv('fg');
+    $bg: gsv('bg');
+    $gr: gsv(gradient);
 
     & {
         color: if($fg, $fg, if($bg, color.yiq-color($bg), false));
@@ -176,12 +181,12 @@ $key: 'w-navbar';
     }
 
     a {
-        color: reg.gsv($key, 'link/fg');
-        background: reg.gsv($key, 'link/bg');
+        color: gsv('link/fg');
+        background: gsv('link/bg');
 
         &:hover {
-            color: reg.gsv($key, 'link/hover/fg');
-            background: reg.gsv($key, 'link/hover/bg');
+            color: gsv('link/hover/fg');
+            background: gsv('link/hover/bg');
         }
     }
 }

@@ -19,15 +19,24 @@ const demoCases = [
 <DefaultLayout title={title} bodyClass={bodyClass}>
     {
         demoCases.map(demoCase => (
-            <form
-                class={demoCase.cls}
-                role='search'
-                method='get'
-                action={demoCase.action}
-                onclick='this.children[0].focus()'>
-                <input type='search' name='s' value='' placeholder='Search' results='5' />
-                {demoCase.button && <input type='submit' class='z-submit' value='Search' />}
-            </form>
+            <div class='demo-panel'>
+                <form
+                    class={demoCase.cls}
+                    role='search'
+                    method='get'
+                    action={demoCase.action}
+                    onclick='this.children[0].focus()'>
+                    <input type='search' name='s' value='' placeholder='Search' results='5' />
+                    {demoCase.button && <input type='submit' class='z-submit' value='Search' />}
+                </form>
+            </div>
         ))
     }
 </DefaultLayout>
+
+<style lang='scss'>
+    .demo-panel {
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+</style>

@@ -19,14 +19,17 @@ $key: 'w-reset';
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
+@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
+@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+
 @mixin init() {
     // core
-    @include reg.ssv($key, 'a/fg', color.$text-black, true);
-    @include reg.ssv($key, 'list/margin-left', 1rem, true);
-    @include reg.ssv($key, 'pre/margin', 0.5rem 0, true);
-    @include reg.ssv($key, 'pre/padding', 0.5rem 1rem, true);
-    // @include reg.ssv($key, 'pre/bg', #f3f6fa, true);
-    @include reg.ssv($key, 'pre/border', solid 1px color.scale(#f3f6fa, $lightness: -2%), true);
+    @include ssv('a/fg', color.$text-black, true);
+    @include ssv('list/margin-left', 1rem, true);
+    @include ssv('pre/margin', 0.5rem 0, true);
+    @include ssv('pre/padding', 0.5rem 1rem, true);
+    // @include ssv('pre/bg', #f3f6fa, true);
+    @include ssv('pre/border', solid 1px color.scale(#f3f6fa, $lightness: -2%), true);
 }
 
 
@@ -56,7 +59,7 @@ $key: 'w-reset';
 
     body {
         word-wrap: break-word;
-        color: reg.gsv($key, fg);
+        color: gsv(fg);
         margin: 0;
     }
 
@@ -76,7 +79,7 @@ $key: 'w-reset';
 
     //--- link
     a {
-        color: reg.gsv($key, 'a/fg');
+        color: gsv('a/fg');
         // background-color: transparent;
         text-decoration: none;
 
@@ -96,14 +99,14 @@ $key: 'w-reset';
     h6 {
         font-family: font.$heading;
         font-weight: 600;
-        color: reg.gsv($key, fg);
+        color: gsv(fg);
     }
 
     body,
     select,
     input,
     textarea {
-        color: reg.gsv($key, fg);
+        color: gsv(fg);
         font-family: font.$text; // set base font here, to apply evenly
         box-sizing: border-box;
     }
@@ -114,15 +117,15 @@ $key: 'w-reset';
         font-family: font.$code;
         font-size: font.$size-sm;
         line-height: font.$line-height * font.$down-scaler;
-        background: inherit; // reg.gsv($key, 'pre/bg'); // same color for pre and code
+        background: inherit; // gsv('pre/bg'); // same color for pre and code
     }
 
     pre {
         display: block;
         overflow: auto;
-        margin: reg.gsv($key, 'pre/margin');
-        padding: reg.gsv($key, 'pre/padding');
-        border: reg.gsv($key, 'pre/border');
+        margin: gsv('pre/margin');
+        padding: gsv('pre/padding');
+        border: gsv('pre/border');
         border-radius: 3px;
     }
 }
