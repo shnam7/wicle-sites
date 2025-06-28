@@ -1,0 +1,41 @@
+//=========================================================
+//
+//  @package sinplete-five
+//
+//  @module app
+//  @description application wide configuration
+//
+//=========================================================
+// @use 'wdk/app';
+// @use 'wdk/color';
+@use 'wdk/ui/media-query' as mq;
+@use 'wicle';
+@use 'wicle/layout/site';
+@use 'wicle/components/search';
+
+//----------------------------------------------------------
+//  Wicle Configuration
+//-------------------------------------------------------------
+@include site.ssv('banner/min-height', 25rem);
+@include mq.set-breakpoints(mq.$w-breakpoints-tailwind);
+
+.demo-header {
+    display: flex;
+    justify-content: right;
+    margin: 0.5rem 0;
+}
+
+// call wicle.init() in the last to have computed config
+// values from the above  custom configurations
+@include wicle.init();
+
+
+//---------------------------------------------------------
+//  App-leve custom configuration
+//---------------------------------------------------------
+
+
+//---------------------------------------------------------
+// Generate Wicle styles
+//---------------------------------------------------------
+@include wicle.generate();
