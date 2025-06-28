@@ -44,12 +44,9 @@ $key: 'w-layout/site';
     @include ssv('footer/fg', color.$text-white, true);
     @include ssv('footer/bg', rgba(#000, 0.85), true);
 
-    // site-overlay
-    @include ssv('overlay/z-index', zi.$level1, true);
-
     // site-offcanvas
     @include ssv('offcanvas/bg', color.$text-black, true);
-    @include ssv('offcanvas/z-index', gsv('overlay/z-index') + 10, true);
+    @include ssv('offcanvas/z-index', zi.$level1 + 10, true);
     @include ssv('offcanvas/close-button/offset', 0.5rem, true);
     @include ssv('offcanvas/close-button/font-size', 1.35rem, true);
     @include ssv('offcanvas/close-button/padding', (0 0.4rem), true);
@@ -129,16 +126,6 @@ $key: 'w-layout/site';
     }
 }
 
-@mixin w-layout-site-overlay {
-    .l-site-overlay {
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: gsv('overlay/z-index');
-    }
-}
-
-
 @mixin w-layout-site-offcanvas() {
     .l-site-offcanvas {
         display: none;
@@ -184,6 +171,5 @@ $key: 'w-layout/site';
     @include w-layout-site-banner;
     @include w-layout-site-content;
     @include w-layout-site-footer;
-    @include w-layout-site-overlay;
     @include w-layout-site-offcanvas;
 }

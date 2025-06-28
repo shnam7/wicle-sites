@@ -5,10 +5,6 @@
 @include wicle.init();
 @include wicle.generate();
 
-.l-site-overlay {
-    display: none;
-}
-
 .demo-header {
     display: flex;
     justify-content: right;

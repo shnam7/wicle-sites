@@ -4,7 +4,6 @@ import SiteBackground from '../components/SiteBackground.astro'
 import SiteHeader from '../components/SiteHeader.astro'
 import SiteBanner from '../components/SiteBanner.astro'
 import SiteFooter from '../components/SiteFooter.astro'
-import SiteOverlay from '../components/SiteOverlay.astro'
 import SiteOffcanvas from '../components/SiteOffcanvas.astro'
 import Sidebar from '../components/Sidebar.astro'
 import '../styles/main.scss'
@@ -31,7 +30,6 @@ const {title, frontpage, bodyClass} = Astro.props.frontmatter || Astro.props
             <footer class='l-site-footer'><SiteFooter /></footer>
         </div>
         <!-- l-site-container  -->
-        <SiteOverlay />
         <SiteOffcanvas />
     </body>
 </html>
