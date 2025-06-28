@@ -20,6 +20,7 @@ const demoCases = [
     {
         demoCases.map(demoCase => (
             <div class='demo-panel'>
+                <p>class='{demoCase.cls}''</p>
                 <form
                     class={demoCase.cls}
                     role='search'
@@ -36,7 +37,13 @@ const demoCases = [
 
 <style lang='scss'>
     .demo-panel {
+        text-align: center;
         margin: 1rem 0;
         padding: 1rem;
+    }
+
+    .w-search {
+        max-width: 50%;
+        text-align: center;
     }
 </style>

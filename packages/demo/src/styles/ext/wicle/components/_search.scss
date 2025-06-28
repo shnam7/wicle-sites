@@ -26,9 +26,11 @@
 //
 //=========================================================================
 
+@use 'sass:math';
 @use 'wdk/color';
 @use 'wdk/font';
 @use 'wdk/reg';
+@use 'wdk/util';
 @use 'wdk/ui/svg';
 @use 'wdk/ui/theme';
 
@@ -38,22 +40,29 @@
 //-----------------------------------------------
 $key: 'w-search';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
+}
+
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
+}
 
 @mixin init() {
     //--- core
     @include ssv('fg', color.gray(60%), true);
     @include ssv('bg', white, true);
-    @include ssv('font', normal 1rem font.$text, true);
+    @include ssv('font-family', font.$text, true);
+    @include ssv('font-size', 1rem, true);
+    @include ssv('font-weight', normal, true);
     @include ssv('line-height', 2, true);
-    @include ssv('max-width', 12em, true);
+    @include ssv('max-width', 100%, true);
     @include ssv('radius', theme.$border-radius, true);
 
     //--- search icon
     @include ssv('icon/svg', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980"><path fill="#000000" d="m29.1 810.2c-18 18-29.1 42.9-29.1 70.3 0 54.9 44.5 99.5 99.4 99.5 27.5 0 52.3-11.1 70.3-29.1l210.7-210.7c59.2 35 128 55.4 201.8 55.4 219.7 0 397.8-178.1 397.8-397.8s-178.1-397.8-397.8-397.8-397.8 178.1-397.8 397.8c0 73.7 20.4 142.6 55.4 201.8zm553.1-710.8c164.8 0 298.4 133.6 298.4 298.4s-133.6 298.3-298.3 298.3-298.3-133.6-298.3-298.3c-0.1-164.8 133.4-298.4 298.2-298.4z"/></svg>', true);
     @include ssv('icon/code', '\1F50E', true); // possible uncodes: '1F50D', '1F50E'
-    @include ssv('icon/margin', 0.5rem, true);
+    @include ssv('icon/margin', 1em, true);
     @include ssv('icon/fg', color.gray(50%), true);
 
     //--- search text
@@ -67,8 +76,8 @@ $key: 'w-search';
 }
 
 @mixin w-search-core {
-    $font: gsv(font); // to-string(map-values(gsv($conf, 'font')), ' ');
-    $icon-margin: gsv(icon/margin);
+    $font: gsv('font-weight') gsv('font-size') gsv('font-family');
+    $icon-margin: gsv('icon/margin');
 
     display: inline-block;
     //white-space: nowrap;
@@ -78,6 +87,7 @@ $key: 'w-search';
     font: gsv(font);
     margin: 0;
     padding: 0;
+    width: gsv('max-width');
 
     // search icon
     &:after {
@@ -88,16 +98,17 @@ $key: 'w-search';
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+        font-size: gsv('font-size');
         left: $icon-margin;
     }
 
     // input box
     & > input[type=search] {
-        font: $font;
         box-sizing: border-box;
         margin: 0;
         width: gsv(max-width);
-        padding-left: $icon-margin*2 + 1rem; // make space for search icon
+        font-size: gsv('font-size');
+        padding-left: $icon-margin * 3; // make space for search icon
         vertical-align: middle;
         line-height: gsv(line-height);
         border-radius: gsv(radius);
@@ -132,23 +143,33 @@ $key: 'w-search';
 
 @mixin w-search-modifiers {
     &.wo-minify {
-        & > input[type=search] {
-            width: gsv(icon/margin) * 4; // left/right margins are 50% of icon. So total width is 4 times of the margin
-
-            &:focus {
-                width: gsv(max-width);
-            }
+        width: gsv(icon/margin) + 6em;
+        &:focus-within {
+            width: gsv(max-width);
         }
     }
 
     &.wo-iconize {
+        width: 1em;
+
+        &:after {
+            left: 0;
+        }
+
+
         & > input[type=search] {
             border-style: hidden;
-            width: 1rem;
 
             &:focus {
                 border-style: solid;
-                width: gsv(max-width);
+            }
+        }
+
+        &:focus-within {
+            width: gsv(max-width);
+
+            &:after {
+                left: gsv('icon/margin');
             }
         }
     }
@@ -156,47 +177,38 @@ $key: 'w-search';
     &.wo-compact {
         & > input[type=search] {
             line-height: 1.5;
-            padding-left: 1.5rem;
         }
     }
 
     &.wo-small {
+
+        &:after,
         & > input[type=search] {
             font-size: 0.9rem;
-            padding-left: 1.8rem;
         }
     }
 
     &.wo-large {
-        &:after {
-            left: gsv(icon/margin) * 2;
-        }
 
+        &:after,
         & > input[type=search] {
             font-size: 1.3rem;
-            padding-left: 3rem;
         }
     }
 
     &.wo-xlarge {
-        &:after {
-            left: gsv(icon/margin) * 2;
-        }
 
+        &:after,
         & > input[type=search] {
             font-size: 2rem;
-            padding-left: 3.75rem;
         }
     }
 
     &.wo-xxlarge {
-        &:after {
-            left: gsv(icon/margin) * 3;
-        }
 
+        &:after,
         & > input[type=search] {
             font-size: 3rem;
-            padding-left: 5.5rem;
         }
     }
 
