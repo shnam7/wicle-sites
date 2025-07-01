@@ -1,0 +1,14 @@
+@use 'true' as *;
+@use 'wdk/color';
+@use 'wicle/base/reset';
+
+@include describe('[base/reset] module test') {
+    @include it('has correct config default values ') {
+        @include assert-equal(reset.gsv('a/fg'), color.$text-black);
+        @include assert-equal(reset.gsv('list/margin-left'), 1rem);
+        @include assert-equal(reset.gsv('pre/margin'), 0.5rem 0);
+        @include assert-equal(reset.gsv('pre/padding'), 0.5rem 1rem);
+        @include assert-equal(reset.gsv('pre/border'),
+            solid 1px color.scale(#f3f6fa, $lightness: -2%));
+    }
+}

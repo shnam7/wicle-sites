@@ -35,41 +35,50 @@
 //-----------------------------------------------
 $key: 'w-navbar';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) { @return reg.gsv($key, $path, $default); }
-
-@mixin init() {
-    // core
-    @include ssv('max-width', site.gsv(max-width), true);
-    @include ssv('height', 3.5rem, true);
-    @include ssv('padding', 0 1.5rem, true);
-    @include ssv('fg', null, true);
-    @include ssv('bg', theme.$color-fg, true);
-    @include ssv('gradient', (level:20%, direction:bottom), true);
-    @include ssv('radius', theme.$border-radius, true);
-    @include ssv('item-spacing', 0.25rem, true);
-    @include ssv('breakpoint', 'lg', true);
-    @include ssv('link/fg', color.gray(85%), true);
-    @include ssv('link/bg', null, true);
-    @include ssv('link/hover/fg', white, true);
-    @include ssv('link/hover/bg', null, true);
-
-    // brand
-    @include ssv('brand/font-family', font.$heading, true);
-    @include ssv('brand/font-size', 1.25rem, true);
-    @include ssv('brand/font-weight', 600, true);
-    @include ssv('brand/fg', color.gray(90%), true);
-    @include ssv('brand/hover/fg', white, true);
-
-    // toggle
-    @include ssv('toggle/fg', color.gray(80%), true);
-    @include ssv('toggle/hover/fg', white, true);
-
-    // optional dropdown trailer
-    @include ssv('trailer/padding', 0.75rem 1rem, true);
-    @include ssv('trailer/fg', theme.$text, true);
-    @include ssv('trailer/bg', color.tint(theme.$color-bg, 90%), true);
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
 }
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
+}
+
+// core
+@include ssv('max-width', site.gsv(max-width), true);
+@include ssv('height', 3.5rem, true);
+@include ssv('padding', 0 1.5rem, true);
+@include ssv('fg', null, true);
+@include ssv('bg', theme.gsv('color/fg'), true);
+@include ssv(
+    'gradient',
+    (
+        level: 20%,
+        direction: bottom,
+    ),
+    true
+);
+@include ssv('radius', theme.gsv('border-radius'), true);
+@include ssv('item-spacing', 0.25rem, true);
+@include ssv('breakpoint', 'lg', true);
+@include ssv('link/fg', color.gray(85%), true);
+@include ssv('link/bg', null, true);
+@include ssv('link/hover/fg', white, true);
+@include ssv('link/hover/bg', null, true);
+
+// brand
+@include ssv('brand/font-family', font.$heading, true);
+@include ssv('brand/font-size', 1.25rem, true);
+@include ssv('brand/font-weight', 600, true);
+@include ssv('brand/fg', color.gray(90%), true);
+@include ssv('brand/hover/fg', white, true);
+
+// toggle
+@include ssv('toggle/fg', color.gray(80%), true);
+@include ssv('toggle/hover/fg', white, true);
+
+// optional dropdown trailer
+@include ssv('trailer/padding', 0.75rem 1rem, true);
+@include ssv('trailer/fg', theme.gsv('text/fg'), true);
+@include ssv('trailer/bg', color.tint(theme.gsv('color/bg'), 90%), true);
 
 //-----------------------------------------------
 //  Mixins
@@ -80,7 +89,6 @@ $key: 'w-navbar';
     align-items: center;
     margin: 0 auto;
     border: none;
-
     max-width: gsv(max-width);
     height: gsv(height);
     padding: gsv(padding);
@@ -101,12 +109,12 @@ $key: 'w-navbar';
 
     // brand
     .wz-brand {
+        $fg: gsv(brand/fg);
+        $hover: gsv('brand/hover/fg');
+
         font-family: gsv(brand/font-family);
         font-size: gsv(brand/font-size);
         font-weight: gsv(brand/font-weight);
-
-        $fg: gsv(brand/fg);
-        $hover: gsv('brand/hover/fg');
         color: $fg;
 
         &:hover,
@@ -131,16 +139,12 @@ $key: 'w-navbar';
     }
 
     .wz-toggle {
+        @include shape.hamburger(gsv('toggle/fg'), gsv('toggle/hover/fg'));
+        // margin: 0.5rem;
         &.wo-responsive {
             @include mq.media(gsv(breakpoint)) {
                 display: none;
             }
-        }
-
-        @include shape.hamburger(gsv('toggle/fg'), gsv('toggle/hover/fg'));
-
-        & {
-            margin: 0.5rem;
         }
     }
 }
@@ -151,13 +155,12 @@ $key: 'w-navbar';
     transition: max-height 0.3s ease-in-out;
     max-height: 0;
     z-index: 1;
-
     box-sizing: border-box;
     width: 100%;
     margin: 0 auto;
-
     // padding: gsv(trailer/padding);
     border-top: gsv(trailer/separator);
+
     & > .w-navbar-trailer-content {
         text-align: center;
         padding: gsv(trailer/padding);
@@ -194,8 +197,6 @@ $key: 'w-navbar';
 //  Elements
 //-----------------------------------------------
 @mixin generate() {
-    @include init();
-
     .w-navbar {
         @include w-navbar-core;
         @include w-navbar-default-styles;

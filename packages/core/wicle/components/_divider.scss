@@ -15,44 +15,44 @@
 @use 'wdk/reg';
 @use 'wdk/ui/theme';
 
-
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
 $key: 'w-divider';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
-
-@mixin init() {
-    // core
-    @include ssv('style', 1px solid color.gray(80%), true);
-    @include ssv('spacing', 1.5rem, true);
-    @include ssv('text/fg', null, true);
-    @include ssv('text/bg', white, true);
-
-    // modifiers
-    @include ssv('skinny/spacing', 0.25rem, true);
-    @include ssv('slim/spacing', 0.5rem, true);
-    @include ssv('thin/spacing', 1rem, true);
-    @include ssv('thick/spacing', 2rem, true);
-    @include ssv('fat/spacing', 3rem, true);
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
+}
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
 }
 
+// core
+@include ssv('style', 1px solid color.gray(80%), true);
+@include ssv('spacing', 1.5rem, true);
+@include ssv('text/fg', null, true);
+@include ssv('text/bg', white, true);
+
+// modifiers
+@include ssv('skinny/spacing', 0.25rem, true);
+@include ssv('slim/spacing', 0.5rem, true);
+@include ssv('thin/spacing', 1rem, true);
+@include ssv('thick/spacing', 2rem, true);
+@include ssv('fat/spacing', 3rem, true);
 
 //-----------------------------------------------
 //  Mixins
 //-----------------------------------------------
 @mixin w-divider-core {
     //display: inline-block;  // required to remove margin collapsing
-    padding: 1px 0 0 0;
+    padding: 1px 0 0;
     width: 100%;
     height: auto;
     user-select: none;
     z-index: 0;
     margin: gsv(spacing) 0;
 
-    &:before {
+    &::before {
         content: '';
         display: block;
         position: absolute;
@@ -66,17 +66,17 @@ $key: 'w-divider';
     position: relative;
     text-align: center;
 
-    &>span,
+    & > span,
     .w-divider-text {
         display: inline;
         padding: 0.2rem 1rem;
-        border-radius: theme.$border-radius;
+        border-radius: theme.gsv('border-radius');
     }
 }
 
 @mixin w-divider-modifiers {
     &.wo-fit {
-        margin: 0 0;
+        margin: 0;
     }
 
     &.wo-skinny {
@@ -100,7 +100,7 @@ $key: 'w-divider';
     }
 
     &.wo-transparent {
-        &:before {
+        &::before {
             display: none;
         }
     }
@@ -122,8 +122,6 @@ $key: 'w-divider';
 //  Elements
 //-----------------------------------------------
 @mixin generate() {
-    @include init();
-
     .w-divider {
         @include w-divider-core;
         @include w-divider-modifiers;

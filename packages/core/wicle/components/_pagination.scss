@@ -11,25 +11,25 @@
 @use 'wdk/ui/media-query' as mq;
 @use 'wdk/ui/theme';
 
-
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
 $key: 'w-pagination';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
-
-@mixin init() {
-
-    // core
-    @include ssv('breakpoint', 'md', true);
-    @include ssv('padding', 0.25rem 0.85rem, true);
-
-    // default styles
-    @include ssv('theme-color', color.scale(theme.$color-fg, $lightness: -5%), true); // pagination theme color
-    @include ssv('current-color', color.scale(color.$harley-davidson-orange, $lightness: -5%), true); // current page color
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
 }
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
+}
+
+// core
+@include ssv('breakpoint', 'md', true);
+@include ssv('padding', 0.25rem 0.85rem, true);
+
+// default styles
+@include ssv('theme-color', color.scale(theme.gsv('color/fg'), $lightness: -5%), true); // pagination theme color
+@include ssv('current-color', color.scale(color.$harley-davidson-orange, $lightness: -5%), true); // current page color
 
 //-----------------------------------------------
 //  Mixins
@@ -55,7 +55,7 @@ $key: 'w-pagination';
                 display: inline-block;
                 position: absolute;
 
-                &:before {
+                &::before {
                     display: block; // required to enable transform effect
                     content: '\27A4';
                     transform: scaleY($arrow-scale);
@@ -68,7 +68,7 @@ $key: 'w-pagination';
             &.prev {
                 left: 0;
 
-                &:before {
+                &::before {
                     transform: scaleY($arrow-scale) rotate(180deg);
                     //content: '\2B9C'    // deprecated because this is not available on mobile devices
                 }
@@ -77,7 +77,7 @@ $key: 'w-pagination';
             &.next {
                 right: 0;
                 transform: translateY(-50%) scaleY(1);
-                //&:before {
+                //&::before {
                 //content: '\2B9E';   // deprecated because this is not available on mobile devices
                 //}
             }
@@ -85,7 +85,7 @@ $key: 'w-pagination';
             &.current {
                 display: inline-block;
 
-                &:before {
+                &::before {
                     content: 'Page';
                     margin-right: 0.5rem;
                 }
@@ -96,7 +96,7 @@ $key: 'w-pagination';
                 padding: gsv(padding-wide);
 
                 &.current {
-                    &:before {
+                    &::before {
                         display: none;
                     }
                 }
@@ -108,7 +108,7 @@ $key: 'w-pagination';
             }
         }
 
-        @include clearfix();
+        @include clearfix;
     }
 }
 
@@ -179,8 +179,6 @@ $key: 'w-pagination';
 //  Elements
 //-----------------------------------------------
 @mixin generate() {
-    @include init();
-
     .w-pagination {
         @include w-pagination-core;
         @include w-pagination-modifiers;

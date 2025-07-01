@@ -7,54 +7,61 @@
 
 @use 'wdk/color';
 @use 'wdk/reg';
-@use "wdk/ui/z-index" as zi;
-@use "wdk/ui/misc" as *;
-@use "wdk/ui/theme";
-
+@use 'wdk/ui/z-index' as zi;
+@use 'wdk/ui/misc' as *;
+@use 'wdk/ui/theme';
 
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
 $key: 'w-layout/site';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
-
-@mixin init() {
-    // site-shadow
-    @include ssv('background/z-index', null, true);
-
-    // site
-    @include ssv('max-width', null, true);
-
-    // site-header
-    @include ssv('header/fg', null, true);
-    @include ssv('header/bg', theme.$color-fg, true);
-    @include ssv('header/gradient', (level:20%, direction:top));
-    @include ssv('header/min-height', 3rem, true);
-    @include ssv('header/z-index', 10, true);
-
-    // site-banner
-    @include ssv('banner/min-height', 25rem, true);
-
-    // site-footer
-    @include ssv('footer/margin', (0rem auto), true);
-    @include ssv('footer/padding', (2rem 1rem), true);
-    @include ssv('footer/divider', (1px solid color.gray(70%, 0.5)), true);
-    @include ssv('footer/fg', color.$text-white, true);
-    @include ssv('footer/bg', rgba(#000, 0.85), true);
-
-    // site-offcanvas
-    @include ssv('offcanvas/bg', color.$text-black, true);
-    @include ssv('offcanvas/z-index', zi.$level1 + 10, true);
-    @include ssv('offcanvas/close-button/offset', 0.5rem, true);
-    @include ssv('offcanvas/close-button/font-size', 1.35rem, true);
-    @include ssv('offcanvas/close-button/padding', (0 0.4rem), true);
-    @include ssv('offcanvas/close-button/fg', color.gray(85%), true);
-    @include ssv('offcanvas/close-button/bg', color.gray(15%), true);
-    @include ssv('offcanvas/close-button/border', (1px solid gray), true);
-    @include ssv('offcanvas/close-button/border-radius', 5px, true);
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
 }
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
+}
+
+// site-shadow
+@include ssv('background/z-index', null, true);
+
+// site
+@include ssv('max-width', null, true);
+
+// site-header
+@include ssv('header/fg', null, true);
+@include ssv('header/bg', theme.gsv('color/fg'), true);
+@include ssv(
+    'header/gradient',
+    (
+        level: 20%,
+        direction: top,
+    )
+);
+@include ssv('header/min-height', 3rem, true);
+@include ssv('header/z-index', 10, true);
+
+// site-banner
+@include ssv('banner/min-height', 25rem, true);
+
+// site-footer
+@include ssv('footer/margin', (0 auto), true);
+@include ssv('footer/padding', (2rem 1rem), true);
+@include ssv('footer/divider', (1px solid color.gray(70%, 0.5)), true);
+@include ssv('footer/fg', color.$text-white, true);
+@include ssv('footer/bg', rgba(#000, 0.85), true);
+
+// site-offcanvas
+@include ssv('offcanvas/bg', color.$text-black, true);
+@include ssv('offcanvas/z-index', zi.$level1 + 10, true);
+@include ssv('offcanvas/close-button/offset', 0.5rem, true);
+@include ssv('offcanvas/close-button/font-size', 1.35rem, true);
+@include ssv('offcanvas/close-button/padding', (0 0.4rem), true);
+@include ssv('offcanvas/close-button/fg', color.gray(85%), true);
+@include ssv('offcanvas/close-button/bg', color.gray(15%), true);
+@include ssv('offcanvas/close-button/border', (1px solid gray), true);
+@include ssv('offcanvas/close-button/border-radius', 5px, true);
 
 //-----------------------------------------------
 //  Mixins
@@ -64,7 +71,7 @@ $key: 'w-layout/site';
         position: absolute;
         top: 0;
         width: 100%;
-        z-index: gsv('background/z-index');  // default value is null
+        z-index: gsv('background/z-index'); // default value is null
     }
 }
 
@@ -80,12 +87,13 @@ $key: 'w-layout/site';
 
 @mixin w-layout-site-header() {
     .l-site-header {
+        $z-index: gsv('header/z-index'); // header should appear above the other layout objects
+
         box-sizing: border-box;
         position: relative;
-        $z-index: gsv('header/z-index'); // header should appear above the other layout objects
         margin: 0 auto;
         min-height: gsv('header/height'); // height this should be set in applications
-        @include clearfix();
+        @include clearfix;
 
         // default style
         color: gsv('header/fg');
@@ -131,18 +139,18 @@ $key: 'w-layout/site';
         display: none;
         position: fixed;
         z-index: gsv('offcanvas/z-index');
-        padding: 2rem 0 0 0;
+        padding: 2rem 0 0;
         overflow-y: auto;
         max-height: 100%;
 
         // close-button
-        &>.offcanvas-close-button {
+        & > .offcanvas-close-button {
             position: absolute;
             top: gsv('offcanvas/close-button/offset');
             right: gsv('offcanvas/close-button/offset');
             cursor: pointer;
 
-            &:after {
+            &::after {
                 position: absolute;
                 right: 0;
                 content: '\2716';
@@ -163,8 +171,6 @@ $key: 'w-layout/site';
 }
 
 @mixin generate() {
-    @include init();
-
     @include w-layout-site-background;
     @include w-layout-site;
     @include w-layout-site-header;

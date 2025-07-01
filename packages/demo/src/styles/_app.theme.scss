@@ -1,0 +1,4 @@
+@use 'wdk/color';
+@use 'wdk/ui/theme';
+
+@include theme.ssv('color/fg', color.$st-tropaz);

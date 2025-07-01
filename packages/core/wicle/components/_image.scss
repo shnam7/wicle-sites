@@ -8,29 +8,29 @@
 @use 'wdk/color';
 @use 'wdk/reg';
 
-
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
 $key: 'w-image';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
-
-@mixin init() {
-    // core
-    @include ssv('radius', 3px, true);
-
-    // modifiers
-    @include ssv('frame/fg', color.adjust(color.$text-black, $alpha: -0.5), true);
-    @include ssv('frame/padding', 0.15rem, true);
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
+}
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
 }
 
+// core
+@include ssv('radius', 3px, true);
+
+// modifiers
+@include ssv('frame/fg', color.adjust(color.$text-black, $alpha: -0.5), true);
+@include ssv('frame/padding', 0.15rem, true);
 
 //-----------------------------------------------
 //  Mixins
 //-----------------------------------------------
-@mixin w-image-core($circular:false) {
+@mixin w-image-core($circular: false) {
     // responsive image
     max-width: 100%;
     height: auto;
@@ -53,13 +53,10 @@ $key: 'w-image';
     }
 }
 
-
 //-----------------------------------------------
 //  Elements
 //-----------------------------------------------
 @mixin generate() {
-    @include init();
-
     .w-image {
         @include w-image-core;
         @include w-image-modifiers;

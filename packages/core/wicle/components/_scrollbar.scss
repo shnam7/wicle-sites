@@ -8,27 +8,27 @@
 @use 'wdk/color';
 @use 'wdk/reg';
 
-
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
 $key: 'w-scrollbar';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
-
-@mixin init {
-    // scrollbar
-    @include ssv('width', 14px, true);
-    @include ssv('height', 14px, true);
-    @include ssv('thumb/border-radius', 5px, true);
-    @include ssv('thumb/bg', color.gray(85%), true);            // dark mode: 23.5%
-    @include ssv('thumb/hover/bg', color.gray(70%), true);      // dark mode: 35%
-    @include ssv('thumb/active/bg', color.gray(45%), true);
-    @include ssv('thumb/transition', (color .2s ease), true);
-    @include ssv('track/bg',gray(95%), true);             // dark mode: 20%
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
+}
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
 }
 
+// scrollbar
+@include ssv('width', 14px, true);
+@include ssv('height', 14px, true);
+@include ssv('thumb/border-radius', 5px, true);
+@include ssv('thumb/bg', color.gray(85%), true); // dark mode: 23.5%
+@include ssv('thumb/hover/bg', color.gray(70%), true); // dark mode: 35%
+@include ssv('thumb/active/bg', color.gray(45%), true);
+@include ssv('thumb/transition', (color 0.2s ease), true);
+@include ssv('track/bg', gray(95%), true); // dark mode: 20%
 
 //-----------------------------------------------
 //  Mixins
@@ -36,7 +36,7 @@ $key: 'w-scrollbar';
 @mixin w-scrollbar-core {
     body {
         ::-webkit-scrollbar {
-            -webkit-appearance: none;
+            // -webkit-appearance: none;
             width: gsv('width');
             height: gsv('height');
         }
@@ -46,9 +46,11 @@ $key: 'w-scrollbar';
             border-radius: gsv('thumb/border-radius');
             background: gsv('thumb/bg');
             transition: gsv('thumb/transition');
+
             &:hover {
                 background: gsv('thumb/hover/bg');
             }
+
             &:active {
                 background: gsv('thumb/active/bg');
             }
@@ -61,11 +63,9 @@ $key: 'w-scrollbar';
     }
 }
 
-
 //-----------------------------------------------
 //  Elements
 //-----------------------------------------------
 @mixin generate() {
-    @include init();
-    @include w-scrollbar-core();
+    @include w-scrollbar-core;
 }

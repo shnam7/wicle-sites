@@ -24,27 +24,29 @@
 //-----------------------------------------------
 $key: 'w-button';
 
-@mixin ssv($path, $value, $is-default: false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default: null) { @return reg.gsv($key, $path, $default); }
-
-@mixin init() {
-    // core
-    @include ssv('margin', 0, true);
-    @include ssv('padding', 0.25rem 1rem, true);
-    @include ssv('line-height', 1.5, true);
-    @include ssv('radius', theme.$border-radius, true);
-    @include ssv('transition', (all 0.15s), true);
-    @include ssv('alpha', 0.75, true);
-    // @include ssv('gradient', (level:20%, direction:bottom), true);
-
-    // modifier: compact
-    @include ssv('compact/font-size', 90%, true);
-    @include ssv('compact/line-height', 1.75, true);
-    @include ssv('compact/padding', 0 0.75rem, true);
-
-    // outline
-    @include ssv('outline/alpha', 0.5, true);
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
 }
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
+}
+
+// core
+@include ssv('margin', 0, true);
+@include ssv('padding', 0.25rem 1rem, true);
+@include ssv('line-height', 1.5, true);
+@include ssv('radius', theme.gsv('border-radius'), true);
+@include ssv('transition', (all 0.15s), true);
+@include ssv('alpha', 0.75, true);
+// @include ssv('gradient', (level:20%, direction:bottom), true);
+
+// modifier: compact
+@include ssv('compact/font-size', 90%, true);
+@include ssv('compact/line-height', 1.75, true);
+@include ssv('compact/padding', 0 0.75rem, true);
+
+// outline
+@include ssv('outline/alpha', 0.5, true);
 
 //-----------------------------------------------
 //  Mixins
@@ -58,11 +60,9 @@ $key: 'w-button';
     vertical-align: middle;
     text-align: center; // align the text for the cases width is set
     text-decoration: none;
-
     margin: gsv('margin');
     padding: gsv('padding');
     line-height: gsv(line-height);
-
     border: 1px solid transparent; //gsv('border');
     outline: none;
     border-radius: gsv('radius');
@@ -87,7 +87,7 @@ $key: 'w-button';
     @if gsv('gradient') {
         z-index: 1;
 
-        &:after {
+        &::after {
             position: absolute;
             content: '';
             top: 0;
@@ -100,7 +100,7 @@ $key: 'w-button';
             opacity: 0;
         }
 
-        &:hover:after {
+        &:hover::after {
             opacity: 1;
         }
     }
@@ -118,7 +118,7 @@ $key: 'w-button';
     &.wo-outline {
         background: transparent;
 
-        &:after {
+        &::after {
             display: none;
         }
     }
@@ -136,7 +136,7 @@ $key: 'w-button';
     $bg: null,
     $gr: (
         level: 20%,
-        direction: bottom
+        direction: bottom,
     )
 ) {
     $hover: color.scale($bg, $lightness: -10%);
@@ -148,7 +148,7 @@ $key: 'w-button';
         background-clip: padding-box; // remove dummy borders for gradients
     }
 
-    &:after {
+    &::after {
         position: absolute;
         content: '';
         top: 0;
@@ -161,7 +161,7 @@ $key: 'w-button';
         opacity: 0;
     }
 
-    &:hover:after {
+    &:hover::after {
         @if $bg {
             background: color.gradient($hover, reg.get($gr, level), reg.get($gr, direction));
         }
@@ -181,7 +181,7 @@ $key: 'w-button';
         $bg: color.adjust($fg, $alpha: -1 * gsv('alpha'));
         $hover: color.adjust($bg, $alpha: 0.1);
 
-        @if (color.channel($fg, 'saturation', $space: hsl) <=50%) {
+        @if color.channel($fg, 'saturation', $space: hsl) <=50% {
             $fg: color.invert($fg, 50%);
         }
     }
@@ -196,7 +196,7 @@ $key: 'w-button';
         background-clip: padding-box; // remove dummy borders for gradients
 
         @if $gr {
-            &:after {
+            &::after {
                 background: color.gradient($hover, reg.get($gr, level), reg.get($gr, direction));
             }
         } @else {
@@ -209,9 +209,7 @@ $key: 'w-button';
 
 //  Generate Button styles for color selections
 //  @param {Map} [$color-scheme=null] - Set of $color-schemes. If null, color.$scheme is used
-@mixin w-button-modifiers-color-scheme($color-scheme: theme.$color-scheme) {
-    $color-scheme: if($color-scheme, $color-scheme, color.$scheme);
-
+@mixin w-button-modifiers-color-scheme($color-scheme: theme.gsv('color-scheme')) {
     @each $scheme in $color-scheme {
         $name: list.nth($scheme, 1);
         $color: list.nth($scheme, 2);
@@ -248,11 +246,13 @@ $key: 'w-button';
 
     &.wo-outline {
         $fg: color.yiq-color($default-color);
+
         border: 1px solid color.adjust($fg, $alpha: -1 * gsv('outline/alpha'));
         color: $fg;
 
         &:hover {
             $fg: if(color.channel($fg, 'saturation', $space: hsl) <=50%, color.invert($fg, 50%), $fg);
+
             color: $fg;
             background: $default-color;
         }
@@ -263,13 +263,12 @@ $key: 'w-button';
 //  Elements
 //-----------------------------------------------
 @mixin generate() {
-    @include init();
     .w-button {
-        @include w-button-core();
-        @include w-button-modifiers-compact();
-        @include w-button-modifiers-outline();
-        @include w-button-modifiers-disabled();
-        @include w-button-modifiers-color-scheme();
-        @include w-button-default-styles();
+        @include w-button-core;
+        @include w-button-modifiers-compact;
+        @include w-button-modifiers-outline;
+        @include w-button-modifiers-disabled;
+        @include w-button-modifiers-color-scheme;
+        @include w-button-default-styles;
     }
 }

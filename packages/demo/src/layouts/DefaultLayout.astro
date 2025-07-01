@@ -39,3 +39,26 @@ const {title, frontpage, bodyClass} = Astro.props.frontmatter || Astro.props
         padding-bottom: 3.5rem;
     }
 </style>
+
+<script>
+    const body = document.querySelector<HTMLElement>('body')!
+
+    // --- Fix banner and parallax positions and sizes
+    window.addEventListener('resize', e => {
+        const header = body.querySelector<HTMLElement>('.l-site-header')
+        const banner = body.querySelector<HTMLElement>('.l-site-banner')!
+        const background = body.querySelector<HTMLElement>('.l-site-background')
+        const bannerOffset = header?.offsetHeight ?? 0
+
+        if (background) {
+            background.style.height = `${banner.offsetHeight}px`
+            background.style.top = `${bannerOffset}px`
+        }
+
+        // fix l-site-background height
+        if (banner.children.length === 0) banner.style.display = 'none'
+    })
+
+    // --- Trigger resize to initiate elements resizing and repositioning
+    window.dispatchEvent(new Event('resize'))
+</script>

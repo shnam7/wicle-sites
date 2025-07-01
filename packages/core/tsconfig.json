@@ -1,0 +1,19 @@
+{
+    "extends": "@wicle/tsconfig/base.json",
+
+    "compilerOptions": {
+        "declaration": false,
+        "isolatedModules": true,
+        "esModuleInterop": false,
+        "lib": ["dom", "esnext", "dom.iterable", "scripthost"],
+
+        "outDir": "./dist",
+        "sourceMap": false,
+        "declarationMap": false,
+
+        "baseUrl": ".",
+        "paths": {"@/*": ["*", "src/scripts/*"]}
+    },
+    "include": ["./scripts/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+}

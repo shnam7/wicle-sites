@@ -26,77 +26,78 @@
 @use 'wdk/ui/z-index' as zi;
 @use 'wdk/ui/theme';
 
-
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
 $key: 'w-nav';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
-
-@mixin init() {
-    // nav (ul: top level)
-    @include ssv('z-index', zi.$level1, true);
-    @include ssv('font-family', font.$text, true);
-    @include ssv('font-weight', normal, true);
-    @include ssv('font-size', 1rem, true);
-    @include ssv('padding', 0, true);
-    @include ssv('border', null, true);
-    @include ssv('radius', theme.$border-radius, true);
-    @include ssv('fg', color.$text-black, true);
-    @include ssv('bg', color.tint(theme.$color-fg, 98%), true);
-
-    // item (li)
-    @include ssv('item/padding', 0, true);
-
-    // text (li > a)
-    @include ssv('item-wrapper/margin', 0, true);
-    @include ssv('item-wrapper/padding', 0.35rem 0.5rem, true);
-    @include ssv('item-wrapper/line-height', 1.5, true);
-    @include ssv('item-wrapper/fg', gsv(fg), true);
-    @include ssv('item-wrapper/bg', null, true);
-    @include ssv('item-wrapper/hover/fg', white, true);
-    @include ssv('item-wrapper/hover/bg', rgba(theme.$color-fg, 0.9), true);
-
-    // nav icon options
-    @include ssv('icon/font-size', 1.25rem, true);
-    @include ssv('icon/font-weight', null, true);
-    @include ssv('icon/padding', 0.1rem, true);
-
-    // separator for top level horizontal menu
-    @include ssv('separator/height', 1.2rem, true);
-    @include ssv('separator/spacing', 3px, true);
-    @include ssv('separator/style', 1px solid rgba(color.$text-black, 0.5), true);
-
-    // divider for dropdown
-    @include ssv('divider/spacing', 5px, true);
-    @include ssv('divider/style', 1px solid theme.$color-line, true); // color #ddd = color.gray(86.5%)
-
-    // dropdown
-    @include ssv('dropdown/z-index', zi.$level2, true);
-    @include ssv('dropdown/padding', 0.5rem 0, true);
-    @include ssv('dropdown/min-width', 12rem, true);
-    @include ssv('dropdown/border', 1px solid theme.$color-line, true);
-
-    @include ssv('dropdown/top-level/offset', 0.5rem, true);
-    @include ssv('dropdown/top-level/fg', color.$text-white, true);
-
-    // accordion
-    @include ssv('accordion/padding', 0 0 0 1rem, true);
-    @include ssv('accordion/header/padding', 0.25rem 0.5rem, true);
-    @include ssv('accordion/click-area-size', 2.5rem, true);
-
-    // options
-    @include ssv('opt/invert/fg', color.gray(85%), true);
-    @include ssv('opt/invert/hover/fg', white, true);
-    @include ssv('opt/invert/separator/style', 1px solid rgba(color.$text-white, 0.35), true);
-
-    @include ssv('opt/flip/x-offset', 1rem, true); // x offset for 1st level popup
-    @include ssv('opt/flip/y-offset', 0px, true); // y offset for 1st level popup
-    @include ssv('opt/flip/sub/x-offset', 3px, true); // x offset for 2nd+ level popup
-    @include ssv('opt/flip/sub/y-offset', 0px, true); // y offset for 2nd+ level popup
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
 }
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
+}
+
+// nav (ul: top level)
+@include ssv('z-index', zi.$level1, true);
+@include ssv('font-family', font.$text, true);
+@include ssv('font-weight', normal, true);
+@include ssv('font-size', 1rem, true);
+@include ssv('padding', 0, true);
+@include ssv('border', null, true);
+@include ssv('radius', theme.gsv('border-radius'), true);
+@include ssv('fg', color.$text-black, true);
+@include ssv('bg', color.tint(theme.gsv('color/fg'), 98%), true);
+
+// item (li)
+@include ssv('item/padding', 0, true);
+
+// text (li > a)
+@include ssv('item-wrapper/margin', 0, true);
+@include ssv('item-wrapper/padding', 0.35rem 0.5rem, true);
+@include ssv('item-wrapper/line-height', 1.5, true);
+@include ssv('item-wrapper/fg', gsv(fg), true);
+@include ssv('item-wrapper/bg', null, true);
+@include ssv('item-wrapper/hover/fg', white, true);
+@include ssv('item-wrapper/hover/bg', rgba(theme.gsv('color/fg'), 0.9), true);
+
+// nav icon options
+@include ssv('icon/font-size', 1.25rem, true);
+@include ssv('icon/font-weight', null, true);
+@include ssv('icon/padding', 0.1rem, true);
+
+// separator for top level horizontal menu
+@include ssv('separator/height', 1.2rem, true);
+@include ssv('separator/spacing', 3px, true);
+@include ssv('separator/style', 1px solid rgba(color.$text-black, 0.5), true);
+
+// divider for dropdown
+@include ssv('divider/spacing', 5px, true);
+@include ssv('divider/style', 1px solid theme.gsv('color/line'), true); // color #ddd = color.gray(86.5%)
+
+// dropdown
+@include ssv('dropdown/z-index', zi.$level2, true);
+@include ssv('dropdown/padding', 0.5rem 0, true);
+@include ssv('dropdown/min-width', 12rem, true);
+@include ssv('dropdown/border', 1px solid theme.gsv('color/line'), true);
+
+@include ssv('dropdown/top-level/offset', 0.5rem, true);
+@include ssv('dropdown/top-level/fg', color.$text-white, true);
+
+// accordion
+@include ssv('accordion/padding', 0 0 0 1rem, true);
+@include ssv('accordion/header/padding', 0.25rem 0.5rem, true);
+@include ssv('accordion/click-area-size', 2.5rem, true);
+
+// options
+@include ssv('opt/invert/fg', color.gray(85%), true);
+@include ssv('opt/invert/hover/fg', white, true);
+@include ssv('opt/invert/separator/style', 1px solid rgba(color.$text-white, 0.35), true);
+
+@include ssv('opt/flip/x-offset', 1rem, true); // x offset for 1st level popup
+@include ssv('opt/flip/y-offset', 0, true); // y offset for 1st level popup
+@include ssv('opt/flip/sub/x-offset', 3px, true); // x offset for 2nd+ level popup
+@include ssv('opt/flip/sub/y-offset', 0, true); // y offset for 2nd+ level popup
 
 //-----------------------------------------------
 //  Mixins
@@ -108,7 +109,6 @@ $key: 'w-nav';
     list-style: none;
     margin: 0;
     outline: 0;
-
     z-index: gsv(z-index);
     font-family: gsv(font-family), font.$serif;
     font-size: gsv(font-size);
@@ -142,7 +142,7 @@ $key: 'w-nav';
         font-size: 0;
         line-height: 0;
         border-top: gsv(divider/style);
-        border-width: 1px 0 0 0;
+        border-width: 1px 0 0;
     }
 
     //--- border radius
@@ -154,17 +154,17 @@ $key: 'w-nav';
         border-radius: $radius;
     }
 
-    @include clearfix();
+    @include clearfix;
 }
 
 @mixin w-nav-parent-marker {
     .w-nav-parent-marker {
         float: right;
         font-family: font.$text;
-        margin-left: 0.5rem; // $parent-marker-margin;
+        margin-left: 0.25rem; // $parent-marker-margin;
         transition: transform 0.5s ease-in-out;
 
-        &:before {
+        &::before {
             font-size: 70%;
             content: '\25BC'; // unicode down triangle character
         }
@@ -188,7 +188,9 @@ $key: 'w-nav';
         transform: scaleY(0); // hide submenu
         opacity: 0;
         transform-origin: 50% 0;
-        transition: opacity 0.25s, transform 0.25s ease-in;
+        transition:
+            opacity 0.25s,
+            transform 0.25s ease-in;
 
         // set submenu out-of-viewport position
         &[js-flip*='x'] {
@@ -283,7 +285,6 @@ $key: 'w-nav';
 }
 
 @mixin w-nav-modifiers {
-
     // horizontal menu
     &.wo-default,
     &.wo-horizontal {
@@ -303,11 +304,10 @@ $key: 'w-nav';
             $style: gsv(separator/style);
 
             & > li {
-                &:before {
+                &::before {
                     content: '';
                     display: inline-block;
                     position: absolute;
-
                     width: 1px;
                     height: $height;
                     top: 50%;
@@ -319,7 +319,7 @@ $key: 'w-nav';
                     margin-top: 0;
                     margin-left: font.px($spacing) * 2;
 
-                    &:before {
+                    &::before {
                         margin: 0 1px;
                         border-left: $style;
                     }
@@ -331,7 +331,7 @@ $key: 'w-nav';
         &.wo-default,
         &.wo-pointer {
             & > li.w-nav-parent {
-                &:after {
+                &::after {
                     border-style: solid;
                     border-color: transparent transparent gsv(bg);
                     border-width: 0 6px 6px;
@@ -344,11 +344,13 @@ $key: 'w-nav';
                     width: 0;
                     //   z-index: 100000;
                     z-index: zi.$level3;
-                    transition: opacity 0.25s, transform 0.25s ease-in;
+                    transition:
+                        opacity 0.25s,
+                        transform 0.25s ease-in;
                     transition-delay: 0.25s;
                 }
 
-                &:hover:after {
+                &:hover::after {
                     opacity: 1;
                     transition: opacity 0.25s linear;
                 }
@@ -360,7 +362,7 @@ $key: 'w-nav';
     &.wo-icon {
         &.wo-pointer {
             & > li.w-nav-parent {
-                &:after {
+                &::after {
                     left: 0.5rem;
                 }
             }
@@ -423,7 +425,6 @@ $key: 'w-nav';
     &.wo-default,
     &.wo-dropdown {
         &.wo-invert {
-
             // invert top-level only for dropdown
             & > li {
                 & > a {
@@ -438,7 +439,6 @@ $key: 'w-nav';
     }
 
     &.wo-accordion.wo-invert {
-
         // invert all levels for accordion
         li {
             color: gsv('opt/invert/fg');
@@ -454,7 +454,7 @@ $key: 'w-nav';
     }
 
     &.wo-separators {
-        & > li:not(:first-child):before {
+        & > li:not(:first-child)::before {
             border-left: gsv('opt/invert/separator/style');
         }
     }
@@ -464,8 +464,6 @@ $key: 'w-nav';
 //  Elements
 //-----------------------------------------------
 @mixin generate() {
-    @include init();
-
     .w-nav {
         @include w-nav-core;
         @include w-nav-modifiers;

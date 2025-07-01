@@ -27,7 +27,6 @@ export const breakPointsReg: Record<string, BreakPoints> = {
     },
 
     // device based states (semantic-ui compatible)
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     semanticUI: {
         mini: 0,
         phone: 320,
@@ -98,7 +97,7 @@ function mqStateOf(width: number, breakPoints: BreakPoints): string {
 
 // start media query change detection service
 export function mqStart(breakPoints?: BreakPoints, options?: MediaQueryOptions) {
-    breakPoints ??= breakPointsReg.tailwind
+    breakPoints ??= breakPointsReg.tailwind!
     options = {...options}
     let mqState: MediaQueryState
 

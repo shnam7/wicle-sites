@@ -1,0 +1,31 @@
+@use 'base/reset';
+@use 'base/typography';
+
+@use 'components/button';
+@use 'components/divider';
+@use 'components/image';
+@use 'components/nav';
+@use 'components/navbar';
+@use 'components/pagination';
+@use 'components/panel';
+@use 'components/scrollbar';
+@use 'components/search';
+
+@use 'layout/site';
+@use 'layout/page';
+
+@mixin generate {
+    @include reset.generate;
+    @include typography.generate;
+    @include button.generate;
+    @include divider.generate;
+    @include image.generate;
+    @include nav.generate;
+    @include navbar.generate;
+    @include pagination.generate;
+    @include panel.generate;
+    @include scrollbar.generate;
+    @include search.generate;
+    @include site.generate;
+    @include page.generate;
+}

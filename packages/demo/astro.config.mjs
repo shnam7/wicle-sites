@@ -8,7 +8,7 @@ export default defineConfig({
             transformer: 'lightningcss',
             preprocessorOptions: {
                 scss: {
-                    loadPaths: ['node_modules/sass-wdk', 'src/styles/ext'],
+                    loadPaths: ['node_modules/sass-wdk', 'node_modules/wicle-sites'],
                 },
             },
         },

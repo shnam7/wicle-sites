@@ -1,7 +1,15 @@
-@use 'app';
+@use './app';
+@use 'wdk/color';
+@use 'wdk/ui/theme';
+@use 'wdk/ui/shape';
+
 
 .demo-header {
     display: flex;
     justify-content: right;
     margin: 0.5rem 0;
+}
+
+.l-site-background {
+    @include shape.pattern(color.shade(theme.gsv('color/fg'), 20%));
 }

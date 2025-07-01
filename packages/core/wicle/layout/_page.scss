@@ -12,34 +12,34 @@
 @use 'wdk/ui/misc' as *;
 @use 'wdk/ui/media-query' as mq;
 
-
 //-----------------------------------------------
 //  Config
 //-----------------------------------------------
 $key: 'w-layout/page';
 
-@mixin ssv($path, $value, $is-default:false) { @include reg.ssv($key, $path, $value, $is-default); }
-@function gsv($path, $default:null) {  @return reg.gsv($key, $path, $default); }
-
-@mixin init() {
-    // page
-    @include ssv('max-width', 1220px, true);
-    @include ssv('min-height', 30rem, true);
-    @include ssv('padding', 1rem, true);
-    @include ssv('font-family', null, true);
-    @include ssv('font-size', 1.15rem, true);
-    @include ssv('breakpoint', 'lg', true);
-
-    // sidebar: sidebar size defined first and then content size determined
-    @include ssv('sidebar/width', 20rem, true);
-    @include ssv('sidebar/spacing', 3rem, true);
-    @include ssv('sidebar/padding', 0 0 0 calc(gsv('sidebar/spacing')/2), true);
-
-    // contents
-    @include ssv('content/width', calc(100% - #{gsv('sidebar/width')}), true);
-    @include ssv('content/padding', 0 calc(gsv('sidebar/spacing') / 2) 0 0, true);
+@mixin ssv($path, $value, $is-default: false) {
+    @include reg.ssv($key, $path, $value, $is-default);
+}
+@function gsv($path, $default: null) {
+    @return reg.gsv($key, $path, $default);
 }
 
+// page
+@include ssv('max-width', 1220px, true);
+@include ssv('min-height', 30rem, true);
+@include ssv('padding', 1rem, true);
+@include ssv('font-family', null, true);
+@include ssv('font-size', 1.15rem, true);
+@include ssv('breakpoint', 'lg', true);
+
+// sidebar: sidebar size defined first and then content size determined
+@include ssv('sidebar/width', 20rem, true);
+@include ssv('sidebar/spacing', 3rem, true);
+@include ssv('sidebar/padding', 0 0 0 calc(gsv('sidebar/spacing') / 2), true);
+
+// contents
+@include ssv('content/width', calc(100% - #{gsv('sidebar/width')}), true);
+@include ssv('content/padding', 0 calc(gsv('sidebar/spacing') / 2) 0 0, true);
 
 //-----------------------------------------------
 //  Mixins
@@ -52,7 +52,7 @@ $key: 'w-layout/page';
         min-height: gsv('min-height');
         margin: 0 auto;
         padding: gsv('padding');
-        @include clearfix();
+        @include clearfix;
     }
 }
 
@@ -106,11 +106,9 @@ $key: 'w-layout/page';
     }
 }
 
-
 //=========================================================
 @mixin generate() {
-    @include init();
-    @include w-layout-page();
-    @include w-layout-page-content();
-    @include w-layout-page-sidebar();
+    @include w-layout-page;
+    @include w-layout-page-content;
+    @include w-layout-page-sidebar;
 }

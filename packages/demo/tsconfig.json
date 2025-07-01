@@ -3,7 +3,7 @@
     "compilerOptions": {
         "baseUrl": "./src/scripts",
         "paths": {
-            "wicle": ["./src/scripts/wicle"]
+            // "wicle/*": ["./node_modules/wicle-sites/wicle/*"]
         }
     },
     "include": [".astro/types.d.ts", "**/*"],

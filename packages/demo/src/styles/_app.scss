@@ -6,8 +6,8 @@
 //  @description application wide configuration
 //
 //=========================================================
-// @use 'wdk/app';
-// @use 'wdk/color';
+
+@use './app.theme';
 @use 'wdk/ui/media-query' as mq;
 @use 'wicle';
 @use 'wicle/layout/site';
@@ -18,17 +18,6 @@
 //-------------------------------------------------------------
 @include site.ssv('banner/min-height', 25rem);
 @include mq.set-breakpoints(mq.$w-breakpoints-tailwind);
-
-.demo-header {
-    display: flex;
-    justify-content: right;
-    margin: 0.5rem 0;
-}
-
-// call wicle.init() in the last to have computed config
-// values from the above  custom configurations
-@include wicle.init();
-
 
 //---------------------------------------------------------
 //  App-leve custom configuration
