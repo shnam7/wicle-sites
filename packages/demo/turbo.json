@@ -1,0 +1,10 @@
+{
+    "extends": ["//"],
+    "tasks": {
+        "build": {
+            "inputs": ["src/**", "public/**", "test/**"],
+            "outputs": ["dist/**", "!converag/**"],
+            "dependsOn": ["wicle-sites#build", "^build"]
+        }
+    }
+}
