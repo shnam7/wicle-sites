@@ -1,4 +1,4 @@
-export default function siblings(elem: Element) {
+export function siblings(elem: Element) {
     const siblings = []
 
     for (const sibling of elem.parentNode?.children ?? []) {
