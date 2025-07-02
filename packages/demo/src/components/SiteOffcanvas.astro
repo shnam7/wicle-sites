@@ -1,4 +1,6 @@
 ---
+import Sidebar from './Sidebar.astro'
+
 const panels = [
     {control: '.wz-control-left', position: 'left'},
     {control: '.wz-control-right', position: 'right'},
@@ -7,6 +9,17 @@ const panels = [
 ]
 ---
 
+<!-- Offcanvas for main menu -->
+<section
+    class='l-site-offcanvas offcanvas-main'
+    data-control='.wz-toggle'
+    data-position='right'
+    data-mode='overlay'>
+    <div class='l-offcanvas-content'>
+        <Sidebar />
+    </div>
+</section>
+
 <!-- Multi Offcanvas panels for Offcanvas demo -->{
     panels.map(panel => (
         <section
@@ -14,7 +27,9 @@ const panels = [
             data-control={panel.control}
             data-position={panel.position}>
             <div class='l-offcanvas-content'>
-                <h1>Offcanvas {panel.position.charAt(0).toUpperCase() + panel.position.slice(1)}</h1>
+                <h1>
+                    Offcanvas {panel.position.charAt(0).toUpperCase() + panel.position.slice(1)}
+                </h1>
                 <p>This is a demo of the {panel.position} offcanvas panel.</p>
                 <ul>
                     <li>AAAAATest1</li>
@@ -30,7 +45,7 @@ const panels = [
     ))
 }
 
-<style>
+<style is:global>
     .l-site-offcanvas {
         padding: 1rem 2rem;
 
@@ -38,6 +53,13 @@ const panels = [
             list-style: disk;
             margin: 0.5rem 0;
             font-size: 120%;
+        }
+        &.offcanvas-main {
+            padding: 1rem 2rem;
+
+            a {
+                color: #ccc;
+            }
         }
     }
 </style>

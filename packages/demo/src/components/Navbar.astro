@@ -12,18 +12,10 @@ const {site, cls} = Astro.props
     <ul class={cls}>
         <li><a class='item' title='search' href='#'><i class='fa fa-search fa-fw'></i></a></li>
         <li>
-            <a class='item' title='github' href={site.repo} target='_blank'><i class='fa fa-github fa-fw'></i></a>
+            <a class='item' title='github' href={site.repo} target='_blank'
+                ><i class='fa fa-github fa-fw'></i></a
+            >
         </li>
-        <!-- <li>
-            <a class='item' title='github' href='{{site.repo}}' target='_blank'><i class='fa fa-github fa-fw'></i></a>
-            <ul>
-                <li><a href='#'>AAAA</a></li>
-                <li><a href='#'>AAAA</a></li>
-                <li><a href='#'>AAAA</a></li>
-                <li><a href='#'>AAAA</a></li>
-            </ul>
-        </li> -->
     </ul>
-
-    <!-- <a href='#' class='wz-toggle wo-responsive'>AAA</a> -->
+    <a href='#' class='wz-toggle wo-responsive'></a>
 </div>

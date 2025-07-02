@@ -58,8 +58,6 @@ const {title, frontpage, bodyClass} = Astro.props.frontmatter || Astro.props
         background.style.height = `${header.offsetHeight + banner.offsetHeight}px`
         surface.style.top = header.offsetHeight + 'px'
 
-        console.log('---2', header.offsetHeight, banner.offsetHeight, background.offsetHeight)
-
         // fix l-site-background height
         if (banner.children.length === 0) banner.style.display = 'none'
     })
