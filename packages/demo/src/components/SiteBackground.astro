@@ -1,1 +1,23 @@
-<div class='l-site-background' id='surface-shadow'></div>
+<div class='l-site-background' id='surface-shadow'>
+    <div id='parallax-surface-1' class='parallax-surface'></div>
+</div>
+
+<style lang='scss'>
+    @use 'wdk/color';
+    @use 'wdk/ui/shape';
+    @use 'wdk/ui/theme';
+
+    $paralax-min-height: 25rem;
+    $paralax-max-height: 100vh; // full screen
+
+    .l-site-background {
+        @include shape.pattern(color.shade(theme.gsv('color/fg'), 20%));
+    }
+
+    #parallax-surface-1 {
+        position: fixed;
+        width: 100%;
+        min-height: $paralax-min-height; // keep minimum height even when no featured image exists
+        top: 0;
+    }
+</style>

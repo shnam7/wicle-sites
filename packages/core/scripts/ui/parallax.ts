@@ -51,7 +51,8 @@ export class Container {
     }
 
     private onContainerScroll(e: Event): void {
-        const currentScrollPos = this.content instanceof Window ? this.content.scrollY : this.content.scrollTo
+        const currentScrollPos =
+            this.content instanceof Window ? this.content.scrollY : this.content.scrollTo
         for (const surface of this.surface) surface.scroll(-currentScrollPos)
     }
 }
@@ -72,7 +73,7 @@ export class Surface {
         cssPosition = 'fixed',
     ) {
         this.content = surfaceContents
-        surfaceContents.style.position = 'cssPosition'
+        surfaceContents.style.position = cssPosition
         surfaceContents.style.transform = 'none'
     }
 

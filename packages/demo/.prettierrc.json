@@ -8,6 +8,6 @@
     "trailingComma": "all",
     "bracketSameLine": true,
     "endOfLine": "lf",
-    "printWidth": 120,
+    "printWidth": 100,
     "plugins": ["prettier-plugin-astro"]
 }

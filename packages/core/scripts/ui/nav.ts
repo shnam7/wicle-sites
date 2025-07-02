@@ -21,7 +21,8 @@ export type NavOptions = {
     breakPoint?: number
 }
 
-const dynamicClasses = 'w-nav,w-nav-item,w-nav-item-wrapper w-nav-parent,w-nav-child,w-nav-divider js-flip, is-active'
+const dynamicClasses =
+    'w-nav,w-nav-item,w-nav-item-wrapper w-nav-parent,w-nav-child,w-nav-divider js-flip, is-active'
 const dynamicElements = 'w-nav-parent-marker,w-nav-accordion-click-area'
 
 function onMouseEnterDropdown(e: Event) {
@@ -79,7 +80,9 @@ function initParentNodes(nav: HTMLElement) {
     for (const parent of parents) {
         if (parent.classList.contains('wo-icon')) continue
 
-        const itemWrappers = [...parent.children].filter(child => child.classList.contains('w-nav-item-wrapper'))
+        const itemWrappers = [...parent.children].filter(child =>
+            child.classList.contains('w-nav-item-wrapper'),
+        )
         for (const wrapper of itemWrappers) {
             if (wrapper.classList.contains('wo-icon')) continue
 
@@ -209,7 +212,9 @@ export function nav(selector?: string, options: NavOptions = {}) {
             // remove event handlers
             window.removeEventListener('resize', flipHandler)
             // window.removeEventListener(Nav.mqStateChangedEventName, this.mqChangeHandler);
-            $nav.filter('.wo-accordion').find('.w-nav-parent,.w-nav-accordion-click-area').off('click')
+            $nav.filter('.wo-accordion')
+                .find('.w-nav-parent,.w-nav-accordion-click-area')
+                .off('click')
         })
 
         nav.dispatchEvent(new Event('nav:init'))

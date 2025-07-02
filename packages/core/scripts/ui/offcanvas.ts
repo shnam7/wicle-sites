@@ -64,7 +64,8 @@ export function offcanvas(selector?: string, options?: OffcanvasOptions) {
                     top: 0,
                     left: pos === 'left' ? 0 : 'auto',
                     right: pos === 'left' ? 'auto' : 0,
-                    transform: pos === 'left' ? 'translate3d(-100%, 0, 0)' : 'translate3d(100%, 0, 0)',
+                    transform:
+                        pos === 'left' ? 'translate3d(-100%, 0, 0)' : 'translate3d(100%, 0, 0)',
                 }
             if (pos === 'top' || pos === 'bottom')
                 return {
@@ -73,7 +74,8 @@ export function offcanvas(selector?: string, options?: OffcanvasOptions) {
                     left: 0,
                     top: pos === 'top' ? 0 : 'auto',
                     bottom: pos === 'top' ? 'auto' : 0,
-                    transform: pos === 'top' ? 'translate3d(0, -100%, 0)' : 'translate3d(0, 100%, 0)',
+                    transform:
+                        pos === 'top' ? 'translate3d(0, -100%, 0)' : 'translate3d(0, 100%, 0)',
                 }
             return {}
         }
