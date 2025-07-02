@@ -7,8 +7,9 @@
         "lint": "turbo lint",
         "clean": "turbo clean",
         "test": "turbo test",
-        "reset": "npm-run-all -s clean reset:turbo reset:node",
+        "reset": "npm-run-all -s clean reset:turbo reset:astro reset:node",
         "reset:turbo": "find . -type d -name .turbo -exec rm -rf {} +",
+        "reset:astro": "find . -type d -name .astro -exec rm -rf {} +",
         "reset:node": "find . -type d -name node_modules -exec rm -rf {} +",
         "prepare-to-commit": "run-s build lint test clean"
     },

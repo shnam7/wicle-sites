@@ -3,8 +3,9 @@
     "tasks": {
         "build": {
             "inputs": ["src/**", "public/**", "test/**"],
-            "outputs": ["dist/**", "!converag/**"],
+            "outputs": ["dist/**", ".astro/**", "!converag/**"],
             "dependsOn": ["wicle-sites#build", "^build"]
-        }
+        },
+        "clean": {}
     }
 }

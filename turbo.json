@@ -5,8 +5,6 @@
             "persistent": true
         },
         "build": {
-            "inputs": ["src/**", "test/**"],
-            "outputs": ["dist/**", "!converag/**"],
             "dependsOn": ["^build"]
         },
         "lint": {
@@ -16,7 +14,8 @@
             "cache": false
         },
         "clean": {
-            "cache": false
+            "cache": false,
+            "dependsOn": ["^clean"]
         }
     }
 }
