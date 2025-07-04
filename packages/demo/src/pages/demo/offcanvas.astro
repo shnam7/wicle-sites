@@ -9,8 +9,8 @@ const bodyClass = 'demo-offcanvas'
     <div class='w-divider'></div>
 
     <div class='demo-panel'>
-        <input type='radio' name='mode' value='push' checked /> Push (default) &nbsp;
-        <input type='radio' name='mode' value='overlay' /> Overlay
+        <input type='radio' name='mode' value='overlay' checked /> Overlay (Defaulet) &nbsp;
+        <input type='radio' name='mode' value='push' /> Push (default) &nbsp;
 
         <br /><br />
 
@@ -28,3 +28,28 @@ const bodyClass = 'demo-offcanvas'
         margin: 1.5rem 1rem;
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modeRadios = document.querySelectorAll<HTMLInputElement>('input[name="mode"]')
+
+        modeRadios.forEach(radio => {
+            radio.addEventListener('change', e => {
+                const target = e.target as HTMLInputElement
+                if (target.checked) {
+                    const newMode = target.value
+
+                    // 모든 오프캔버스 요소에 모드 변경 이벤트 발생
+                    const offcanvasElements = document.querySelectorAll('.l-site-offcanvas')
+                    offcanvasElements.forEach(element => {
+                        console.log(`Changing mode to: ${newMode} for element:`, element)
+                        const changeEvent = new CustomEvent('offcanvas:change-mode', {
+                            detail: {mode: newMode},
+                        })
+                        element.dispatchEvent(changeEvent)
+                    })
+                }
+            })
+        })
+    })
+</script>

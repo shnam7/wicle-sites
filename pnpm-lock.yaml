@@ -26,9 +26,6 @@ importers:
       '@changesets/cli':
         specifier: ^2.29.5
         version: 2.29.5
-      '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
       '@types/node':
         specifier: ^24.0.10
         version: 24.0.10
@@ -44,9 +41,6 @@ importers:
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
-      jquery:
-        specifier: ^3.7.1
-        version: 3.7.1
       lightningcss:
         specifier: ^1.30.1
         version: 1.30.1
@@ -93,12 +87,6 @@ importers:
         specifier: ^5.11.0
         version: 5.11.0(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.44.0)(sass@1.89.2)(typescript@5.8.3)
     devDependencies:
-      '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
-      jquery:
-        specifier: ^3.7.1
-        version: 3.7.1
       lightningcss:
         specifier: ^1.30.1
         version: 1.30.1
@@ -1031,9 +1019,6 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
-  '@types/jquery@3.5.32':
-    resolution: {integrity: sha512-b9Xbf4CkMqS02YH8zACqN1xzdxc3cO735Qe5AbSUFmyOiaWAbcpqh9Wna+Uk0vgACvoQHpWDg2rGdHkYPLmCiQ==}
-
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
@@ -1051,9 +1036,6 @@ packages:
 
   '@types/node@24.0.10':
     resolution: {integrity: sha512-ENHwaH+JIRTDIEEbDK6QSQntAYGtbvdDXnMXnZaZ6k13Du1dPMmprkEHIL7ok2Wl2aZevetwTAb5S+7yIF+enA==}
-
-  '@types/sizzle@2.3.9':
-    resolution: {integrity: sha512-xzLEyKB50yqCUPUJkIsrVvoWNfFUbIZI+RspLWt8u+tIW/BetMBZtgV2LY/2o+tYH8dRvQ+eoPf3NdhQCcLE2w==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -2700,9 +2682,6 @@ packages:
   jiti@2.4.2:
     resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
     hasBin: true
-
-  jquery@3.7.1:
-    resolution: {integrity: sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -5442,10 +5421,6 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/jquery@3.5.32':
-    dependencies:
-      '@types/sizzle': 2.3.9
-
   '@types/json-schema@7.0.15': {}
 
   '@types/mdast@4.0.4':
@@ -5463,8 +5438,6 @@ snapshots:
   '@types/node@24.0.10':
     dependencies:
       undici-types: 7.8.0
-
-  '@types/sizzle@2.3.9': {}
 
   '@types/unist@3.0.3': {}
 
@@ -7426,8 +7399,6 @@ snapshots:
       pretty-format: 30.0.2
 
   jiti@2.4.2: {}
-
-  jquery@3.7.1: {}
 
   js-tokens@4.0.0: {}
 
