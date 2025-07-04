@@ -73,7 +73,11 @@ $key: 'w-nav';
 
 // divider for dropdown
 @include ssv('divider/spacing', 5px, true);
-@include ssv('divider/style', 1px solid theme.gsv('color/line'), true); // color #ddd = color.gray(86.5%)
+@include ssv(
+    'divider/style',
+    1px solid theme.gsv('color/line'),
+    true
+); // color #ddd = color.gray(86.5%)
 
 // dropdown
 @include ssv('dropdown/z-index', zi.$level2, true);

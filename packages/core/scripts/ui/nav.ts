@@ -8,9 +8,8 @@
 // export type MQEventHandler = (nav: Nav, event: CustomEvent<MediaQuery.MQChangeEventData>) => void;
 
 // interface Options { [key: string]: any }
-import jQuery from 'jquery'
-
-const window = globalThis as Window & typeof globalThis
+import {slideDown, slideUp} from '../util/slider.js'
+import {siblings} from '../util/siblings.js'
 
 export type NavOptions = {
     speed?: number
@@ -21,28 +20,27 @@ export type NavOptions = {
     breakPoint?: number
 }
 
+type NavConfig = {
+    selector: string
+    options: NavOptions
+}
+
+const window = globalThis as Window & typeof globalThis
+const conf: NavConfig = {
+    selector: '.w-nav',
+    options: {
+        speed: 200,
+        showDelay: 0,
+        hideDelay: 0,
+        parentLink: false,
+        singleOpen: false,
+        breakPoint: 640,
+    },
+}
+
 const dynamicClasses =
     'w-nav,w-nav-item,w-nav-item-wrapper w-nav-parent,w-nav-child,w-nav-divider js-flip, is-active'
 const dynamicElements = 'w-nav-parent-marker,w-nav-accordion-click-area'
-
-function onMouseEnterDropdown(e: Event) {
-    // check out-of-viewport status (determine child popup dipslay position)
-    const sub = (e.currentTarget as HTMLElement).querySelector('.w-nav-child')
-    if (sub) {
-        const rect = sub.getBoundingClientRect()
-        let flip = ''
-
-        // Check if the element exceeds the horizontal viewport (excluding scrollbars)
-        if (rect.right >= document.body.clientWidth) flip = 'x'
-
-        // Check if the element exceeds the vertical viewport
-        if (rect.bottom >= window.innerHeight) flip += 'y'
-
-        if (flip) {
-            sub.setAttribute('js-flip', flip)
-        }
-    }
-}
 
 function flipHandler(e: Event) {
     const flippedElements = document.querySelectorAll('.w-nav [js-flip]')
@@ -96,127 +94,164 @@ function initParentNodes(nav: HTMLElement) {
     }
 }
 
-export function nav(selector?: string, options: NavOptions = {}) {
-    selector ??= '.w-nav'
-    options = {
-        speed: 200,
-        showDelay: 0,
-        hideDelay: 0,
-        parentLink: false,
-        singleOpen: false,
-        breakPoint: 640,
-        ...options,
+// --- event handlers
+function onNavInit(e: Event) {
+    const nav = e.currentTarget as HTMLElement
+    const options = (e as CustomEvent<NavOptions>).detail
+    // Use the data here...
+
+    setBasicClasses(nav)
+    setMultiLevelClasses(nav)
+    initParentNodes(nav)
+
+    const navItems = document.querySelectorAll('.w-nav-item')
+
+    for (const el of navItems) {
+        const text = el.textContent?.trim() ?? ''
+
+        // If text starts with one or more dash-like characters, add the class
+        if (/^[-\u2014\u2013]+/.test(text)) {
+            el.classList.add('w-nav-divider')
+        }
     }
 
-    for (const nav of document.querySelectorAll<HTMLElement>(selector)) {
-        const $nav = jQuery(nav)
+    // --- dropdown settings
+    const cl = nav.classList
+    if (cl.contains('wo-dropdown') || cl.contains('wo-default')) {
+        for (const itemWithChildren of nav.querySelectorAll('.w-nav-parent')) {
+            itemWithChildren.removeEventListener('mouseenter', onDropdownMouseEnter)
+            itemWithChildren.addEventListener('mouseenter', onDropdownMouseEnter)
+        }
+    }
 
-        // init
-        nav.addEventListener('nav:init', (e: Event) => {
-            const data = (e as CustomEvent<NavOptions>).detail
-            // Use the data here...
+    // --- accordion settings
+    if (cl.contains('wo-accordion')) {
+        for (const el of nav.querySelectorAll<HTMLElement>('.w-nav-item-wrapper')) {
+            const hasClickArea = el.querySelector('.w-nav-accordion-click-area')
+            if (!hasClickArea) {
+                const clickArea = document.createElement('span')
+                clickArea.className = 'w-nav-accordion-click-area'
+                el.after(clickArea)
+            }
+        }
+    }
 
-            setBasicClasses(nav)
-            setMultiLevelClasses(nav)
-            initParentNodes(nav)
+    if (nav.classList.contains('wo-accordion')) {
+        const accordionElements = nav.querySelectorAll<HTMLElement>(
+            '.w-nav-item-wrapper,.w-nav-accordion-click-area',
+        )
 
-            const navItems = document.querySelectorAll('.w-nav-item')
+        // Remove existing click handlers
+        for (const el of accordionElements) {
+            el.removeEventListener('click', onAccordionClick)
+            el.addEventListener('click', onAccordionClick)
+        }
+    }
 
-            for (const el of navItems) {
-                const text = el.textContent?.trim() ?? ''
+    for (const el of nav.querySelectorAll('.w-state-active')) {
+        el.classList.add('is-active')
+    }
+    // }
 
-                // If text starts with one or more dash-like characters, add the class
-                if (/^[-\u2014\u2013]+/.test(text)) {
-                    el.classList.add('w-nav-divider')
+    window.removeEventListener('resize', flipHandler)
+    window.addEventListener('resize', flipHandler)
+}
+
+function onNavClean(e: Event) {
+    const nav = e.currentTarget as HTMLElement
+
+    // remove dynamic elements
+    const dynamicElementSelectors = dynamicElements.split(',')
+    for (const selector of dynamicElementSelectors) {
+        for (const el of nav.querySelectorAll<HTMLElement>(`.${selector.trim()}`)) {
+            el.remove()
+        }
+    }
+
+    // remove dynamic classes
+    const dynamicClassList = dynamicClasses.split(',')
+    for (const className of dynamicClassList) {
+        for (const el of nav.querySelectorAll(`.${className.trim()}`)) {
+            el.classList.remove(className.trim())
+        }
+    }
+
+    // remove event handlers
+    window.removeEventListener('resize', flipHandler)
+
+    // Remove accordion click handlers
+    if (nav.classList.contains('wo-accordion')) {
+        const accordionElements = nav.querySelectorAll<HTMLElement>(
+            '.w-nav-parent,.w-nav-accordion-click-area',
+        )
+        for (const el of accordionElements) {
+            el.removeEventListener('click', onAccordionClick)
+        }
+    }
+}
+
+function onDropdownMouseEnter(e: Event) {
+    // check out-of-viewport status (determine child popup dipslay position)
+    const sub = (e.currentTarget as HTMLElement).querySelector('.w-nav-child')
+    if (sub) {
+        const rect = sub.getBoundingClientRect()
+        let flip = ''
+
+        // Check if the element exceeds the horizontal viewport (excluding scrollbars)
+        if (rect.right >= document.body.clientWidth) flip = 'x'
+
+        // Check if the element exceeds the vertical viewport
+        if (rect.bottom >= window.innerHeight) flip += 'y'
+
+        if (flip) {
+            sub.setAttribute('js-flip', flip)
+        }
+    }
+}
+
+function onAccordionClick(e: Event) {
+    const target = e.target as HTMLElement
+    const opts = conf.options
+    const href = target.getAttribute('href')
+
+    // set target to w-nav-parent
+    const parent = target.parentElement!
+    const sub = parent.querySelector<HTMLElement>('.w-nav-child')
+    const subAll = parent.querySelectorAll<HTMLElement>('.w-nav-child')
+
+    if (sub) {
+        const isHidden = getComputedStyle(sub).display === 'none'
+
+        if (isHidden) {
+            slideDown(sub, opts.speed)
+            const sibling = parent.querySelector('a')
+            if (sibling) sibling.classList.add('is-active')
+
+            if (opts.singleOpen) {
+                for (const sibling of siblings(parent.parentElement!)) {
+                    const siblingChild = sibling.querySelector<HTMLElement>('.w-nav-child')
+                    slideUp(siblingChild ?? undefined, opts.speed)
+                    sibling.querySelector('a')?.classList.remove('is-active')
                 }
             }
+        } else {
+            setTimeout(() => {
+                for (const el of subAll) slideUp(el, opts.speed)
+                parent.querySelector('a')?.classList.remove('is-active')
+            }, opts.hideDelay ?? 0)
+        }
+    }
 
-            // --- dropdown settings
-            const cl = nav.classList
-            if (cl.contains('wo-dropdown') || cl.contains('wo-default')) {
-                for (const itemWithChildren of nav.querySelectorAll('.w-nav-parent')) {
-                    itemWithChildren.removeEventListener('mouseenter', onMouseEnterDropdown)
-                    itemWithChildren.addEventListener('mouseenter', onMouseEnterDropdown)
-                }
-            }
+    if (opts.parentLink && href) window.location.href = href
+    e.preventDefault()
+    return false
+}
 
-            // --- accordion settings
-            if (cl.contains('wo-accordion')) {
-                for (const el of nav.querySelectorAll<HTMLElement>('.w-nav-item-wrapper')) {
-                    const hasClickArea = el.querySelector('.w-nav-accordion-click-area')
-                    if (!hasClickArea) {
-                        const clickArea = document.createElement('span')
-                        clickArea.className = 'w-nav-accordion-click-area'
-                        el.after(clickArea)
-                    }
-                }
-            }
-
-            const $accordion = $nav.filter('.wo-accordion')
-            $accordion
-                .find('.w-nav-item-wrapper,.w-nav-accordion-click-area')
-                .off('click')
-                .on('click', (e, data) => {
-                    const opts = options ?? {}
-                    const href = e.target.getAttribute('href')
-
-                    // set target to w-nav-parent
-                    const $target = jQuery(e.target).parent()
-                    const $sub = $target.children('.w-nav-child')
-                    const $subAll = $target.find('.w-nav-child')
-                    if ($sub.length > 0) {
-                        if ($sub.css('display') === 'none') {
-                            $sub.slideDown(opts.speed).siblings('a').addClass('is-active')
-                            if (opts.singleOpen) {
-                                $target
-                                    .siblings()
-                                    .find('.w-nav-child')
-                                    .slideUp(opts.speed)
-                                    .end()
-                                    .find('a')
-                                    .removeClass('is-active')
-                            }
-                        } else {
-                            $subAll
-                                .delay(opts.hideDelay ?? 0)
-                                .slideUp(opts.speed)
-                                .siblings('a')
-                                .removeClass('is-active')
-                        }
-                    }
-
-                    if (opts.parentLink && href) window.location.href = href
-                    e.preventDefault()
-                    return false
-                })
-
-            for (const el of nav.querySelectorAll('.w-state-active')) {
-                el.classList.add('is-active')
-            }
-
-            window.removeEventListener('resize', flipHandler)
-            window.addEventListener('resize', flipHandler)
-        })
-
-        $nav.on('nav:clean', (e, data) => {
-            // remove dynamic elements
-            // eslint-disable-next-line unicorn/no-array-callback-reference
-            $nav.find(dynamicElements).remove()
-
-            // remove dynamic classes
-            // $nav.find(dynamicClasses).removeClass(dynamicClasses)
-            for (const el of nav.querySelectorAll(dynamicClasses)) {
-                el.classList.remove(dynamicClasses)
-            }
-
-            // remove event handlers
-            window.removeEventListener('resize', flipHandler)
-            // window.removeEventListener(Nav.mqStateChangedEventName, this.mqChangeHandler);
-            $nav.filter('.wo-accordion')
-                .find('.w-nav-parent,.w-nav-accordion-click-area')
-                .off('click')
-        })
-
-        nav.dispatchEvent(new Event('nav:init'))
+export function nav(selector?: string, options: NavOptions = {}) {
+    if (selector) conf.selector = selector
+    for (const nav of document.querySelectorAll<HTMLElement>(conf.selector)) {
+        nav.addEventListener('nav:init', onNavInit)
+        nav.addEventListener('nav:clean', onNavClean)
+        nav.dispatchEvent(new CustomEvent<NavOptions>('nav:init', {detail: options}))
     }
 }
