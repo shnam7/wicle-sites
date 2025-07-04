@@ -1,11 +1,10 @@
 {
     "extends": ["//"],
     "tasks": {
-        "build": {
-            "inputs": ["src/**", "public/**", "test/**"],
-            "outputs": ["dist/**", ".astro/**", "!converag/**"],
-            "dependsOn": ["wicle-sites#build", "^build"]
-        },
-        "clean": {}
+        "dev": {
+            "cache": false,
+            "persistent": true,
+            "dependsOn": ["wicle-sites#build"]
+        }
     }
 }

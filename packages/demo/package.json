@@ -10,7 +10,7 @@
         "clean": "rm -rf dist .astro"
     },
     "dependencies": {
-        "astro": "^5.10.2"
+        "astro": "^5.11.0"
     },
     "devDependencies": {
         "@types/jquery": "^3.5.32",

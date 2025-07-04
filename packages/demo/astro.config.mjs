@@ -25,14 +25,17 @@ export default defineConfig({
                 {find: '@@', replacement: './'},
             ],
         },
-        server: {
-            watch: {
-                // Watch for changes in shared packages
-                ignored: ['!**/packages/**'],
-            },
-        },
-        optimizeDeps: {
-            include: ['wicle-sites'],
-        },
+        // server: {
+        //     watch: {
+        //         // Watch for changes in shared packages
+        //         ignored: ['!**/packages/**'],
+        //     },
+        // },
+        // optimizeDeps: {
+        //     include: ['wicle-sites'],
+        // },
+        // ssr: {
+        //     noExternal: ['wicle-sites'],
+        // },
     },
 })
