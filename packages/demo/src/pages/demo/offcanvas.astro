@@ -40,13 +40,12 @@ const bodyClass = 'demo-offcanvas'
                     const newMode = target.value
 
                     // 모든 오프캔버스 요소에 모드 변경 이벤트 발생
-                    const offcanvasElements = document.querySelectorAll('.l-site-offcanvas')
+                    const offcanvasElements =
+                        document.querySelectorAll<HTMLElement>('.l-site-offcanvas')
                     offcanvasElements.forEach(element => {
-                        console.log(`Changing mode to: ${newMode} for element:`, element)
-                        const changeEvent = new CustomEvent('offcanvas:change-mode', {
-                            detail: {mode: newMode},
-                        })
-                        element.dispatchEvent(changeEvent)
+                        element.dispatchEvent(new Event('offcanvas:close'))
+                        // console.log(`Changing mode to: ${newMode} for element:`, element)
+                        element.dataset.mode = newMode
                     })
                 }
             })

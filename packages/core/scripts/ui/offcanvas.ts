@@ -14,38 +14,45 @@
  *	<button class="w-button wz-control">Button</button>	// control button
  */
 
+import {on} from 'node:events'
+
 export type OffcanvasOptions = {
-    closeButton: boolean
-    closeButtonSelector: string
-    closeOnBackgroundClick: boolean
+    selector?: string // selector for offcanvas element
+    control?: string // selector for open/close control
+    position?: string // location of the canvas: left, top, right, bottom
+    width?: string // default width of vertical canvas
+    height?: string // default height of horizontal canvas
+    mode?: string // animation mode. overlay(default) or push
+    duration?: number // animation duration
+    pusher?: string // selector for element to be pushed on open
+    isOpen?: boolean // open/close state,
+    closeButton?: boolean
+    closeButtonClassName?: string
+    autoClose?: boolean
 }
 
-type OffcanvasData = {
-    control: string // selector for open/close control
-    position: string // location of the canvas: left, top, right, bottom
-    width: string // default width of vertical canvas
-    height: string // default height of horizontal canvas
-    mode: string // animation mode. overlay(default) or push
-    duration: number // animation duration
-    pusher: string // selector for element to be pushed on open
-    isOpen: boolean // open/close state
+type OffcanvasData = Required<OffcanvasOptions>
+
+const defaultCanvasData: OffcanvasData = {
+    selector: '.l-site-offcanvas',
+    control: '',
+    position: 'left',
+    width: '320px',
+    height: '320px',
+    mode: 'overlay',
+    duration: 500,
+    pusher: '.l-site-container',
+    isOpen: false,
+    closeButton: true,
+    closeButtonClassName: 'offcanvas-close-button',
+    autoClose: true,
 }
 
-// WeakMap for storing element data (replaces jQuery data())
+// --- Canvas data - using both WeakMap and element dataset
 const canvasDataMap = new WeakMap<HTMLElement, OffcanvasData>()
 
-// Helper functions
-function applyCss(element: HTMLElement, styles: Record<string, string | number>) {
-    Object.assign(element.style, styles)
-}
-
-function dispatchCustomEvent(element: HTMLElement, eventName: string, data?: OffcanvasData) {
-    const event = new CustomEvent(eventName, {detail: data})
-    element.dispatchEvent(event)
-}
-
-function getElementData(element: HTMLElement): Partial<OffcanvasData> {
-    const {dataset} = element
+function getCanvasElementData(canvas: HTMLElement): Partial<OffcanvasData> {
+    const {dataset} = canvas
     const data: Partial<OffcanvasData> = {}
 
     if (dataset.control) data.control = dataset.control
@@ -55,237 +62,226 @@ function getElementData(element: HTMLElement): Partial<OffcanvasData> {
     if (dataset.mode) data.mode = dataset.mode
     if (dataset.duration) data.duration = Number.parseInt(dataset.duration, 10)
     if (dataset.pusher) data.pusher = dataset.pusher
+    if (dataset.closeButton) data.closeButton = dataset.closeButton === 'true'
+    if (dataset.closeButtonClassName) data.closeButtonClassName = dataset.closeButtonClassName
+    if (dataset.autoClose) data.autoClose = dataset.autoClose === 'true'
+
+    //  sanity check
+    if (Number.isNaN(data.duration)) data.duration = defaultCanvasData.duration
 
     return data
 }
 
-export function offcanvas(selector?: string, options?: OffcanvasOptions) {
-    selector ??= '.l-site-offcanvas'
-    const opts: OffcanvasOptions = {
-        closeButton: true,
-        closeButtonSelector: '.offcanvas-close-button',
-        closeOnBackgroundClick: true,
-        ...options,
+function getCanvasData(canvas: HTMLElement): Required<OffcanvasData> {
+    return {...defaultCanvasData, ...canvasDataMap.get(canvas), ...getCanvasElementData(canvas)}
+}
+
+function setCanvasData(canvas: HTMLElement, data: Required<OffcanvasData>): void {
+    const {dataset} = canvas
+
+    dataset.control &&= data.control
+    dataset.position &&= data.position
+    dataset.width &&= data.width
+    dataset.height &&= data.height
+    dataset.mode &&= data.mode
+    dataset.duration &&= data.duration.toString()
+    dataset.pusher &&= data.pusher
+    dataset.closeButton &&= data.closeButton.toString()
+    dataset.closeButtonSelector &&= data.closeButtonClassName
+    dataset.autoClose &&= data.autoClose.toString()
+
+    canvasDataMap.set(canvas, data)
+}
+
+// ----- Helper functions
+
+function applyCss(element: HTMLElement, styles: Record<string, string | number>) {
+    Object.assign(element.style, styles)
+}
+
+function hideCss(data: OffcanvasData): Record<string, string | number> {
+    const pos = data.position
+    if (pos === 'left' || pos === 'right')
+        return {
+            width: `${data.width}`,
+            height: '100%',
+            top: '0',
+            left: pos === 'left' ? '0' : 'auto',
+            right: pos === 'left' ? 'auto' : '0',
+            transform: pos === 'left' ? 'translate3d(-100%, 0, 0)' : 'translate3d(100%, 0, 0)',
+        }
+    if (pos === 'top' || pos === 'bottom')
+        return {
+            width: '100%',
+            height: `${data.height}`,
+            left: '0',
+            top: pos === 'top' ? '0' : 'auto',
+            bottom: pos === 'top' ? 'auto' : '0',
+            transform: pos === 'top' ? 'translate3d(0, -100%, 0)' : 'translate3d(0, 100%, 0)',
+        }
+    return {}
+}
+
+function pushCss(data: OffcanvasData): Record<string, string | number> {
+    const pos = data.position
+    if (pos === 'left') return {transform: `translate3d(${data.width},0,0)`}
+    if (pos === 'right') return {transform: `translate3d(-${data.width},0,0)`}
+    if (pos === 'top') return {transform: `translate3d(0,${data.height},0)`}
+    if (pos === 'bottom') return {transform: `translate3d(0,-${data.height},0)`}
+    return {}
+}
+
+// --- Event handlers ----------------------------------------
+
+// init
+function onInit(e: Event) {
+    const canvas = e.target as HTMLElement
+    const data = getCanvasData(canvas)
+
+    // init canvas
+    applyCss(canvas, {
+        ...hideCss(data),
+        display: 'block',
+        transition: 'transform ' + data.duration / 1000 + 's',
+    })
+
+    // init pusher
+    const pusher = document.querySelector<HTMLElement>(data.pusher)
+    if (pusher) {
+        applyCss(pusher, {
+            overflowX: 'hidden',
+            transition: 'transform ' + data.duration / 1000 + 's',
+        })
     }
 
-    const canvasElements = document.querySelectorAll<HTMLElement>(selector)
+    // set control button handler
+    if (data.control) {
+        const controlElements = document.querySelectorAll<HTMLElement>(data.control)
 
+        function onControlClick(e: Event) {
+            canvas.dispatchEvent(new Event('offcanvas:toggle'))
+        }
+
+        for (const control of controlElements) {
+            control.removeEventListener('click', onControlClick)
+            control.addEventListener('click', onControlClick)
+        }
+    }
+
+    // add offcanvas-close-button
+    if (data.closeButton) {
+        const closeButton = document.createElement('div')
+        closeButton.className = data.closeButtonClassName
+        canvas.insertBefore(closeButton, canvas.firstChild)
+
+        function onCloseButtonClick(e: Event) {
+            e.stopPropagation() // prevent event bubbling
+            canvas.dispatchEvent(new Event('offcanvas:close'))
+        }
+
+        closeButton.removeEventListener('click', onCloseButtonClick)
+        closeButton.addEventListener('click', onCloseButtonClick)
+    }
+
+    setCanvasData(canvas, data)
+}
+
+// open
+function onOpen(e: Event) {
+    const canvas = e.target as HTMLElement
+    const data = getCanvasData(canvas)
+
+    if (data.isOpen) return
+
+    // trigger opening start notice event
+    canvas.dispatchEvent(new Event('offcanvas:opening'))
+    applyCss(canvas, {transform: 'translate3d(0, 0, 0)'})
+
+    if (data.mode === 'push') {
+        const pusher = document.querySelector<HTMLElement>(data.pusher)
+        if (pusher) applyCss(pusher, pushCss(data))
+    }
+
+    data.isOpen = true
+    setCanvasData(canvas, data)
+
+    // trigger opening completed notice event
+    canvas.dispatchEvent(new Event('offcanvas:opened'))
+}
+
+// close
+function onClose(e: Event) {
+    const canvas = e.target as HTMLElement
+    const data = getCanvasData(canvas)
+
+    if (!data.isOpen) return
+
+    // trigger closing start notice event
+    canvas.dispatchEvent(new Event('offcanvas:closing'))
+
+    if (data.mode === 'push') {
+        const pusher = document.querySelector<HTMLElement>(data.pusher)
+        if (pusher) applyCss(pusher, {transform: 'none'})
+    }
+
+    applyCss(canvas, hideCss(data))
+
+    data.isOpen = false
+    setCanvasData(canvas, data)
+
+    // trigger closing completed notice event
+    canvas.dispatchEvent(new Event('offcanvas:closed'))
+}
+
+// toggle
+function onToggle(e: Event) {
+    const canvas = e.target as HTMLElement
+    const data = getCanvasData(canvas)
+
+    const eventName = data.isOpen ? 'offcanvas:close' : 'offcanvas:open'
+    canvas.dispatchEvent(new Event(eventName))
+}
+
+export function offcanvas(options: Partial<OffcanvasData> = {}) {
+    const canvasElements = document.querySelectorAll<HTMLElement>(
+        options.selector ?? defaultCanvasData.selector,
+    )
     for (const canvas of canvasElements) {
-        const defaultCanvasData: OffcanvasData = {
-            control: '',
-            position: 'left',
-            width: '320px',
-            height: '320px',
-            mode: 'overlay',
-            duration: 500,
-            pusher: '.l-site-container',
-            isOpen: false,
-        }
-
-        function hideCss(data: OffcanvasData): Record<string, string | number> {
-            const pos = data.position
-            if (pos === 'left' || pos === 'right')
-                return {
-                    width: `${data.width}`,
-                    height: '100%',
-                    top: '0',
-                    left: pos === 'left' ? '0' : 'auto',
-                    right: pos === 'left' ? 'auto' : '0',
-                    transform:
-                        pos === 'left' ? 'translate3d(-100%, 0, 0)' : 'translate3d(100%, 0, 0)',
-                }
-            if (pos === 'top' || pos === 'bottom')
-                return {
-                    width: '100%',
-                    height: `${data.height}`,
-                    left: '0',
-                    top: pos === 'top' ? '0' : 'auto',
-                    bottom: pos === 'top' ? 'auto' : '0',
-                    transform:
-                        pos === 'top' ? 'translate3d(0, -100%, 0)' : 'translate3d(0, 100%, 0)',
-                }
-            return {}
-        }
-
-        function pushCss(data: OffcanvasData): Record<string, string | number> {
-            if (data.mode !== 'push') return {}
-
-            const pos = data.position
-            if (pos === 'left') return {transform: 'translate3d(' + data.width + ',0,0)'}
-            if (pos === 'right') return {transform: 'translate3d(-' + data.width + ',0,0)'}
-            if (pos === 'top') return {transform: 'translate3d(0,' + data.height + ',0)'}
-            if (pos === 'bottom') return {transform: 'translate3d(0,-' + data.height + ',0)'}
-            return {}
-        }
-
-        // --- Event handlers ----------------------------------------
-
-        // init
-        function onInit(e: CustomEvent<OffcanvasData>) {
-            const data: OffcanvasData = {...e.detail, ...getElementData(canvas)}
-
-            applyCss(canvas, hideCss(data))
-            applyCss(canvas, {transition: 'transform ' + data.duration / 1000 + 's'})
-
-            setTimeout(() => {
-                applyCss(canvas, {display: 'block'})
-            }, 0)
-
-            // set animation timing for pusher
-            if (data.mode === 'push') {
-                const pusher = document.querySelector<HTMLElement>(data.pusher)
-                if (pusher) {
-                    applyCss(pusher, {
-                        overflowX: 'hidden',
-                        transition: 'transform ' + data.duration / 1000 + 's',
-                    })
-                }
-            }
-
-            // Focus/blur handlers for accessibility
-            let timerId: NodeJS.Timeout
-            canvas.addEventListener('blur', () => {
-                timerId = setTimeout(() => {
-                    dispatchCustomEvent(canvas, 'offcanvas:close')
-                })
-            })
-            canvas.addEventListener('focus', () => {
-                clearTimeout(timerId)
-            })
-
-            // set offcanvas control button handler
-            if (data.control) {
-                const controlElements = document.querySelectorAll<HTMLElement>(data.control)
-                for (const control of controlElements) {
-                    control.addEventListener('click', e => {
-                        dispatchCustomEvent(canvas, 'offcanvas:toggle')
-                        e.preventDefault()
-                    })
-                }
-            }
-
-            // add offcanvas-close-button
-            if (opts.closeButton) {
-                const closeButton = document.createElement('div')
-                closeButton.className = 'offcanvas-close-button'
-                canvas.insertBefore(closeButton, canvas.firstChild)
-
-                const closeButtons = canvas.querySelectorAll<HTMLElement>(opts.closeButtonSelector)
-                for (const btn of closeButtons) {
-                    btn.addEventListener('click', e => {
-                        const controlElements = document.querySelectorAll<HTMLElement>(data.control)
-                        for (const control of controlElements) control.click()
-                        e.preventDefault()
-                    })
-                }
-            }
-
-            canvasDataMap.set(canvas, data)
-        }
-
-        // open
-        function onOpen(e: CustomEvent<OffcanvasData>) {
-            const data = canvasDataMap.get(canvas)
-            if (!data || data.isOpen) return
-
-            dispatchCustomEvent(canvas, 'offcanvas:opening', data)
-            applyCss(canvas, {transform: 'translate3d(0, 0, 0)'})
-
-            if (data.mode === 'push') {
-                const pusher = document.querySelector<HTMLElement>(data.pusher)
-                if (pusher) applyCss(pusher, pushCss(data))
-            }
-
-            data.isOpen = true
-            canvasDataMap.set(canvas, data)
-            dispatchCustomEvent(canvas, 'offcanvas:opened', data)
-        }
-
-        // close
-        function onClose(e: CustomEvent<OffcanvasData>) {
-            const data = canvasDataMap.get(canvas)
-            if (!data?.isOpen) return
-
-            dispatchCustomEvent(canvas, 'offcanvas:closing', data)
-
-            if (data.mode === 'push') {
-                const pusher = document.querySelector<HTMLElement>(data.pusher)
-                if (pusher) applyCss(pusher, {transform: 'none'})
-            }
-
-            applyCss(canvas, hideCss(data))
-
-            data.isOpen = false
-            canvasDataMap.set(canvas, data)
-            dispatchCustomEvent(canvas, 'offcanvas:closed', data)
-        }
-
-        // toggle
-        function onToggle(e: CustomEvent<OffcanvasData>) {
-            const data = canvasDataMap.get(canvas)
-            if (!data) return
-
-            const eventName = data.isOpen ? 'offcanvas:close' : 'offcanvas:open'
-            dispatchCustomEvent(canvas, eventName, data)
-        }
-
-        // change mode
-        function onChangeMode(e: CustomEvent<{mode: string}>) {
-            const data = canvasDataMap.get(canvas)
-            if (!data) return
-
-            const newMode = e.detail.mode
-            if (newMode !== 'overlay' && newMode !== 'push') {
-                console.warn(
-                    `Invalid offcanvas mode: ${newMode}. Valid modes are 'overlay' or 'push'.`,
-                )
-                return
-            }
-
-            // If canvas is open, close it first
-            const wasOpen = data.isOpen
-            if (wasOpen) {
-                dispatchCustomEvent(canvas, 'offcanvas:close', data)
-            }
-
-            // Update mode
-            data.mode = newMode
-            canvasDataMap.set(canvas, data)
-
-            // Update pusher transition settings
-            const pusher = document.querySelector<HTMLElement>(data.pusher)
-            if (pusher) {
-                if (newMode === 'push') {
-                    applyCss(pusher, {
-                        overflowX: 'hidden',
-                        transition: 'transform ' + data.duration / 1000 + 's',
-                    })
-                } else {
-                    applyCss(pusher, {
-                        overflowX: '',
-                        transition: '',
-                        transform: 'none',
-                    })
-                }
-            }
-
-            // Dispatch mode changed event
-            dispatchCustomEvent(canvas, 'offcanvas:mode-changed', data)
-
-            // Reopen if it was open before
-            if (wasOpen) {
-                dispatchCustomEvent(canvas, 'offcanvas:open', data)
-            }
-        }
+        canvasDataMap.set(canvas, {
+            ...defaultCanvasData,
+            ...options,
+            ...getCanvasElementData(canvas),
+        })
 
         // Add event listeners
-        canvas.addEventListener('offcanvas:init', onInit as EventListener)
-        canvas.addEventListener('offcanvas:open', onOpen as EventListener)
-        canvas.addEventListener('offcanvas:close', onClose as EventListener)
-        canvas.addEventListener('offcanvas:toggle', onToggle as EventListener)
-        canvas.addEventListener('offcanvas:change-mode', onChangeMode as EventListener)
+        canvas.addEventListener('offcanvas:init', onInit)
+        canvas.addEventListener('offcanvas:open', onOpen)
+        canvas.addEventListener('offcanvas:close', onClose)
+        canvas.addEventListener('offcanvas:toggle', onToggle)
 
         // trigger init event
-        dispatchCustomEvent(canvas, 'offcanvas:init', defaultCanvasData)
+        canvas.dispatchEvent(new Event('offcanvas:init'))
     }
+
+    function autoCloseHandler(e: Event) {
+        for (const canvas of canvasElements) {
+            const data = getCanvasData(canvas)
+
+            // if control is clicked, do nothing
+            const controls = document.querySelectorAll<HTMLElement>(data.control)
+            const isControlClicked = [...controls].some(control =>
+                control.contains(e.target as Node),
+            )
+
+            if (isControlClicked) return
+
+            // if the click is not for control, then execute auto-close logic
+            if (data.isOpen && data.autoClose && !canvas.contains(e.target as Node)) {
+                canvas.dispatchEvent(new Event('offcanvas:close'))
+            }
+        }
+    }
+
+    globalThis.removeEventListener('click', autoCloseHandler)
+    globalThis.addEventListener('click', autoCloseHandler)
 }

@@ -99,9 +99,9 @@ $key: 'w-nav';
 @include ssv('opt/invert/separator/style', 1px solid rgba(color.$text-white, 0.35), true);
 
 @include ssv('opt/flip/x-offset', 1rem, true); // x offset for 1st level popup
-@include ssv('opt/flip/y-offset', 0, true); // y offset for 1st level popup
+@include ssv('opt/flip/y-offset', 0px, true); // y offset for 1st level popup
 @include ssv('opt/flip/sub/x-offset', 3px, true); // x offset for 2nd+ level popup
-@include ssv('opt/flip/sub/y-offset', 0, true); // y offset for 2nd+ level popup
+@include ssv('opt/flip/sub/y-offset', 0px, true); // y offset for 2nd+ level popup
 
 //-----------------------------------------------
 //  Mixins
@@ -359,25 +359,31 @@ $key: 'w-nav';
                     transition: opacity 0.25s linear;
                 }
             }
+
+            .js-y-flipped {
+                &::after {
+                    top: 0;
+                }
+            }
         }
     }
 
     // icon menu
-    &.wo-icon {
-        &.wo-pointer {
-            & > li.w-nav-parent {
-                &::after {
-                    left: 0.5rem;
-                }
-            }
-        }
+    // &.wo-icon {
+    //     &.wo-pointer {
+    //         & > li.w-nav-parent {
+    //             &::after {
+    //                 left: 0.5rem;
+    //             }
+    //         }
+    //     }
 
-        & > li > a {
-            font-size: gsv(icon/font-size);
-            font-weight: gsv(icon/font-weight);
-            padding: gsv(icon/padding) auto; // vertical padding must be preserved to sync dropdown popup position
-        }
-    }
+    //     & > li > a {
+    //         font-size: gsv(icon/font-size);
+    //         font-weight: gsv(icon/font-weight);
+    //         padding: gsv(icon/padding) auto; // vertical padding must be preserved to sync dropdown popup position
+    //     }
+    // }
 
     &.wo-default,
     &.wo-dropdown {

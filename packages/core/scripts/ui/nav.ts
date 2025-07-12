@@ -12,41 +12,68 @@ import {slideDown, slideUp} from '../util/slider.js'
 import {siblings} from '../util/siblings.js'
 
 export type NavOptions = {
+    selector?: string
     speed?: number
-    showDelay?: number
-    hideDelay?: number
     parentLink?: boolean
     singleOpen?: boolean
-    breakPoint?: number
 }
 
-type NavConfig = {
-    selector: string
-    options: NavOptions
+type NavData = Required<NavOptions> & {
+    // keep event handlers for use in clean-up
+    onAccordionClick?: (e: Event) => void
 }
 
-const window = globalThis as Window & typeof globalThis
-const conf: NavConfig = {
+const defaultNavData: NavData = {
     selector: '.w-nav',
-    options: {
-        speed: 200,
-        showDelay: 0,
-        hideDelay: 0,
-        parentLink: false,
-        singleOpen: false,
-        breakPoint: 640,
-    },
+    speed: 200,
+    parentLink: false,
+    singleOpen: false,
 }
 
-const dynamicClasses =
-    'w-nav,w-nav-item,w-nav-item-wrapper w-nav-parent,w-nav-child,w-nav-divider js-flip, is-active'
-const dynamicElements = 'w-nav-parent-marker,w-nav-accordion-click-area'
+// --- Canvas data - using both WeakMap and element dataset
+const navDataMap = new WeakMap<HTMLElement, NavData>()
+const window = globalThis as Window & typeof globalThis
+const dynamicClasses = [
+    'w-nav',
+    'w-nav-item',
+    'w-nav-item-wrapper',
+    'w-nav-parent',
+    'w-nav-child',
+    'w-nav-divider',
+    'js-flip',
+    'js-y-flipped',
+    'is-active',
+]
+const dynamicElements = ['w-nav-parent-marker', 'w-nav-accordion-click-area']
 
-function flipHandler(e: Event) {
-    const flippedElements = document.querySelectorAll('.w-nav [js-flip]')
-    for (const el of flippedElements) {
-        el.removeAttribute('js-flip')
-    }
+// ----- Helper functions -----------------------------------------------------
+
+function getNavElementData(nav: HTMLElement): Partial<NavData> {
+    const {dataset} = nav
+    const data: Partial<NavData> = {}
+
+    if (dataset.speed) data.speed = Number.parseInt(dataset.speed, 10)
+    if (dataset.parentLink) data.parentLink = dataset.parentLink === 'true'
+    if (dataset.singleOpen) data.singleOpen = dataset.singleOpen === 'true'
+
+    //  sanity check
+    if (Number.isNaN(data.speed)) data.speed = defaultNavData.speed
+
+    return data
+}
+
+function getNavData(nav: HTMLElement): NavData {
+    return {...defaultNavData, speed: 500, ...navDataMap.get(nav), ...getNavElementData(nav)}
+}
+
+function setNavData(nav: HTMLElement, data: NavData): void {
+    const {dataset} = nav
+
+    dataset.speed &&= data.speed.toString()
+    dataset.parentLink &&= data.parentLink.toString()
+    dataset.singleOpen &&= data.singleOpen.toString()
+
+    navDataMap.set(nav, data)
 }
 
 function setBasicClasses(nav: HTMLElement) {
@@ -76,13 +103,13 @@ function initParentNodes(nav: HTMLElement) {
     // set parent nodes for multi-level menus
     const parents = nav.querySelectorAll<HTMLElement>('.w-nav-parent')
     for (const parent of parents) {
-        if (parent.classList.contains('wo-icon')) continue
+        // if (parent.classList.contains('wo-icon')) continue
 
         const itemWrappers = [...parent.children].filter(child =>
             child.classList.contains('w-nav-item-wrapper'),
         )
         for (const wrapper of itemWrappers) {
-            if (wrapper.classList.contains('wo-icon')) continue
+            // if (wrapper.classList.contains('wo-icon')) continue
 
             const hasMarker = wrapper.querySelector('.w-nav-parent-marker')
             if (!hasMarker) {
@@ -94,11 +121,77 @@ function initParentNodes(nav: HTMLElement) {
     }
 }
 
-// --- event handlers
+function handleAccordionClick(target: HTMLElement, nav: HTMLElement) {
+    const data = getNavData(nav)
+    const href = target.getAttribute('href')
+
+    const targetItem = target.parentElement
+    const targetChild = targetItem?.querySelector<HTMLElement>('.w-nav-child')
+    // sanity check
+    if (!targetItem || !targetChild) {
+        console.warn('Invalid target or target child element:', target, targetChild)
+        return
+    }
+
+    const siblingItems = siblings(targetItem)
+    const siblingChildren = [...siblingItems]
+        .map(sibling => sibling.querySelector<HTMLElement>('.w-nav-child'))
+        .filter(child => child !== null)
+
+    const isHidden = getComputedStyle(targetChild).display === 'none'
+
+    // handle target submenu
+    if (isHidden) {
+        slideDown(targetChild, data.speed)
+        target.classList.add('is-active')
+    } else {
+        slideUp(targetChild, data.speed)
+        target.classList.remove('is-active')
+    }
+
+    // handle siblings
+    for (const siblingChild of siblingChildren) {
+        if (getComputedStyle(siblingChild).display === 'none') continue
+        slideUp(siblingChild, data.speed)
+        siblingChild.parentElement?.querySelector('a')?.classList.remove('is-active')
+    }
+
+    if (data.parentLink && href) globalThis.location.href = href
+}
+
+// ----- Event Handlers -------------------------------------------------------
+
+function onWindowResize(_: Event) {
+    const flippedElements = document.querySelectorAll('.w-nav [js-flip]')
+    for (const el of flippedElements) {
+        el.removeAttribute('js-flip')
+        el.parentElement?.classList.remove('js-y-flipped')
+    }
+}
+
+function onDropdownMouseEnter(e: Event) {
+    // check out-of-viewport status (determine child popup dipslay position)
+    const sub = (e.currentTarget as HTMLElement).querySelector('.w-nav-child')
+    if (sub) {
+        const rect = sub.getBoundingClientRect()
+        let flip = ''
+
+        // Check if the element exceeds the horizontal viewport (excluding scrollbars)
+        if (rect.right >= document.body.clientWidth) flip = 'x'
+
+        // Check if the element exceeds the vertical viewport
+        if (rect.bottom >= window.innerHeight) flip += 'y'
+
+        if (flip) {
+            sub.setAttribute('js-flip', flip)
+            if (flip.includes('y')) sub.parentElement?.classList.add('js-y-flipped')
+        }
+    }
+}
+
 function onNavInit(e: Event) {
     const nav = e.currentTarget as HTMLElement
-    const options = (e as CustomEvent<NavOptions>).detail
-    // Use the data here...
+    const data = getNavData(nav)
 
     setBasicClasses(nav)
     setMultiLevelClasses(nav)
@@ -107,10 +200,10 @@ function onNavInit(e: Event) {
     const navItems = document.querySelectorAll('.w-nav-item')
 
     for (const el of navItems) {
-        const text = el.textContent?.trim() ?? ''
+        const text = el.textContent?.trim()
 
         // If text starts with one or more dash-like characters, add the class
-        if (/^[-\u2014\u2013]+/.test(text)) {
+        if (text && /^[-\u2014\u2013]+/.test(text)) {
             el.classList.add('w-nav-divider')
         }
     }
@@ -137,121 +230,78 @@ function onNavInit(e: Event) {
     }
 
     if (nav.classList.contains('wo-accordion')) {
+        // save handle to clean up later in onClean handler
+        data.onAccordionClick = (e: Event) => {
+            handleAccordionClick(e.target as HTMLElement, nav)
+            e.preventDefault()
+        }
+
         const accordionElements = nav.querySelectorAll<HTMLElement>(
             '.w-nav-item-wrapper,.w-nav-accordion-click-area',
         )
 
         // Remove existing click handlers
         for (const el of accordionElements) {
-            el.removeEventListener('click', onAccordionClick)
-            el.addEventListener('click', onAccordionClick)
+            el.removeEventListener('click', data.onAccordionClick)
+            el.addEventListener('click', data.onAccordionClick)
         }
     }
 
-    for (const el of nav.querySelectorAll('.w-state-active')) {
-        el.classList.add('is-active')
-    }
-    // }
+    window.removeEventListener('resize', onWindowResize)
+    window.addEventListener('resize', onWindowResize)
+    window.removeEventListener('scroll', onWindowResize)
+    window.addEventListener('scroll', onWindowResize)
 
-    window.removeEventListener('resize', flipHandler)
-    window.addEventListener('resize', flipHandler)
+    setNavData(nav, data)
 }
 
 function onNavClean(e: Event) {
     const nav = e.currentTarget as HTMLElement
+    const data = getNavData(nav)
+
+    // remove event handlers: this should come before removing dynamic elements
+    window.removeEventListener('resize', onWindowResize)
+
+    // Remove accordion click handlers
+    if (data.onAccordionClick && nav.classList.contains('wo-accordion')) {
+        const accordionElements = nav.querySelectorAll<HTMLElement>(
+            '.w-nav-parent,.w-nav-accordion-click-area',
+        )
+
+        for (const el of accordionElements) {
+            el.removeEventListener('click', data.onAccordionClick)
+        }
+
+        data.onAccordionClick = undefined
+    }
 
     // remove dynamic elements
-    const dynamicElementSelectors = dynamicElements.split(',')
-    for (const selector of dynamicElementSelectors) {
+    for (const selector of dynamicElements) {
         for (const el of nav.querySelectorAll<HTMLElement>(`.${selector.trim()}`)) {
             el.remove()
         }
     }
 
     // remove dynamic classes
-    const dynamicClassList = dynamicClasses.split(',')
-    for (const className of dynamicClassList) {
+    for (const className of dynamicClasses) {
         for (const el of nav.querySelectorAll(`.${className.trim()}`)) {
             el.classList.remove(className.trim())
         }
     }
 
-    // remove event handlers
-    window.removeEventListener('resize', flipHandler)
-
-    // Remove accordion click handlers
-    if (nav.classList.contains('wo-accordion')) {
-        const accordionElements = nav.querySelectorAll<HTMLElement>(
-            '.w-nav-parent,.w-nav-accordion-click-area',
-        )
-        for (const el of accordionElements) {
-            el.removeEventListener('click', onAccordionClick)
-        }
-    }
+    setNavData(nav, data)
 }
 
-function onDropdownMouseEnter(e: Event) {
-    // check out-of-viewport status (determine child popup dipslay position)
-    const sub = (e.currentTarget as HTMLElement).querySelector('.w-nav-child')
-    if (sub) {
-        const rect = sub.getBoundingClientRect()
-        let flip = ''
+export function nav(options: NavOptions = {}) {
+    const navList = document.querySelectorAll<HTMLElement>(
+        options.selector ?? defaultNavData.selector,
+    )
 
-        // Check if the element exceeds the horizontal viewport (excluding scrollbars)
-        if (rect.right >= document.body.clientWidth) flip = 'x'
+    for (const nav of navList) {
+        navDataMap.set(nav, {...defaultNavData, ...options, ...getNavElementData(nav)})
 
-        // Check if the element exceeds the vertical viewport
-        if (rect.bottom >= window.innerHeight) flip += 'y'
-
-        if (flip) {
-            sub.setAttribute('js-flip', flip)
-        }
-    }
-}
-
-function onAccordionClick(e: Event) {
-    const target = e.target as HTMLElement
-    const opts = conf.options
-    const href = target.getAttribute('href')
-
-    // set target to w-nav-parent
-    const parent = target.parentElement!
-    const sub = parent.querySelector<HTMLElement>('.w-nav-child')
-    const subAll = parent.querySelectorAll<HTMLElement>('.w-nav-child')
-
-    if (sub) {
-        const isHidden = getComputedStyle(sub).display === 'none'
-
-        if (isHidden) {
-            slideDown(sub, opts.speed)
-            const sibling = parent.querySelector('a')
-            if (sibling) sibling.classList.add('is-active')
-
-            if (opts.singleOpen) {
-                for (const sibling of siblings(parent.parentElement!)) {
-                    const siblingChild = sibling.querySelector<HTMLElement>('.w-nav-child')
-                    slideUp(siblingChild ?? undefined, opts.speed)
-                    sibling.querySelector('a')?.classList.remove('is-active')
-                }
-            }
-        } else {
-            setTimeout(() => {
-                for (const el of subAll) slideUp(el, opts.speed)
-                parent.querySelector('a')?.classList.remove('is-active')
-            }, opts.hideDelay ?? 0)
-        }
-    }
-
-    if (opts.parentLink && href) window.location.href = href
-    e.preventDefault()
-    return false
-}
-
-export function nav(selector?: string, options: NavOptions = {}) {
-    if (selector) conf.selector = selector
-    for (const nav of document.querySelectorAll<HTMLElement>(conf.selector)) {
         nav.addEventListener('nav:init', onNavInit)
         nav.addEventListener('nav:clean', onNavClean)
-        nav.dispatchEvent(new CustomEvent<NavOptions>('nav:init', {detail: options}))
+        nav.dispatchEvent(new Event('nav:init'))
     }
 }

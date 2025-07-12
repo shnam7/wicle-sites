@@ -16,13 +16,18 @@ const demoCases = [
 
 <DefaultLayout title={title} bodyClass={bodyClass}>
     <div class='demo-header'>
-        <button id='w-panel-demo-alpha-toggle' class='w-button wo-primary' style='float:right'>Alpha Toggle</button>
+        <button id='w-panel-demo-alpha-toggle' class='w-button wo-primary' style='float:right'
+            >Alpha Toggle</button
+        >
     </div>
     {
         demoCases.map(demoCase => (
+            <div class="w-divider wo-thick"></div>
+            <div class='caption'>class='{demoCase.cls}'</div>
             <div class={`demo-panel ${demoCase.cls}`}>
-                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
-                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque
+                volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh,
+                viverra non, semper suscipit, posuere a, pede.
             </div>
         ))
     }
@@ -30,8 +35,11 @@ const demoCases = [
 
 <style lang='scss'>
     .demo-panel {
-        margin: 2rem 0;
+        margin: 0.25rem 0;
         padding: 1rem;
+    }
+    .caption {
+        color: brown;
     }
 </style>
 

@@ -114,11 +114,6 @@ export function mqStart(breakPoints?: BreakPoints, options?: MediaQueryOptions) 
         }
     })
 
-    // report current mqState value
-    window.addEventListener('mq:report', e => {
-        window.dispatchEvent(new CustomEvent('mq:state', {detail: mqState}))
-    })
-
     // detect media query changes
     window.addEventListener('resize', e => {
         const {width} = getViewporSize()
@@ -131,6 +126,11 @@ export function mqStart(breakPoints?: BreakPoints, options?: MediaQueryOptions) 
             mqState.state = state
             window.dispatchEvent(new CustomEvent('mq:change', {detail: mqState}))
         }
+    })
+
+    // report current mqState value
+    window.addEventListener('mq:report', e => {
+        window.dispatchEvent(new CustomEvent('mq:state', {detail: mqState}))
     })
 
     // trigger initial events

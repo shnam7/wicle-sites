@@ -20,6 +20,7 @@ const stylelintConfig = {
         'value-keyword-case': null,
         'no-descending-specificity': null,
         'selector-class-pattern': null,
+        'length-zero-no-unit': null,
     },
 }
 

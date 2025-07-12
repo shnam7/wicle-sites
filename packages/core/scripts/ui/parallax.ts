@@ -10,6 +10,10 @@
  *          which will make all the surfaces move faster than window
  */
 
+export function isWindow(obj: any): obj is Window {
+    return obj instanceof Window || obj === globalThis
+}
+
 export class Container {
     private readonly content: HTMLElement | Window
     private readonly surface: Surface[]
@@ -51,8 +55,10 @@ export class Container {
     }
 
     private onContainerScroll(e: Event): void {
-        const currentScrollPos =
-            this.content instanceof Window ? this.content.scrollY : this.content.scrollTo
+        const currentScrollPos = isWindow(this.content)
+            ? this.content.scrollY
+            : this.content.scrollTop
+
         for (const surface of this.surface) surface.scroll(-currentScrollPos)
     }
 }
