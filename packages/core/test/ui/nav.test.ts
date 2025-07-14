@@ -291,6 +291,52 @@ describe('nav', () => {
             flippedElements = document.querySelectorAll('.w-nav [js-flip]')
             expect(flippedElements.length).toBe(0)
         })
+        it('should add parent-marker to subemu items', () => {
+            nav()
+
+            const parentMarker = document.querySelector('.w-nav-parent-marker')
+            expect(parentMarker).not.toBeNull()
+        })
+
+        it('should not add parent-marker for icon-only navs', () => {
+            navElement.classList.add('wo-icon')
+            nav()
+
+            const parentMarker = document.querySelector('.w-nav-parent-marker')
+            expect(parentMarker).toBeNull()
+        })
+
+        it('should not add parent-marker for icon-only navs', () => {
+            container.innerHTML = `
+                <ul class="w-nav wo-dropdown">
+                    <li class="wo-icon">
+                        <a href='#'>Java</a>
+                        <ul>
+                            <li><a href='#'>Test fro Java</a></li>
+                        </ul>
+                    </li>
+            `
+            nav()
+
+            const parentMarker = document.querySelector('.w-nav-parent-marker')
+            expect(parentMarker).toBeNull()
+        })
+
+        it('should not add parent-marker for icon menu item', () => {
+            container.innerHTML = `
+                <ul class="w-nav wo-dropdown">
+                    <li>
+                        <a class="wo-icon" href='#'>Java</a>
+                        <ul>
+                            <li><a href='#'>Test fro Java</a></li>
+                        </ul>
+                    </li>
+            `
+            nav()
+
+            const parentMarker = document.querySelector('.w-nav-parent-marker')
+            expect(parentMarker).toBeNull()
+        })
     })
 
     describe('cleaning navigation', () => {

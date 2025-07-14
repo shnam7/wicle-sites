@@ -15,7 +15,7 @@
         "!**/*.map"
     ],
     "scripts": {
-        "dev": "run-s watch",
+        "dev": "run-s build watch",
         "dev:test": "vitest watch --coverage --coverage.include=scripts",
         "build": "run-p build:**",
         "build:ts": "tsdown scripts/index.ts --format cjs,esm --dts",
@@ -59,7 +59,7 @@
     ],
     "devDependencies": {
         "@changesets/cli": "^2.29.5",
-        "@types/node": "^24.0.13",
+        "@types/node": "^24.0.14",
         "@vitest/coverage-v8": "^3.2.4",
         "@wicle/tsconfig": "github:shnam7/wicle-tsconfig",
         "changesets": "^1.0.2",

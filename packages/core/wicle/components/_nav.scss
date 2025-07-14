@@ -369,21 +369,21 @@ $key: 'w-nav';
     }
 
     // icon menu
-    // &.wo-icon {
-    //     &.wo-pointer {
-    //         & > li.w-nav-parent {
-    //             &::after {
-    //                 left: 0.5rem;
-    //             }
-    //         }
-    //     }
+    &.wo-icon {
+        &.wo-pointer {
+            & > li.w-nav-parent {
+                &::after {
+                    left: 0.5rem;
+                }
+            }
+        }
 
-    //     & > li > a {
-    //         font-size: gsv(icon/font-size);
-    //         font-weight: gsv(icon/font-weight);
-    //         padding: gsv(icon/padding) auto; // vertical padding must be preserved to sync dropdown popup position
-    //     }
-    // }
+        & > li > a {
+            font-size: gsv(icon/font-size);
+            font-weight: gsv(icon/font-weight);
+            padding: gsv(icon/padding) auto; // vertical padding must be preserved to sync dropdown popup position
+        }
+    }
 
     &.wo-default,
     &.wo-dropdown {

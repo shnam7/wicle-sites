@@ -1,6 +1,7 @@
 ---
 import DefaultLayout from '../../layouts/DefaultLayout.astro'
 import SliderDemo from '../../components/demo/SliderDemo.astro'
+import TwStyles from '../../components/demo/TwStyles.astro'
 
 const title = 'Code Snippets'
 const bodyClass = 'demo-snippets'
@@ -11,5 +12,11 @@ const bodyClass = 'demo-snippets'
     <h2>Sliders</h2>
     <div class='demo-panel'>
         <SliderDemo title={title} bodyClass={bodyClass} />
+    </div>
+
+    <div class='w-divider wo-thick'></div>
+    <h2>Tailwind Style Test</h2>
+    <div class='demo-panel'>
+        <TwStyles />
     </div>
 </DefaultLayout>

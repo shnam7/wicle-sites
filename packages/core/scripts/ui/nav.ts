@@ -100,16 +100,21 @@ function setMultiLevelClasses(nav: HTMLElement) {
 }
 
 function initParentNodes(nav: HTMLElement) {
+    // do not add parent marker for icon-only navs
+    if (nav.classList.contains('wo-icon') || nav.classList.contains('wo-no-parent-marker')) return
+
     // set parent nodes for multi-level menus
     const parents = nav.querySelectorAll<HTMLElement>('.w-nav-parent')
     for (const parent of parents) {
-        // if (parent.classList.contains('wo-icon')) continue
+        // do not add parent-marker for icon-only submenu
+        if (parent.classList.contains('wo-icon')) continue
 
         const itemWrappers = [...parent.children].filter(child =>
             child.classList.contains('w-nav-item-wrapper'),
         )
         for (const wrapper of itemWrappers) {
-            // if (wrapper.classList.contains('wo-icon')) continue
+            // do not add parent marker for specific icon items
+            if (wrapper.classList.contains('wo-icon')) continue
 
             const hasMarker = wrapper.querySelector('.w-nav-parent-marker')
             if (!hasMarker) {
