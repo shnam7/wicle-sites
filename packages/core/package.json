@@ -72,13 +72,13 @@
         "sass": "^1.89.2",
         "sass-true": "^9.0.0",
         "sass-wdk": "file://~/dev/public/sass-wdk",
-        "stylelint": "^16.21.1",
+        "stylelint": "^16.22.0",
         "stylelint-config-standard-scss": "^15.0.1",
         "stylelint-scss": "^6.12.1",
         "tsdown": "^0.12.9",
         "typescript": "^5.8.3",
         "vitest": "^3.2.4",
-        "xo": "^1.1.1"
+        "xo": "^1.2.1"
     },
     "packageManager": "pnpm@10.13.1"
 }

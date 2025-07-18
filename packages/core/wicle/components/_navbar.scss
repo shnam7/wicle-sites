@@ -78,7 +78,7 @@ $key: 'w-navbar';
 // optional dropdown trailer
 @include ssv('trailer/padding', 0.75rem 1rem, true);
 @include ssv('trailer/fg', theme.gsv('text/fg'), true);
-@include ssv('trailer/bg', color.tint(theme.gsv('color/bg'), 90%), true);
+@include ssv('trailer/bg', color.tint(theme.gsv('color/fg'), 90%), true);
 
 //-----------------------------------------------
 //  Mixins
@@ -178,7 +178,11 @@ $key: 'w-navbar';
         color: if($fg, $fg, if($bg, color.yiq-color($bg), false));
 
         @if $bg {
-            background: if($gr, color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)), $bg);
+            background: if(
+                $gr,
+                color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)),
+                $bg
+            );
         }
     }
 

@@ -11,7 +11,7 @@
         "reset:turbo": "find . -type d -name .turbo -exec rm -rf {} +",
         "reset:astro": "find . -type d -name .astro -exec rm -rf {} +",
         "reset:node": "find . -type d -name node_modules -exec rm -rf {} +",
-        "prepare-to-commit": "run-s build lint test clean"
+        "prepare-to-commit": "run-s clean lint build test clean"
     },
     "license": "MIT",
     "engines": {
