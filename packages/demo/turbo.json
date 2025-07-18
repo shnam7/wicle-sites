@@ -1,10 +1,8 @@
 {
     "extends": ["//"],
     "tasks": {
-        "dev": {
-            "cache": false,
-            "persistent": true,
-            "dependsOn": ["wicle-sites#build"]
+        "build": {
+            "inputs": ["src/**", "public/scripts/**", "tsconfig.json", "*.config.{js,ts,mjs,cjs}"]
         }
     }
 }
