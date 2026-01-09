@@ -144,7 +144,7 @@ $key: 'w-button';
     z-index: 1;
 
     @if $bg {
-        background: if($gr, color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)), $bg);
+        background: if(sass($gr): color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)); else: $bg);
         background-clip: padding-box; // remove dummy borders for gradients
     }
 
@@ -191,20 +191,18 @@ $key: 'w-button';
         color: $fg;
     }
 
-    & {
-        background: if($gr, color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)), $bg);
-        background-clip: padding-box; // remove dummy borders for gradients
+    background: if(sass($gr): color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)); else: $bg);
+    background-clip: padding-box; // remove dummy borders for gradients
 
-        @if $gr {
-            &::after {
-                background: color.gradient($hover, reg.get($gr, level), reg.get($gr, direction));
-            }
-        } @else {
-            &:hover {
-                background: $hover;
-            }
+    @if $gr {
+        &::after {
+            background: color.gradient($hover, reg.get($gr, level), reg.get($gr, direction));
         }
-    }
+    } @else {
+        &:hover {
+            background: $hover;
+        }
+    }    
 }
 
 //  Generate Button styles for color selections
@@ -251,7 +249,10 @@ $key: 'w-button';
         color: $fg;
 
         &:hover {
-            $fg: if(color.channel($fg, 'saturation', $space: hsl) <=50%, color.invert($fg, 50%), $fg);
+            $fg: if(
+                sass(color.channel($fg, 'saturation', $space: hsl) <=50%): color.invert($fg, 50%);
+                else: $fg
+            );
 
             color: $fg;
             background: $default-color;

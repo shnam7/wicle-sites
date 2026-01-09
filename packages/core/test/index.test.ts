@@ -1,5 +1,5 @@
 import {describe, it, expect, vi} from 'vitest'
-import * as index from '../scripts/index.ts'
+import * as index from '../scripts/index.js'
 
 // Mock all modules exported in index.ts
 vi.mock('../scripts/ui/offcanvas.ts', () => ({

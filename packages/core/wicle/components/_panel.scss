@@ -68,7 +68,7 @@ $key: 'w-panel';
     }
 
     color: $fg;
-    background: if($gr, color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)), $bg);
+    background: if(sass($gr): color.gradient($bg, reg.get($gr, level), reg.get($gr, direction)); else: $bg);
     border-color: color.adjust($line, $alpha: -0.7);
 }
 
@@ -84,7 +84,7 @@ $key: 'w-panel';
     }
 
     // color scheme
-    $color-scheme: if($color-scheme, $color-scheme, theme.gsv('color-scheme'));
+    $color-scheme: if(sass($color-scheme): $color-scheme; else: theme.gsv('color-scheme'));
 
     @each $scheme in $color-scheme {
         $name: list.nth($scheme, 1);

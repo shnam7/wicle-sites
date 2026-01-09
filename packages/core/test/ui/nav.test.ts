@@ -1,6 +1,6 @@
 import {beforeEach, afterEach, describe, expect, it, vi} from 'vitest'
-import {nav} from '../../scripts/ui/nav.ts'
-import {slideDown, slideUp} from '../../scripts/util/slider.ts'
+import {nav} from '../../scripts/ui/nav.js'
+import {slideDown, slideUp} from '../../scripts/util/slider.js'
 
 vi.mock('../../scripts/util/slider.ts', async () => {
     return {
@@ -209,10 +209,10 @@ describe('nav', () => {
             const parents = navElement.querySelectorAll<HTMLElement>('.w-nav-parent')
             expect(parents.length).toBe(2)
 
-            const clickArea1 = parents[0].querySelector<HTMLElement>('.w-nav-item-wrapper')!
-            const clickArea2 = parents[0].querySelector<HTMLElement>('.w-nav-item-wrapper')!
-            const subMenu1 = parents[0].querySelector<HTMLElement>('.w-nav-child')!
-            const subMenu2 = parents[1].querySelector<HTMLElement>('.w-nav-child')!
+            const clickArea1 = parents[0]!.querySelector<HTMLElement>('.w-nav-item-wrapper')!
+            const clickArea2 = parents[0]!.querySelector<HTMLElement>('.w-nav-item-wrapper')!
+            const subMenu1 = parents[0]!.querySelector<HTMLElement>('.w-nav-child')!
+            const subMenu2 = parents[1]!.querySelector<HTMLElement>('.w-nav-child')!
             expect(subMenu1).not.toBeNull()
             expect(subMenu2).not.toBeNull()
             subMenu1.style.display = 'block' // open first submenu

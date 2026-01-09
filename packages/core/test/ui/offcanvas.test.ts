@@ -1,5 +1,5 @@
 import {beforeEach, afterEach, describe, expect, it, vi} from 'vitest'
-import {offcanvas, type OffcanvasOptions} from '../../scripts/ui/offcanvas.ts'
+import {offcanvas, type OffcanvasOptions} from '../../scripts/ui/offcanvas.js'
 
 describe('offcanvas', () => {
     let container: HTMLElement

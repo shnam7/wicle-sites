@@ -56,7 +56,7 @@ $key: 'w-reset';
     }
 
     body {
-        word-wrap: break-word;
+        overflow-wrap: break-word;
         color: gsv(fg);
         margin: 0;
     }

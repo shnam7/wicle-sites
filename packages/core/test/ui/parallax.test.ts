@@ -1,5 +1,5 @@
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest'
-import {Container, Surface, Parallax} from '../../scripts/ui/parallax.ts'
+import {Container, Surface, Parallax} from '../../scripts/ui/parallax.js'
 
 describe('Parallax module', () => {
     let mockElement: HTMLElement

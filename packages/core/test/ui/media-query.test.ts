@@ -1,6 +1,6 @@
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest'
 import {mqStart, breakPointsReg, type BreakPoints} from '../../scripts/ui/media-query.js'
-import {getViewporSize} from '../../scripts/util/view.ts'
+import {getViewporSize} from '../../scripts/util/view.js'
 
 // Mock the view module
 vi.mock('../../scripts/util/view.js', () => ({

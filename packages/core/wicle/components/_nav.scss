@@ -396,9 +396,7 @@ $key: 'w-nav';
 }
 
 @mixin w-nav-default-styles {
-    & {
-        background-color: gsv(bg);
-    }
+    background-color: gsv(bg);
 
     li {
         color: gsv(fg); // default text color for menu items
