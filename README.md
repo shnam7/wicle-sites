@@ -2,13 +2,14 @@
 
 Component library for Web front-end development
 
-[Quick Reference](docs/index.md)<br>
-[Demo](https://shnam7.github.io/wicle/)
+<!-- [Quick Reference](docs/index.md)<br> -->
+
+[Demo](https://shnam7.github.io/wicle-sites/)
 
 # Notes
 
--   Wicle is open but documentation and support can be limited, as of now.<br>
--   Wicle is developed using [sass-wdk](https://github.com/shnam7/sass-wdk).
+- Wicle-Sites is open but documentation and support can be limited, as of now.<br>
+- Wicle-Sites is developed using [sass-wdk](https://github.com/shnam7/sass-wdk).
 
 <br>
 <div>

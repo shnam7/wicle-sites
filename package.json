@@ -11,7 +11,8 @@
         "reset:turbo": "find . -type d -name .turbo -exec rm -rf {} +",
         "reset:astro": "find . -type d -name .astro -exec rm -rf {} +",
         "reset:node": "find . -type d -name node_modules -exec rm -rf {} +",
-        "prepare-to-commit": "run-s clean lint build test clean"
+        "prepare-to-commit": "run-s clean lint build test clean",
+        "npm-dry-run": "npm publish ./packages/core --dry-run"
     },
     "license": "MIT",
     "engines": {
@@ -19,9 +20,9 @@
     },
     "devDependencies": {
         "npm-run-all": "^4.1.5",
-        "prettier": "^3.7.4",
+        "prettier": "^3.9.1",
         "prettier-plugin-astro": "^0.14.1",
-        "turbo": "^2.7.3"
+        "turbo": "^2.10.0"
     },
-    "packageManager": "pnpm@10.27.0"
+    "packageManager": "pnpm@11.9.0"
 }

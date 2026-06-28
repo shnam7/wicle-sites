@@ -4,7 +4,6 @@
     "compilerOptions": {
         "declaration": false,
         "isolatedModules": true,
-        "esModuleInterop": false,
         "allowSyntheticDefaultImports": true,
         "lib": ["dom", "esnext", "dom.iterable", "scripthost"],
 
@@ -12,8 +11,7 @@
         "sourceMap": false,
         "declarationMap": false,
 
-        "baseUrl": ".",
-        "paths": {"@/*": ["*", "src/scripts/*"]}
+        "paths": {"@/*": ["./*", "./src/scripts/*"]}
     },
     "include": ["./scripts/**/*.ts", "./test/**/*.ts"],
     "exclude": ["node_modules", "dist", "wicle"]

@@ -2,10 +2,21 @@
 import {defineConfig} from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 
+/** @type {import('vite').Plugin} */
+const fixAstroServerApp = {
+    name: 'fix-astro-server-app',
+    enforce: 'pre',
+    async resolveId(id) {
+        if (id === 'astro:server-app.js') {
+            return this.resolve('astro:server-app')
+        }
+    },
+}
+
 // https://astro.build/config
 export default defineConfig({
     vite: {
-        plugins: [tailwindcss()],
+        plugins: [tailwindcss(), fixAstroServerApp],
         css: {
             transformer: 'lightningcss',
             preprocessorOptions: {
@@ -40,4 +51,6 @@ export default defineConfig({
         //     noExternal: ['wicle-sites'],
         // },
     },
+    site: 'https://shnam7.github.io',
+    base: process.env.NODE_ENV === 'production' ? '/wicle-sites/' : '/',
 })

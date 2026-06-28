@@ -1,9 +1,8 @@
 {
     "extends": "astro/tsconfigs/strict",
     "compilerOptions": {
-        "baseUrl": "./src/scripts",
         "paths": {
-            // "wicle/*": ["./node_modules/wicle-sites/wicle/*"]
+            "wicle/*": ["./node_modules/wicle-sites/wicle/*"]
         }
     },
     "include": [".astro/types.d.ts", "**/*"],

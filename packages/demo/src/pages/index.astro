@@ -1,7 +1,8 @@
 <script>
     // redirect to front page
     var rootPath = '/getting-started'
-    if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) rootPath = '/wicle' + rootPath
+    if (!['localhost', '127.0.0.1'].includes(window.location.hostname))
+        rootPath = '/wicle-sites' + rootPath
 
     window.location.href = rootPath
 </script>

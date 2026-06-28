@@ -1,6 +1,6 @@
 {
     "name": "wicle-sites",
-    "version": "0.1.0",
+    "version": "3.0.0",
     "type": "module",
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
@@ -35,11 +35,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/shnam7/wicle-mutex"
+        "url": "https://github.com/shnam7/wicle-sites.git",
+        "directory": "packages/core"
     },
-    "homepage": "https://github.com/shnam7/wicle-mutex#readme",
+    "homepage": "https://github.com/shnam7/wicle-sites#readme",
     "bugs": {
-        "url": "https://github.com/shnam7/wicle-mutex/issues"
+        "url": "https://github.com/shnam7/wicle-sites/issues"
     },
     "author": {
         "name": "Robin Nam",
