@@ -1,11 +1,11 @@
-import {getViewporSize} from '../util/view.js'
+/**
+ * @module MediaQuery
+ * @description Responsive media query utilities for breakpoint detection and change events.
+ */
+
+import {getViewportSize} from '../util/view.js'
 
 const window = globalThis as Window & typeof globalThis
-
-/**
- * @package wicle
- * @module MediaQuery
- */
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type MediaQueryOptions = {
@@ -103,7 +103,7 @@ export function mqStart(breakPoints?: BreakPoints, options?: MediaQueryOptions) 
 
     // init
     window.addEventListener('mq:init', e => {
-        const {width} = getViewporSize()
+        const {width} = getViewportSize()
         const state = mqStateOf(width, breakPoints)
         mqState = {
             state,
@@ -116,7 +116,7 @@ export function mqStart(breakPoints?: BreakPoints, options?: MediaQueryOptions) 
 
     // detect media query changes
     window.addEventListener('resize', e => {
-        const {width} = getViewporSize()
+        const {width} = getViewportSize()
         const state = mqStateOf(width, breakPoints)
         if (state !== mqState.state) {
             // console.log(`[window::resize]width=${width}, state=${state}, prevState=${mqState.prevState}`);

@@ -6,6 +6,7 @@
         "isolatedModules": true,
         "allowSyntheticDefaultImports": true,
         "lib": ["dom", "esnext", "dom.iterable", "scripthost"],
+        "types": ["node"],
 
         "outDir": "./dist",
         "sourceMap": false,

@@ -2,12 +2,10 @@ import {beforeEach, afterEach, describe, expect, it, vi} from 'vitest'
 import {nav} from '../../scripts/ui/nav.js'
 import {slideDown, slideUp} from '../../scripts/util/slider.js'
 
-vi.mock('../../scripts/util/slider.ts', async () => {
-    return {
-        slideDown: vi.fn(),
-        slideUp: vi.fn(),
-    }
-})
+vi.mock('../../scripts/util/slider.ts', async () => ({
+    slideDown: vi.fn(),
+    slideUp: vi.fn(),
+}))
 
 const navHTML = `
     <ul class="w-nav">
@@ -198,8 +196,10 @@ describe('nav', () => {
             expect(clickArea).not.toBeNull()
 
             const event = new Event('click')
-            Object.defineProperty(event, 'target', {value: clickArea})
-            Object.defineProperty(event, 'preventDefault', {value: vi.fn()})
+            Object.defineProperties(event, {
+                target: {value: clickArea},
+                preventDefault: {value: vi.fn()},
+            })
             document.querySelector('.w-nav-accordion-click-area')?.dispatchEvent(event)
         })
 
@@ -211,12 +211,12 @@ describe('nav', () => {
 
             const clickArea1 = parents[0]!.querySelector<HTMLElement>('.w-nav-item-wrapper')!
             const clickArea2 = parents[0]!.querySelector<HTMLElement>('.w-nav-item-wrapper')!
-            const subMenu1 = parents[0]!.querySelector<HTMLElement>('.w-nav-child')!
-            const subMenu2 = parents[1]!.querySelector<HTMLElement>('.w-nav-child')!
-            expect(subMenu1).not.toBeNull()
-            expect(subMenu2).not.toBeNull()
-            subMenu1.style.display = 'block' // open first submenu
-            subMenu2.style.display = 'none' // ensure second submenu is closed
+            const submenu1 = parents[0]!.querySelector<HTMLElement>('.w-nav-child')!
+            const submenu2 = parents[1]!.querySelector<HTMLElement>('.w-nav-child')!
+            expect(submenu1).not.toBeNull()
+            expect(submenu2).not.toBeNull()
+            submenu1.style.display = 'block' // open first submenu
+            submenu2.style.display = 'none' // ensure second submenu is closed
 
             clickArea2.click() // click on second parent to open it
 

@@ -1,8 +1,7 @@
 /**
- *  Wicle scripts
+ * Wicle scripts
  *
- *  @module Nav
- *
+ * @module Nav
  */
 
 // export type MQEventHandler = (nav: Nav, event: CustomEvent<MediaQuery.MQChangeEventData>) => void;
@@ -48,13 +47,13 @@ const dynamicElements = ['w-nav-parent-marker', 'w-nav-accordion-click-area']
 
 // ----- Helper functions -----------------------------------------------------
 
-function getNavElementData(nav: HTMLElement): Partial<NavData> {
-    const {dataset} = nav
+function getNavElementData(navElement: HTMLElement): Partial<NavData> {
+    const {dataset} = navElement
     const data: Partial<NavData> = {}
 
-    if (dataset.speed) data.speed = Number.parseInt(dataset.speed, 10)
-    if (dataset.parentLink) data.parentLink = dataset.parentLink === 'true'
-    if (dataset.singleOpen) data.singleOpen = dataset.singleOpen === 'true'
+    if (dataset.speed !== undefined) data.speed = Number(dataset.speed)
+    if (dataset.parentLink !== undefined) data.parentLink = dataset.parentLink === 'true'
+    if (dataset.singleOpen !== undefined) data.singleOpen = dataset.singleOpen === 'true'
 
     //  sanity check
     if (Number.isNaN(data.speed)) data.speed = defaultNavData.speed
@@ -62,24 +61,29 @@ function getNavElementData(nav: HTMLElement): Partial<NavData> {
     return data
 }
 
-function getNavData(nav: HTMLElement): NavData {
-    return {...defaultNavData, speed: 500, ...navDataMap.get(nav), ...getNavElementData(nav)}
+function getNavData(navElement: HTMLElement): NavData {
+    return {
+        ...defaultNavData,
+        speed: 500,
+        ...navDataMap.get(navElement),
+        ...getNavElementData(navElement),
+    }
 }
 
-function setNavData(nav: HTMLElement, data: NavData): void {
-    const {dataset} = nav
+function setNavData(navElement: HTMLElement, data: NavData): void {
+    const {dataset} = navElement
 
     dataset.speed &&= data.speed.toString()
     dataset.parentLink &&= data.parentLink.toString()
     dataset.singleOpen &&= data.singleOpen.toString()
 
-    navDataMap.set(nav, data)
+    navDataMap.set(navElement, data)
 }
 
-function setBasicClasses(nav: HTMLElement) {
+function setBasicClasses(navElement: HTMLElement) {
     // set basic classes
-    nav.classList.add('w-nav')
-    for (const el of nav.querySelectorAll('li')) {
+    navElement.classList.add('w-nav')
+    for (const el of navElement.querySelectorAll('li')) {
         el.classList.add('w-nav-item')
         const itemWrapper = el.querySelector('a,div')
         if (itemWrapper) {
@@ -88,46 +92,51 @@ function setBasicClasses(nav: HTMLElement) {
     }
 }
 
-function setMultiLevelClasses(nav: HTMLElement) {
+function setMultiLevelClasses(navElement: HTMLElement) {
     // set parent/child settings for multi-level menus
-    const cl = nav.classList
+    const cl = navElement.classList
     if (cl.contains('wo-dropdown') || cl.contains('wo-default') || cl.contains('wo-accordion')) {
-        for (const ul of nav.querySelectorAll('ul')) {
+        for (const ul of navElement.querySelectorAll('ul')) {
             ul.classList.add('w-nav-child')
             ul.parentElement?.classList.add('w-nav-parent')
         }
     }
 }
 
-function initParentNodes(nav: HTMLElement) {
+function initParentNodes(navElement: HTMLElement) {
     // do not add parent marker for icon-only navs
-    if (nav.classList.contains('wo-icon') || nav.classList.contains('wo-no-parent-marker')) return
+    if (
+        navElement.classList.contains('wo-icon') ||
+        navElement.classList.contains('wo-no-parent-marker')
+    )
+        return
 
     // set parent nodes for multi-level menus
-    const parents = nav.querySelectorAll<HTMLElement>('.w-nav-parent')
+    const parents = navElement.querySelectorAll<HTMLElement>('.w-nav-parent')
     for (const parent of parents) {
-        // do not add parent-marker for icon-only submenu
-        if (parent.classList.contains('wo-icon')) continue
+        // parent-marker will not be added to icon-only submenu
+        if (!parent.classList.contains('wo-icon')) {
+            const itemWrappers = [...parent.children].filter(child =>
+                child.classList.contains('w-nav-item-wrapper'),
+            )
 
-        const itemWrappers = [...parent.children].filter(child =>
-            child.classList.contains('w-nav-item-wrapper'),
-        )
-        for (const wrapper of itemWrappers) {
-            // do not add parent marker for specific icon items
-            if (wrapper.classList.contains('wo-icon')) continue
-
-            const hasMarker = wrapper.querySelector('.w-nav-parent-marker')
-            if (!hasMarker) {
-                const span = document.createElement('span')
-                span.className = 'w-nav-parent-marker'
-                wrapper.append(span)
+            for (const wrapper of itemWrappers) {
+                // add parent marker when 'wo-icon' not set and the parent market not already exist.
+                if (
+                    !wrapper.classList.contains('wo-icon') &&
+                    !wrapper.querySelector('.w-nav-parent-marker')
+                ) {
+                    const span = document.createElement('span')
+                    span.className = 'w-nav-parent-marker'
+                    wrapper.append(span)
+                }
             }
         }
     }
 }
 
-function handleAccordionClick(target: HTMLElement, nav: HTMLElement) {
-    const data = getNavData(nav)
+function handleAccordionClick(target: HTMLElement, navElement: HTMLElement) {
+    const data = getNavData(navElement)
     const href = target.getAttribute('href')
 
     const targetItem = target.parentElement
@@ -161,7 +170,7 @@ function handleAccordionClick(target: HTMLElement, nav: HTMLElement) {
         siblingChild.parentElement?.querySelector('a')?.classList.remove('is-active')
     }
 
-    if (data.parentLink && href) globalThis.location.href = href
+    if (data.parentLink && href !== null) globalThis.location.assign(href)
 }
 
 // ----- Event Handlers -------------------------------------------------------
@@ -175,19 +184,20 @@ function onWindowResize(_: Event) {
 }
 
 function onDropdownMouseEnter(e: Event) {
-    // check out-of-viewport status (determine child popup dipslay position)
+    // check out-of-viewport status (determine child popup display position)
     const sub = (e.currentTarget as HTMLElement).querySelector('.w-nav-child')
     if (sub) {
         const rect = sub.getBoundingClientRect()
         let flip = ''
 
         // Check if the element exceeds the horizontal viewport (excluding scrollbars)
-        if (rect.right >= document.body.clientWidth) flip = 'x'
+        flip = rect.right >= document.body.clientWidth ? 'x' : flip
+        flip = flip === '' && rect.left <= 0 ? 'x' : flip
 
         // Check if the element exceeds the vertical viewport
-        if (rect.bottom >= window.innerHeight) flip += 'y'
+        flip = rect.bottom >= window.innerHeight ? `${flip}y` : flip
 
-        if (flip) {
+        if (flip !== '') {
             sub.setAttribute('js-flip', flip)
             if (flip.includes('y')) sub.parentElement?.classList.add('js-y-flipped')
         }
@@ -195,12 +205,12 @@ function onDropdownMouseEnter(e: Event) {
 }
 
 function onNavInit(e: Event) {
-    const nav = e.currentTarget as HTMLElement
-    const data = getNavData(nav)
+    const navElement = e.currentTarget as HTMLElement
+    const data = getNavData(navElement)
 
-    setBasicClasses(nav)
-    setMultiLevelClasses(nav)
-    initParentNodes(nav)
+    setBasicClasses(navElement)
+    setMultiLevelClasses(navElement)
+    initParentNodes(navElement)
 
     const navItems = document.querySelectorAll('.w-nav-item')
 
@@ -208,15 +218,15 @@ function onNavInit(e: Event) {
         const text = el.textContent?.trim()
 
         // If text starts with one or more dash-like characters, add the class
-        if (text && /^[-\u2014\u2013]+/.test(text)) {
+        if (text !== '' && /^[\-\u{2013}\u{2014}]+/v.test(text)) {
             el.classList.add('w-nav-divider')
         }
     }
 
     // --- dropdown settings
-    const cl = nav.classList
+    const cl = navElement.classList
     if (cl.contains('wo-dropdown') || cl.contains('wo-default')) {
-        for (const itemWithChildren of nav.querySelectorAll('.w-nav-parent')) {
+        for (const itemWithChildren of navElement.querySelectorAll('.w-nav-parent')) {
             itemWithChildren.removeEventListener('mouseenter', onDropdownMouseEnter)
             itemWithChildren.addEventListener('mouseenter', onDropdownMouseEnter)
         }
@@ -224,7 +234,7 @@ function onNavInit(e: Event) {
 
     // --- accordion settings
     if (cl.contains('wo-accordion')) {
-        for (const el of nav.querySelectorAll<HTMLElement>('.w-nav-item-wrapper')) {
+        for (const el of navElement.querySelectorAll<HTMLElement>('.w-nav-item-wrapper')) {
             const hasClickArea = el.querySelector('.w-nav-accordion-click-area')
             if (!hasClickArea) {
                 const clickArea = document.createElement('span')
@@ -234,14 +244,14 @@ function onNavInit(e: Event) {
         }
     }
 
-    if (nav.classList.contains('wo-accordion')) {
+    if (navElement.classList.contains('wo-accordion')) {
         // save handle to clean up later in onClean handler
-        data.onAccordionClick = (e: Event) => {
-            handleAccordionClick(e.target as HTMLElement, nav)
-            e.preventDefault()
+        data.onAccordionClick = (err: Event) => {
+            handleAccordionClick(err.target as HTMLElement, navElement)
+            err.preventDefault()
         }
 
-        const accordionElements = nav.querySelectorAll<HTMLElement>(
+        const accordionElements = navElement.querySelectorAll<HTMLElement>(
             '.w-nav-item-wrapper,.w-nav-accordion-click-area',
         )
 
@@ -257,19 +267,19 @@ function onNavInit(e: Event) {
     window.removeEventListener('scroll', onWindowResize)
     window.addEventListener('scroll', onWindowResize)
 
-    setNavData(nav, data)
+    setNavData(navElement, data)
 }
 
 function onNavClean(e: Event) {
-    const nav = e.currentTarget as HTMLElement
-    const data = getNavData(nav)
+    const navElement = e.currentTarget as HTMLElement
+    const data = getNavData(navElement)
 
     // remove event handlers: this should come before removing dynamic elements
     window.removeEventListener('resize', onWindowResize)
 
     // Remove accordion click handlers
-    if (data.onAccordionClick && nav.classList.contains('wo-accordion')) {
-        const accordionElements = nav.querySelectorAll<HTMLElement>(
+    if (data.onAccordionClick && navElement.classList.contains('wo-accordion')) {
+        const accordionElements = navElement.querySelectorAll<HTMLElement>(
             '.w-nav-parent,.w-nav-accordion-click-area',
         )
 
@@ -282,19 +292,19 @@ function onNavClean(e: Event) {
 
     // remove dynamic elements
     for (const selector of dynamicElements) {
-        for (const el of nav.querySelectorAll<HTMLElement>(`.${selector.trim()}`)) {
+        for (const el of navElement.querySelectorAll<HTMLElement>(`.${selector.trim()}`)) {
             el.remove()
         }
     }
 
     // remove dynamic classes
     for (const className of dynamicClasses) {
-        for (const el of nav.querySelectorAll(`.${className.trim()}`)) {
+        for (const el of navElement.querySelectorAll(`.${className.trim()}`)) {
             el.classList.remove(className.trim())
         }
     }
 
-    setNavData(nav, data)
+    setNavData(navElement, data)
 }
 
 export function nav(options: NavOptions = {}) {
@@ -302,11 +312,11 @@ export function nav(options: NavOptions = {}) {
         options.selector ?? defaultNavData.selector,
     )
 
-    for (const nav of navList) {
-        navDataMap.set(nav, {...defaultNavData, ...options, ...getNavElementData(nav)})
+    for (const navItem of navList) {
+        navDataMap.set(navItem, {...defaultNavData, ...options, ...getNavElementData(navItem)})
 
-        nav.addEventListener('nav:init', onNavInit)
-        nav.addEventListener('nav:clean', onNavClean)
-        nav.dispatchEvent(new Event('nav:init'))
+        navItem.addEventListener('nav:init', onNavInit)
+        navItem.addEventListener('nav:clean', onNavClean)
+        navItem.dispatchEvent(new Event('nav:init'))
     }
 }

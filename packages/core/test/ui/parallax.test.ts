@@ -121,8 +121,7 @@ describe('Parallax module', () => {
 
             // Get the scroll event handler that was registered and trigger it
             expect(mockWindow.addEventListener).toHaveBeenCalledWith('scroll', expect.any(Function))
-            const containerScrollHandler = (mockWindow.addEventListener as any).mock.calls[0][1]
-            containerScrollHandler(new Event('scroll'))
+            mockWindow.dispatchEvent(new Event('scroll'))
 
             // check sufface scroll method was called with the correct value
             expect(scrollSpy).toHaveBeenCalledWith(-150)

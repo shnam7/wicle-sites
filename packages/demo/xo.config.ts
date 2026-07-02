@@ -1,8 +1,11 @@
 import {type FlatXoConfig} from 'xo'
+import astroPlugin from 'eslint-plugin-astro'
 
 const xoConfig: FlatXoConfig = [
+    ...astroPlugin.configs.recommended,
     {
         prettier: true,
+        semicolon: false,
         space: 4,
         rules: {
             'capitalized-comments': 'off',

@@ -4,9 +4,9 @@ import {fileURLToPath} from 'node:url'
 import fs from 'node:fs'
 import sassTrue from 'sass-true'
 import {describe, it} from 'vitest'
-import '../wicle/base/_reset.scss'
-import '../wicle/layout/_site.scss'
-import './scss/base/reset.test.scss'
+// import '../wicle/base/_reset.scss'
+// import '../wicle/layout/_site.scss'
+// import './scss/base/reset.test.scss'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 

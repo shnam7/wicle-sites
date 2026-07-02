@@ -21,13 +21,15 @@ describe('slider', () => {
         element.style.height = 'auto'
 
         // Mock scrollHeight and offsetHeight
-        Object.defineProperty(element, 'scrollHeight', {
-            configurable: true,
-            value: 100,
-        })
-        Object.defineProperty(element, 'offsetHeight', {
-            configurable: true,
-            value: 100,
+        Object.defineProperties(element, {
+            scrollHeight: {
+                configurable: true,
+                value: 100,
+            },
+            offsetHeight: {
+                configurable: true,
+                value: 100,
+            },
         })
     })
 

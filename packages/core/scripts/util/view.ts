@@ -1,16 +1,20 @@
 /**
- *  @package wicle *
+ * @module View
+ * @description Utilities calculating viewport size.
  */
 
 // ref: https://andylangton.co.uk/blog/development/get-viewportwindow-size-width-and-height-javascript
-
-export function getViewporSize(): {width: number; height: number} {
-    let e: any = globalThis
-    let a = 'inner'
-    if (!('innerWidth' in globalThis)) {
-        a = 'client'
-        e = document.documentElement || document.body
+export function getViewportSize(): {width: number; height: number} {
+    if ('innerWidth' in globalThis) {
+        return {
+            width: globalThis.innerWidth,
+            height: globalThis.innerHeight,
+        }
     }
 
-    return {width: e[a + 'Width'] as number, height: e[a + 'Height'] as number}
+    const element = document.documentElement ?? document.body
+    return {
+        width: element.clientWidth,
+        height: element.clientHeight,
+    }
 }

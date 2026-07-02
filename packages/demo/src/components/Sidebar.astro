@@ -1,7 +1,7 @@
 ---
-import site from '../data/site.json'
-import path from 'path'
-const baseUrl = process.env.NODE_ENV === 'production' ? site.baseUrl : '/'
+import {getVersion} from 'wicle-sites'
+
+const base = import.meta.env.BASE_URL // '/wicle-sites/' in prod, '/' in dev
 
 const demoNames = [
     'colors',
@@ -21,18 +21,16 @@ const demoNames = [
 ---
 
 <h3>Contents</h3>
-
-<p>Version {site.version}</p>
-<p>---</p>
+<div class='w-divider wo-thick'></div>
 
 <ul>
-    <li><a href={path.join(baseUrl ?? '', 'getting-started')}>Getting Started</a></li>
+    <li><a href={`${base}getting-started`}>Getting Started</a></li>
     <li><a href='#demo'>Demo</a></li>
     <ul>
         {
             demoNames.map(name => (
                 <li>
-                    <a href={path.join(baseUrl ?? '', 'demo/', name)}>
+                    <a href={`${base}demo/${name}`}>
                         {name.charAt(0).toUpperCase() + name.slice(1)}
                     </a>
                 </li>

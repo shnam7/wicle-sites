@@ -1,13 +1,19 @@
 /**
- * @package wicle
+ * Parallax scrolling effect for HTML elements.
  *
- * Example:
- * Container = [Surface1, Surface2, ...], perspective=0.5
- * Surface1 scrolls normally, Surface2 scrolls 50%, Surface scrolls 25%, ...
+ * The Parallax module provides a way to create a parallax scrolling effect for HTML elements.
+ * It allows you to define multiple surfaces that move at different speeds relative to the scroll position,
+ * creating a sense of depth and motion.
  *
- * Note: If parent node has 'transform' property, 'fixed' property of Surface object does not work.
- *       In this case, Surface will move by the parent, and move again by the scroll handler,
- *          which will make all the surfaces move faster than window
+ * @module Parallax
+ *
+ * @example
+ * // Container = [Surface1, Surface2, ...], perspective = 0.5
+ * // Surface1 scrolls normally, Surface2 scrolls 50%, Surface3 scrolls 25%, ...
+ *
+ * @note If the parent node has a 'transform' property, the 'fixed' property of the Surface object will not work.
+ * In this case, the Surface will move with the parent and then move again by the scroll handler,
+ * causing all surfaces to move faster than the window.
  */
 
 export function isWindow(obj: any): obj is Window {
@@ -21,13 +27,13 @@ export class Container {
     private lastPerspective: number
 
     /**
-     *   Creates a Container for a Parallax
+     * Creates a Container for a Parallax
      *
-     *   @param {HTMLElement} scrollableContent The container that will be parallaxed
-     *   @param {perspective} perspective The ratio of how much back content should be scrolled
-     *          relative to forward content. For example, if this value is 0.5, and there are 2 surfaces,
-     *          the front-most surface would be scrolled normally, and the surface behind it would be scrolled
-     *          half as much.
+     * @param scrollableContent The container that will be parallaxed
+     * @param perspective The ratio of how much back content should be scrolled
+     * relative to forward content. For example, if this value is 0.5, and there are 2 surfaces,
+     * the front-most surface would be scrolled normally, and the surface behind it would be scrolled
+     * half as much.
      */
     constructor(scrollableContent: HTMLElement | Window, perspective: number) {
         this.content = scrollableContent
@@ -38,6 +44,14 @@ export class Container {
         scrollableContent.addEventListener('scroll', (event: Event) => {
             this.onContainerScroll(event)
         })
+    }
+
+    private onContainerScroll(e: Event): void {
+        const currentScrollPos = isWindow(this.content)
+            ? this.content.scrollY
+            : this.content.scrollTop
+
+        for (const surface of this.surface) surface.scroll(-currentScrollPos)
     }
 
     addSurface(surface: Surface): void {
@@ -53,25 +67,17 @@ export class Container {
         this.surface.push(surface)
         // console.log(surface, 'perspective=', surface.perspective);
     }
-
-    private onContainerScroll(e: Event): void {
-        const currentScrollPos = isWindow(this.content)
-            ? this.content.scrollY
-            : this.content.scrollTop
-
-        for (const surface of this.surface) surface.scroll(-currentScrollPos)
-    }
 }
 
 export class Surface {
     private readonly content: HTMLElement
 
     /**
-     *  Create a Surface for a Palallax
+     * Create a Surface for a Palallax
      *
-     *  @param surfaceContents
-     *  @param perspective Initial perspective of the surface.
-     *  @param cssPosition CSS position property: Should be absolute or fixed
+     * @param surfaceContents The HTML element that will be parallaxed
+     * @param perspective Initial perspective of the surface.
+     * @param cssPosition CSS position property: Should be absolute or fixed
      */
     constructor(
         surfaceContents: HTMLElement,

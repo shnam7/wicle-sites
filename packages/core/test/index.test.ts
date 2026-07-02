@@ -67,6 +67,10 @@ describe('index.ts exports', () => {
         expect(index).toHaveProperty('SliderClass')
     })
 
+    it('should export version module functions', () => {
+        expect(index).toHaveProperty('getVersion')
+    })
+
     it('should have all expected exports', () => {
         const expectedExports = [
             'offcanvasFunction',
@@ -107,6 +111,8 @@ describe('index.ts exports', () => {
             'ViewClass',
             'sliderFunction',
             'SliderClass',
+            'getVersion',
+            'getVersion',
         ]
 
         for (const key of exportKeys) {

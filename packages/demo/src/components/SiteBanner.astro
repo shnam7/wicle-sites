@@ -1,12 +1,12 @@
 ---
 import site from '../data/site.json'
-import pkg from '../../package.json'
+import {getVersion} from 'wicle-sites'
 ---
 
 <div class='l-site-banner'>
     {site?.title && <h1 class='title'>{site.title}</h1>}
     {site?.description && <p class='description'>{site.description}</p>}
-    {pkg?.version && <p class='version'>Version {pkg.version}</p>}
+    {getVersion() && <p class='version'>Version {getVersion()}</p>}
     {
         site?.repo && (
             <a href={site.repo} class='w-button wo-warning' target='_blank'>

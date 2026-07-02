@@ -185,8 +185,8 @@ describe('offcanvas', () => {
         })
 
         it('should open offcanvas', async () => {
-            const openingSpy = vi.fn()
-            const openedSpy = vi.fn()
+            const openingSpy = vi.fn<(event: Event) => void>()
+            const openedSpy = vi.fn<(event: Event) => void>()
             mockCanvas.addEventListener('offcanvas:opening', openingSpy)
             mockCanvas.addEventListener('offcanvas:opened', openedSpy)
 
@@ -209,8 +209,8 @@ describe('offcanvas', () => {
                 expect(mockCanvas.style.transform).toBe('translate3d(0, 0, 0)')
             })
 
-            const closingSpy = vi.fn()
-            const closedSpy = vi.fn()
+            const closingSpy = vi.fn<(event: Event) => void>()
+            const closedSpy = vi.fn<(event: Event) => void>()
             mockCanvas.addEventListener('offcanvas:closing', closingSpy)
             mockCanvas.addEventListener('offcanvas:closed', closedSpy)
 
@@ -243,7 +243,7 @@ describe('offcanvas', () => {
         })
 
         it('should not open if already open', () => {
-            const openingSpy = vi.fn()
+            const openingSpy = vi.fn<(event: Event) => void>()
             mockCanvas.addEventListener('offcanvas:opening', openingSpy)
 
             // Open first time
@@ -257,7 +257,7 @@ describe('offcanvas', () => {
         })
 
         it('should not close if already closed', () => {
-            const closingSpy = vi.fn()
+            const closingSpy = vi.fn<(event: Event) => void>()
             mockCanvas.addEventListener('offcanvas:closing', closingSpy)
 
             // Try to close when already closed

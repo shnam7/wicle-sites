@@ -1,13 +1,13 @@
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest'
 import {mqStart, breakPointsReg, type BreakPoints} from '../../scripts/ui/media-query.js'
-import {getViewporSize} from '../../scripts/util/view.js'
+import {getViewportSize} from '../../scripts/util/view.js'
 
 // Mock the view module
 vi.mock('../../scripts/util/view.js', () => ({
-    getViewporSize: vi.fn(),
+    getViewportSize: vi.fn(),
 }))
 
-const mockGetViewporSize = vi.mocked(getViewporSize)
+const mockGetViewportSize = vi.mocked(getViewportSize)
 
 describe('MediaQuery', () => {
     beforeEach(() => {
@@ -66,55 +66,53 @@ describe('MediaQuery', () => {
         })
 
         it('should handle mq:init event correctly', () => {
-            mockGetViewporSize.mockReturnValue({width: 800, height: 600})
+            mockGetViewportSize.mockReturnValue({width: 800, height: 600})
 
             mqStart()
 
-            const initCall = (globalThis.addEventListener as any).mock.calls.find(
-                (call: any[]) => call[0] === 'mq:init',
-            )
+            const initCall = vi
+                .mocked(window.addEventListener)
+                .mock.calls.find(call => call[0] === 'mq:init')
             expect(initCall).toBeDefined()
-            const initHandler = initCall![1]
+            const initHandler = initCall![1] as EventListener
             initHandler(new Event('mq:init'))
-            expect(mockGetViewporSize).toHaveBeenCalled()
+            expect(mockGetViewportSize).toHaveBeenCalled()
         })
 
         it('should handle resize event and detect state changes', () => {
             // set initial viewport size
-            mockGetViewporSize.mockReturnValue({width: 500, height: 600})
+            mockGetViewportSize.mockReturnValue({width: 500, height: 600})
 
             mqStart()
 
             // execute mq:init process
-            const initCall = (window.addEventListener as any).mock.calls.find(
-                (call: any[]) => call[0] === 'mq:init',
-            )
+            const initCall = vi
+                .mocked(window.addEventListener)
+                .mock.calls.find(call => call[0] === 'mq:init')
             expect(initCall).toBeDefined()
-            const initHandler = initCall![1]
+            const initHandler = initCall![1] as EventListener
             initHandler(new Event('mq:init'))
 
             // change viewport size
-            mockGetViewporSize.mockReturnValue({width: 1200, height: 800})
+            mockGetViewportSize.mockReturnValue({width: 1200, height: 800})
 
             // execute resize process
-            const resizeCall = (window.addEventListener as any).mock.calls.find(
-                (call: any[]) => call[0] === 'resize',
-            )
+            const resizeCall = vi
+                .mocked(window.addEventListener)
+                .mock.calls.find(call => call[0] === 'resize')
             expect(resizeCall).toBeDefined()
 
-            const resizeHandler = resizeCall![1]
+            const resizeHandler = resizeCall![1] as EventListener
             resizeHandler(new Event('resize'))
 
+            const expectedChangeDetail = expect.objectContaining({
+                state: expect.any(String),
+                width: 1200,
+                prevState: expect.any(String),
+                prevWidth: 500,
+            })
             expect(window.dispatchEvent).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    type: 'mq:change',
-                    detail: expect.objectContaining({
-                        state: expect.any(String),
-                        width: 1200,
-                        prevState: expect.any(String),
-                        prevWidth: 500,
-                    }),
-                }),
+                expect.objectContaining({type: 'mq:change', detail: expectedChangeDetail}),
             )
         })
 
@@ -122,62 +120,60 @@ describe('MediaQuery', () => {
             mqStart()
 
             // init
-            const initCall = (window.addEventListener as any).mock.calls.find(
-                (call: any[]) => call[0] === 'mq:init',
-            )
+            const initCall = vi
+                .mocked(window.addEventListener)
+                .mock.calls.find(call => call[0] === 'mq:init')
             expect(initCall).toBeDefined()
-            const initHandler = initCall![1]
-            mockGetViewporSize.mockReturnValue({width: 500, height: 600})
+            const initHandler = initCall![1] as EventListener
+            mockGetViewportSize.mockReturnValue({width: 500, height: 600})
             initHandler(new Event('mq:init'))
 
             // call mq:report
-            const reportCall = (window.addEventListener as any).mock.calls.find(
-                (call: any[]) => call[0] === 'mq:report',
-            )
+            const reportCall = vi
+                .mocked(window.addEventListener)
+                .mock.calls.find(call => call[0] === 'mq:report')
             expect(reportCall).toBeDefined()
-            const reportHandler = reportCall![1]
+            const reportHandler = reportCall![1] as EventListener
 
             reportHandler(new Event('mq:report'))
+            const expectedStateDetail = expect.objectContaining({
+                state: expect.any(String),
+                width: expect.any(Number),
+                prevState: expect.any(String),
+                prevWidth: expect.any(Number),
+                breakPoints: expect.any(Object),
+            })
             expect(window.dispatchEvent).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    type: 'mq:state',
-                    detail: expect.objectContaining({
-                        state: expect.any(String),
-                        width: expect.any(Number),
-                        prevState: expect.any(String),
-                        prevWidth: expect.any(Number),
-                        breakPoints: expect.any(Object),
-                    }),
-                }),
+                expect.objectContaining({type: 'mq:state', detail: expectedStateDetail}),
             )
         })
 
         it('should not dispatch mq:change when state remains the same', () => {
-            mockGetViewporSize.mockReturnValue({width: 1200, height: 800})
+            mockGetViewportSize.mockReturnValue({width: 1200, height: 800})
 
             mqStart()
 
             // mq:init
-            const initCall = (window.addEventListener as any).mock.calls.find(
-                (call: any[]) => call[0] === 'mq:init',
-            )
+            const initCall = vi
+                .mocked(window.addEventListener)
+                .mock.calls.find(call => call[0] === 'mq:init')
             expect(initCall).toBeDefined()
-            const initHandler = initCall![1]
+            const initHandler = initCall![1] as EventListener
             initHandler(new Event('mq:init'))
 
             // return the same size in the next resize
-            mockGetViewporSize.mockReturnValue({width: 1250, height: 800})
-            const resizeCall = (window.addEventListener as any).mock.calls.find(
-                (call: any[]) => call[0] === 'resize',
-            )
+            mockGetViewportSize.mockReturnValue({width: 1250, height: 800})
+            const resizeCall = vi
+                .mocked(window.addEventListener)
+                .mock.calls.find(call => call[0] === 'resize')
             expect(resizeCall).toBeDefined()
-            const resizeHandler = resizeCall![1]
+            const resizeHandler = resizeCall![1] as EventListener
             resizeHandler(new Event('resize'))
 
             // confiem mq:change was not executed
-            const changeEvents = (window.dispatchEvent as any).mock.calls.filter(
-                (call: any[]) => call[0].type === 'mq:change',
-            )
+            const changeEvents = vi
+                .mocked(window.dispatchEvent)
+                .mock.calls.filter(call => call[0].type === 'mq:change')
             expect(changeEvents).toHaveLength(0)
         })
     })

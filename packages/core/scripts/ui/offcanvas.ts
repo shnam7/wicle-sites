@@ -1,17 +1,19 @@
 /**
- * @package wicle
+ * Offcanvas component.
  *
- * @usage
- * 	<section
- * 		class="l-site-offcanvas"		// offcanvas class name
- * 		data-control=".wz-control"		// name of control button
- * 		data-position="left"			// ofcanvas position: left, top, right, bottom
- * 		data-width="200px"				// data-height for horizontal canvas
- * 	>
- * 		Offcanvas contents...
- * 	</section>
+ * @module Offcanvas
  *
- *	<button class="w-button wz-control">Button</button>	// control button
+ * @example
+ * <section
+ *     class="l-site-offcanvas"        // offcanvas class name
+ *     data-control=".wz-control"      // name of control button
+ *     data-position="left"            // ofcanvas position: left, top, right, bottom
+ *     data-width="200px"              // data-height for horizontal canvas
+ * >
+ *     Offcanvas contents...
+ * </section>
+ *
+ * <button class="w-button wz-control">Button</button> // control button
  */
 
 import {on} from 'node:events'
@@ -55,16 +57,17 @@ function getCanvasElementData(canvas: HTMLElement): Partial<OffcanvasData> {
     const {dataset} = canvas
     const data: Partial<OffcanvasData> = {}
 
-    if (dataset.control) data.control = dataset.control
-    if (dataset.position) data.position = dataset.position
-    if (dataset.width) data.width = dataset.width
-    if (dataset.height) data.height = dataset.height
-    if (dataset.mode) data.mode = dataset.mode
-    if (dataset.duration) data.duration = Number.parseInt(dataset.duration, 10)
-    if (dataset.pusher) data.pusher = dataset.pusher
-    if (dataset.closeButton) data.closeButton = dataset.closeButton === 'true'
-    if (dataset.closeButtonClassName) data.closeButtonClassName = dataset.closeButtonClassName
-    if (dataset.autoClose) data.autoClose = dataset.autoClose === 'true'
+    if (dataset.control !== undefined) data.control = dataset.control
+    if (dataset.position !== undefined) data.position = dataset.position
+    if (dataset.width !== undefined) data.width = dataset.width
+    if (dataset.height !== undefined) data.height = dataset.height
+    if (dataset.mode !== undefined) data.mode = dataset.mode
+    if (dataset.duration !== undefined) data.duration = Number(dataset.duration)
+    if (dataset.pusher !== undefined) data.pusher = dataset.pusher
+    if (dataset.closeButton !== undefined) data.closeButton = dataset.closeButton === 'true'
+    if (dataset.closeButtonClassName !== undefined)
+        data.closeButtonClassName = dataset.closeButtonClassName
+    if (dataset.autoClose !== undefined) data.autoClose = dataset.autoClose === 'true'
 
     //  sanity check
     if (Number.isNaN(data.duration)) data.duration = defaultCanvasData.duration
@@ -103,7 +106,7 @@ function hideCss(data: OffcanvasData): Record<string, string | number> {
     const pos = data.position
     if (pos === 'left' || pos === 'right')
         return {
-            width: `${data.width}`,
+            width: data.width,
             height: '100%',
             top: '0',
             left: pos === 'left' ? '0' : 'auto',
@@ -113,7 +116,7 @@ function hideCss(data: OffcanvasData): Record<string, string | number> {
     if (pos === 'top' || pos === 'bottom')
         return {
             width: '100%',
-            height: `${data.height}`,
+            height: data.height,
             left: '0',
             top: pos === 'top' ? '0' : 'auto',
             bottom: pos === 'top' ? 'auto' : '0',
@@ -155,10 +158,10 @@ function onInit(e: Event) {
     }
 
     // set control button handler
-    if (data.control) {
+    if (data.control?.length > 0) {
         const controlElements = document.querySelectorAll<HTMLElement>(data.control)
 
-        function onControlClick(e: Event) {
+        function onControlClick(err: Event) {
             canvas.dispatchEvent(new Event('offcanvas:toggle'))
         }
 
@@ -174,8 +177,8 @@ function onInit(e: Event) {
         closeButton.className = data.closeButtonClassName
         canvas.insertBefore(closeButton, canvas.firstChild)
 
-        function onCloseButtonClick(e: Event) {
-            e.stopPropagation() // prevent event bubbling
+        function onCloseButtonClick(err: Event) {
+            err.stopPropagation() // prevent event bubbling
             canvas.dispatchEvent(new Event('offcanvas:close'))
         }
 
